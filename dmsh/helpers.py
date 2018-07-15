@@ -44,5 +44,8 @@ def show(pts, cells, geo):
     plt.plot(pts[0, ~is_inside], pts[1, ~is_inside], ".", color="r")
     plt.triplot(pts[0], pts[1], cells)
     plt.axis("square")
+
+    t = numpy.linspace(0.0, 2 * numpy.pi, 100)
+    plt.plot(numpy.cos(t), numpy.sin(t), '-', color="b")
     plt.show()
     return
