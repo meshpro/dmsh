@@ -10,8 +10,7 @@ jobs:
       - run: apt-get install -y git python3-pip
       - run: pip3 install -U pytest pytest-cov black flake8
       - checkout
-      - run: pip3 install -r test_requirements.txt
-      - run: pip3 install .[all]
+      - run: pip3 install .
       # format and lint
       - run: LC_ALL=C.UTF-8 black --check setup.py dmsh/ test/*.py
       - run: flake8 setup.py dmsh/ test/*.py
