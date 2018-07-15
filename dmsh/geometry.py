@@ -11,9 +11,11 @@ class Circle(object):
         return
 
     def isinside(self, x):
+        assert x.shape[0] == 2
         return (x[0] - self.x0[0]) ** 2 + (x[1] - self.x0[1]) ** 2 - self.r ** 2
 
     def jac2(self, x):
+        assert x.shape[0] == 2
         # TODO self.x0
         return numpy.array(
             [
@@ -23,6 +25,7 @@ class Circle(object):
         )
 
     def hessian2(self, x):
+        assert x.shape[0] == 2
         # TODO self.x0
         return numpy.array(
             [
