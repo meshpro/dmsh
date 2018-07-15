@@ -18,16 +18,16 @@ def multi_newton(x0, geo, tol, max_num_steps=10):
     """Newton's minimization method for multiple starting points.
     """
     x = x0.copy()
-    fx = geo.isinside(x)
+    fx = geo.isinside(x.T)
 
     k = 0
     mask = numpy.abs(fx) > tol
     while numpy.any(mask):
-        jac = geo.jac2(x[:, mask])
-        hess = geo.hessian2(x[:, mask])
-        p = -numpy.linalg.solve(numpy.moveaxis(hess, -1, 0), jac.T).T
-        x[:, mask] += p
-        fx = geo.isinside(x)
+        jac = geo.jac2(x[mask].T)
+        hess = geo.hessian2(x[mask].T)
+        p = -numpy.linalg.solve(numpy.moveaxis(hess, -1, 0), jac.T)
+        x[mask] += p
+        fx = geo.isinside(x.T)
         mask = numpy.abs(fx) > tol
         k += 1
         if k >= max_num_steps:

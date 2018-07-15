@@ -5,9 +5,9 @@ import numpy
 import dmsh
 
 
-def test_circle():
+def test_circle(h0=0.7, show=False):
     geo = dmsh.geometry.Circle([0.0, 0.0], 1.0)
-    X, cells = dmsh.generate(geo, 0.7, show=False)
+    X, cells = dmsh.generate(geo, h0, show=show)
     # X = numpy.column_stack([X[0], X[1], numpy.zeros(X.shape[1])])
     # meshio.write_points_cells("out.vtk", X, {"triangle": cells})
     X = X.T
@@ -40,4 +40,4 @@ def test_circle():
 
 
 if __name__ == "__main__":
-    test_circle()
+    test_circle(0.1, show=True)
