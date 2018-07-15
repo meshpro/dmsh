@@ -38,6 +38,7 @@ def multi_newton(x0, geo, tol, max_num_steps=10):
 
 def show(pts, cells, geo):
     import matplotlib.pyplot as plt
+
     eps = 1.0e-10
     is_inside = geo.isinside(pts) < eps
     plt.plot(pts[0, is_inside], pts[1, is_inside], ".")
@@ -46,6 +47,6 @@ def show(pts, cells, geo):
     plt.axis("square")
 
     t = numpy.linspace(0.0, 2 * numpy.pi, 100)
-    plt.plot(numpy.cos(t), numpy.sin(t), '-', color="b")
+    plt.plot(numpy.cos(t), numpy.sin(t), "-", color="b")
     plt.show()
     return

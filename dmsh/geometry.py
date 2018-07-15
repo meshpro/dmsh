@@ -15,14 +15,24 @@ class Circle(object):
 
     def jac2(self, x):
         # TODO self.x0
-        return numpy.array([
-            4 * (x[0]**2 + x[1]**2 - self.r**2) * x[0],
-            4 * (x[0]**2 + x[1]**2 - self.r**2) * x[1],
-        ])
+        return numpy.array(
+            [
+                4 * (x[0] ** 2 + x[1] ** 2 - self.r ** 2) * x[0],
+                4 * (x[0] ** 2 + x[1] ** 2 - self.r ** 2) * x[1],
+            ]
+        )
 
     def hessian2(self, x):
         # TODO self.x0
-        return numpy.array([
-            [8 * x[0]**2 + 4 * (x[0]**2 + x[1]**2 - self.r**2), 8 * x[0] * x[1]],
-            [8 * x[0] * x[1], 8 * x[1]**2 + 4 * (x[0]**2 + x[1]**2 - self.r**2)],
-        ])
+        return numpy.array(
+            [
+                [
+                    8 * x[0] ** 2 + 4 * (x[0] ** 2 + x[1] ** 2 - self.r ** 2),
+                    8 * x[0] * x[1],
+                ],
+                [
+                    8 * x[0] * x[1],
+                    8 * x[1] ** 2 + 4 * (x[0] ** 2 + x[1] ** 2 - self.r ** 2),
+                ],
+            ]
+        )

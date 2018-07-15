@@ -5,19 +5,30 @@ import numpy
 import scipy.spatial
 
 from . import geometry
-from .helpers import unique_rows, multi_newton, show
+from .helpers import unique_rows, multi_newton, show as show_mesh
 
 
 def element_size_function(x):
     return numpy.ones(x.shape[1])
 
 
-def generate():
-    h0 = 0.5
-    f_scale = 1.2
-    delta_t = 0.2
+def _recell(pts, geo):
+    # compute Delaunay triangulation
+    tri = scipy.spatial.Delaunay(pts.T)
+    cells = tri.simplices.copy()
 
-    geo = geometry.Circle([0.0, 0.0], 1.0)
+    # kick out all cells whose barycenter is not in the geometry
+    bc = numpy.sum(pts[:, cells], axis=-1) / 3.0
+    cells = cells[geo.isinside(bc) < 0.0]
+
+    # Determine edges
+    edges = numpy.concatenate([cells[:, [0, 1]], cells[:, [1, 2]], cells[:, [2, 0]]])
+    edges = numpy.sort(edges, axis=1)
+    edges, _, _ = unique_rows(edges)
+    return cells, edges
+
+
+def generate(geo, h0, f_scale=1.2, delta_t=0.2, show=False):
 
     x_step = h0
     y_step = h0 * numpy.sqrt(3) / 2
@@ -54,35 +65,19 @@ def generate():
     p = element_size_function(pts)
     pts = pts[:, numpy.random.rand(pts.shape[1]) < p]
 
-    # import matplotlib.pyplot as plt
-    # t = numpy.linspace(0.0, 2 * numpy.pi, 100)
-    # plt.plot(numpy.cos(t), numpy.sin(t), '-')
-    # plt.plot(pts[0], pts[1], '.')
-    # plt.axis("square")
-    # plt.show()
-    # exit(1)
+    cells, edges = _recell(pts, geo)
+    pts_old = pts.copy()
 
     while True:
-        if True:
-            # Re-Delauneyfication
-            # pts_old = pts.copy()
+        max_move = numpy.max(
+            numpy.sqrt((pts[0] - pts_old[0]) ** 2 + (pts[1] - pts_old[1]) ** 2)
+        )
+        if max_move > 1.0e-2:
+            pts_old = pts.copy()
+            cells, edges = _recell(pts, geo)
 
-            # compute Delaunay triangulation
-            tri = scipy.spatial.Delaunay(pts.T)
-            cells = tri.simplices.copy()
-
-            # kick out all cells whose barycenter is not in the geometry
-            bc = numpy.sum(pts[:, cells], axis=-1) / 3.0
-            cells = cells[geo.isinside(bc) < 0.0]
-
-            # Determine edges
-            edges = numpy.concatenate(
-                [cells[:, [0, 1]], cells[:, [1, 2]], cells[:, [2, 0]]]
-            )
-            edges = numpy.sort(edges, axis=1)
-            edges, _, _ = unique_rows(edges)
-
-        show(pts, cells, geo)
+        if show:
+            show_mesh(pts, cells, geo)
 
         edges_vec = pts[:, edges[:, 1]] - pts[:, edges[:, 0]]
         edge_lengths = numpy.sqrt(edges_vec[0] ** 2 + edges_vec[1] ** 2)
@@ -106,22 +101,23 @@ def generate():
         force = force_abs * edges_vec
 
         force_per_node = numpy.zeros(pts.T.shape)
-        fastfunc.add.at(force_per_node, edges[:, 0], -force)
-        fastfunc.add.at(force_per_node, edges[:, 1], +force)
+        fastfunc.add.at(force_per_node, edges[:, 0], -force.T)
+        fastfunc.add.at(force_per_node, edges[:, 1], +force.T)
 
-        print(pts[:, 7])
-        pts += delta_t * force_per_node.T
-        print(pts[:, 7])
-        exit(1)
+        update = delta_t * force_per_node.T
 
-        # show(pts, cells, geo)
+        pts_old2 = pts.copy()
 
+        pts += update
         # Some boundary points may have been pushed outside; bring them back onto the
         # boundary.
         is_outside = geo.isinside(pts) > 0.0
         pts[:, is_outside] = multi_newton(pts[:, is_outside], geo, tol=1.0e-10)
 
-        # show(pts, cells, geo)
+        max_move = numpy.max(
+            numpy.sqrt((pts[0] - pts_old2[0]) ** 2 + (pts[1] - pts_old2[1]) ** 2)
+        )
+        if max_move < 1.0e-5:
+            break
 
-    exit(1)
-    return None
+    return pts, cells
