@@ -3,13 +3,34 @@
 import numpy
 
 
-# class Union(object):
-#     def __init__(self, geometries):
-#         self.geometries = geometries
-#         return
-#
-#     def isinside(self, x):
-#         return
+class Union(object):
+    def __init__(self, geometries):
+        self.geometries = geometries
+        self.bounding_box = [
+            numpy.min([geo.bounding_box[0] for geo in geometries]),
+            numpy.max([geo.bounding_box[1] for geo in geometries]),
+            numpy.min([geo.bounding_box[2] for geo in geometries]),
+            numpy.max([geo.bounding_box[3] for geo in geometries]),
+        ]
+        return
+
+    def plot(self, color="b"):
+        for geo in self.geometries:
+            geo.plot()
+        return
+
+    def isinside(self, x):
+        return numpy.min([geo.isinside(x) for geo in self.geometries], axis=0)
+
+    def boundary_step(self, x):
+        # step for the is_inside with the smallest value
+        alpha = numpy.array([geo.isinside(x) for geo in self.geometries])
+        alpha[alpha < 0] = numpy.inf
+        idx = numpy.argmin(alpha, axis=0)
+        for k, geo in enumerate(self.geometries):
+            if numpy.any(idx == k):
+                x[:, idx == k] = geo.boundary_step(x[:, idx == k])
+        return x
 
 
 class Ellipse(object):
@@ -24,7 +45,12 @@ class Ellipse(object):
         import matplotlib.pyplot as plt
 
         t = numpy.linspace(0.0, 2 * numpy.pi, 100)
-        plt.plot(self.a * numpy.cos(t), self.b * numpy.sin(t), "-", color=color)
+        plt.plot(
+            self.x0[0] + self.a * numpy.cos(t),
+            self.x0[1] + self.b * numpy.sin(t),
+            "-",
+            color=color,
+        )
         return
 
     def isinside(self, x):
