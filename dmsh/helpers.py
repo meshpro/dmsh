@@ -23,10 +23,7 @@ def multi_newton(x0, geo, tol, max_num_steps=10):
     k = 0
     mask = numpy.abs(fx) > tol
     while numpy.any(mask):
-        jac = geo.jac2(x[mask].T)
-        hess = geo.hessian2(x[mask].T)
-        p = -numpy.linalg.solve(numpy.moveaxis(hess, -1, 0), jac.T)
-        x[mask] += p
+        x[mask] += geo.boundary_step(x[mask].T)
         fx = geo.isinside(x.T)
         mask = numpy.abs(fx) > tol
         k += 1
