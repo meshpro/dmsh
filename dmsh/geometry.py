@@ -12,51 +12,6 @@ import numpy
 #         return
 
 
-class Circle(object):
-    def __init__(self, x0, r):
-        self.x0 = x0
-        self.r = r
-        self.bounding_box = [x0[0] - r, x0[0] + r, x0[1] - r, x0[1] + r]
-        return
-
-    def plot(self, color="b"):
-        import matplotlib.pyplot as plt
-
-        t = numpy.linspace(0.0, 2 * numpy.pi, 100)
-        plt.plot(self.r * numpy.cos(t), self.r * numpy.sin(t), "-", color=color)
-        return
-
-    def isinside(self, x):
-        assert x.shape[0] == 2
-        return (x[0] - self.x0[0]) ** 2 + (x[1] - self.x0[1]) ** 2 - self.r ** 2
-
-    def jac2(self, x):
-        assert x.shape[0] == 2
-        # TODO self.x0
-        return numpy.array(
-            [
-                4 * (x[0] ** 2 + x[1] ** 2 - self.r ** 2) * x[0],
-                4 * (x[0] ** 2 + x[1] ** 2 - self.r ** 2) * x[1],
-            ]
-        )
-
-    def hessian2(self, x):
-        assert x.shape[0] == 2
-        # TODO self.x0
-        return numpy.array(
-            [
-                [
-                    8 * x[0] ** 2 + 4 * (x[0] ** 2 + x[1] ** 2 - self.r ** 2),
-                    8 * x[0] * x[1],
-                ],
-                [
-                    8 * x[0] * x[1],
-                    8 * x[1] ** 2 + 4 * (x[0] ** 2 + x[1] ** 2 - self.r ** 2),
-                ],
-            ]
-        )
-
-
 class Ellipse(object):
     def __init__(self, x0, a, b):
         self.x0 = x0
@@ -117,3 +72,9 @@ class Ellipse(object):
                 ],
             ]
         )
+
+
+class Circle(Ellipse):
+    def __init__(self, x0, r):
+        super(Circle, self).__init__(x0, r, r)
+        return
