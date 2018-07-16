@@ -46,7 +46,10 @@ def show(pts, cells, geo):
     plt.triplot(pts[:, 0], pts[:, 1], cells)
     plt.axis("square")
 
-    t = numpy.linspace(0.0, 2 * numpy.pi, 100)
-    plt.plot(numpy.cos(t), numpy.sin(t), "-", color="b")
+    try:
+        geo.plot()
+    except AttributeError:
+        pass
+
     plt.show()
     return
