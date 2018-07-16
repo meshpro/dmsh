@@ -33,6 +33,38 @@ class Union(object):
         return x
 
 
+class Intersection(object):
+    def __init__(self, geometries):
+        self.geometries = geometries
+        self.bounding_box = [
+            numpy.max([geo.bounding_box[0] for geo in geometries]),
+            numpy.min([geo.bounding_box[1] for geo in geometries]),
+            numpy.max([geo.bounding_box[2] for geo in geometries]),
+            numpy.min([geo.bounding_box[3] for geo in geometries]),
+        ]
+        return
+
+    def plot(self, color="b"):
+        for geo in self.geometries:
+            geo.plot()
+        return
+
+    def isinside(self, x):
+        return numpy.max([geo.isinside(x) for geo in self.geometries], axis=0)
+
+    def boundary_step(self, x):
+        # step for the is_inside with the smallest value
+        alpha = numpy.array([geo.isinside(x) for geo in self.geometries])
+        while numpy.any(alpha > 0):
+            alpha[alpha < 0] = numpy.inf
+            idx = numpy.argmin(alpha, axis=0)
+            for k, geo in enumerate(self.geometries):
+                if numpy.any(idx == k):
+                    x[:, idx == k] = geo.boundary_step(x[:, idx == k])
+            alpha = numpy.array([geo.isinside(x) for geo in self.geometries])
+        return x
+
+
 class Ellipse(object):
     def __init__(self, x0, a, b):
         self.x0 = x0
@@ -87,10 +119,38 @@ class Ellipse(object):
         return x + p.T
 
 
-class Circle(Ellipse):
+class Circle(object):
     def __init__(self, x0, r):
-        super(Circle, self).__init__(x0, r, r)
+        self.x0 = x0
+        self.r = r
+        self.bounding_box = [x0[0] - r, x0[0] + r, x0[1] - r, x0[1] + r]
         return
+
+    def plot(self, color="b"):
+        import matplotlib.pyplot as plt
+
+        t = numpy.linspace(0.0, 2 * numpy.pi, 100)
+        plt.plot(
+            self.x0[0] + self.r * numpy.cos(t),
+            self.x0[1] + self.r * numpy.sin(t),
+            "-",
+            color=color,
+        )
+        return
+
+    def isinside(self, x):
+        assert x.shape[0] == 2
+        return (
+            ((x[0] - self.x0[0]) / self.r) ** 2
+            + ((x[1] - self.x0[1]) / self.r) ** 2
+            - 1.0
+        )
+
+    def boundary_step(self, x):
+        # simply project onto the circle
+        x = (x.T - self.x0).T
+        r = numpy.sqrt(numpy.einsum("ij,ij->j", x, x))
+        return ((x / r * self.r).T + self.x0).T
 
 
 class Rectangle(object):

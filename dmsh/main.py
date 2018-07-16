@@ -112,7 +112,7 @@ def generate(geo, h0, f_scale=1.2, delta_t=0.2, show=False):
         pts[is_outside] = multi_newton(pts[is_outside], geo, tol=1.0e-10)
 
         diff = pts - pts_old2
-        move2 = numpy.max(numpy.einsum("ij,ij->i", diff, diff))
+        move2 = numpy.einsum("ij,ij->i", diff, diff)
         if numpy.all(move2 < 1.0e-5 ** 2):
             break
 
