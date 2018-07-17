@@ -109,7 +109,7 @@ def generate(geo, h0, f_scale=1.2, delta_t=0.2, show=False):
         # Some boundary points may have been pushed outside; bring them back onto the
         # boundary.
         is_outside = geo.isinside(pts.T) > 0.0
-        pts[is_outside] = multi_newton(pts[is_outside], geo, tol=1.0e-10)
+        pts[is_outside] = geo.boundary_step(pts[is_outside].T).T
 
         diff = pts - pts_old2
         move2 = numpy.einsum("ij,ij->i", diff, diff)

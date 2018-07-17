@@ -202,4 +202,4 @@ def test_intersection(h0=0.5, show=True):
 
 
 if __name__ == "__main__":
-    test_intersection(0.1, show=True)
+    test_intersection(0.1, show=False)
