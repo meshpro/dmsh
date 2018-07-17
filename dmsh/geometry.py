@@ -5,6 +5,49 @@ import numpy
 from .helpers import multi_newton
 
 
+class Rotation(object):
+    def __init__(self, geometry, angle):
+        self.geometry = geometry
+
+        self.R = numpy.array(
+            [
+                [+numpy.cos(angle), -numpy.sin(angle)],
+                [+numpy.sin(angle), +numpy.cos(angle)],
+            ]
+        )
+        self.R_inv = numpy.array(
+            [
+                [+numpy.cos(angle), +numpy.sin(angle)],
+                [-numpy.sin(angle), +numpy.cos(angle)],
+            ]
+        )
+
+        # bounding box
+        bb = geometry.bounding_box
+        corners = numpy.array(
+            [[bb[0], bb[2]], [bb[1], bb[2]], [bb[1], bb[3]], [bb[0], bb[3]]]
+        )
+        rotated_corners = numpy.dot(self.R, corners.T)
+        self.bounding_box = [
+            numpy.min(rotated_corners[0]),
+            numpy.max(rotated_corners[0]),
+            numpy.min(rotated_corners[1]),
+            numpy.max(rotated_corners[1]),
+        ]
+        return
+
+    def plot(self):
+        return
+
+    def isinside(self, x):
+        return self.geometry.isinside(numpy.dot(self.R_inv, x))
+
+    def boundary_step(self, x):
+        y = numpy.dot(self.R_inv, x)
+        y2 = self.geometry.boundary_step(y)
+        return numpy.dot(self.R, y2)
+
+
 class Union(object):
     def __init__(self, geometries):
         self.geometries = geometries
@@ -16,7 +59,7 @@ class Union(object):
         ]
         return
 
-    def plot(self, color="b"):
+    def plot(self):
         for geo in self.geometries:
             geo.plot()
         return
