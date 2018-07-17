@@ -236,3 +236,24 @@ class Rectangle(object):
         x[1] = numpy.maximum(x[1], numpy.full(x[1].shape, self.y0))
         x[1] = numpy.minimum(x[1], numpy.full(x[1].shape, self.y1))
         return x
+
+
+class HalfSpace(object):
+    def __init__(self, normal, alpha):
+        self.normal = normal
+        self.alpha = alpha
+        self.bounding_box = [-numpy.inf, +numpy.inf, -numpy.inf, +numpy.inf]
+        return
+
+    def plot(self):
+        return
+
+    def isinside(self, x):
+        assert x.shape[0] == 2
+        return self.alpha - numpy.dot(self.normal, x)
+
+    def boundary_step(self, x):
+        beta = self.alpha - numpy.dot(self.normal, x) / numpy.dot(
+            self.normal, self.normal
+        )
+        return x + numpy.multiply.outer(self.normal, beta)
