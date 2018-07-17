@@ -5,6 +5,23 @@ import numpy
 from .helpers import multi_newton
 
 
+class Scaling(object):
+    def __init__(self, geometry, alpha):
+        self.geometry = geometry
+        self.alpha = alpha
+        self.bounding_box = alpha * numpy.array(geometry.bounding_box)
+        return
+
+    def plot(self):
+        return
+
+    def isinside(self, x):
+        return self.geometry.isinside(x / self.alpha) * self.alpha
+
+    def boundary_step(self, x):
+        return self.geometry.boundary_step(x / self.alpha) * self.alpha
+
+
 class Translation(object):
     def __init__(self, geometry, v):
         self.geometry = geometry
