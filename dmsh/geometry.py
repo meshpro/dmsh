@@ -74,6 +74,40 @@ class Intersection(object):
         return x
 
 
+class Difference(object):
+    def __init__(self, geo0, geo1):
+        self.geo0 = geo0
+        self.geo1 = geo1
+        self.bounding_box = geo0.bounding_box
+        return
+
+    def plot(self, color="b"):
+        self.geo0.plot()
+        self.geo1.plot()
+        return
+
+    def isinside(self, x):
+        return numpy.max([self.geo0.isinside(x), -self.geo1.isinside(x)], axis=0)
+
+    def boundary_step(self, x, tol=1.0e-12):
+        # step for the is_inside with the smallest value
+        alpha0 = self.geo0.isinside(x)
+        alpha1 = self.geo1.isinside(x)
+        while numpy.any(alpha0 > tol) or numpy.any(alpha1 < -tol):
+            idx0 = alpha0 > tol
+            if numpy.any(idx0):
+                x[:, idx0] = self.geo0.boundary_step(x[:, idx0])
+                alpha0 = self.geo0.isinside(x)
+                continue
+
+            idx1 = alpha1 < -tol
+            if numpy.any(idx1):
+                x[:, idx1] = self.geo1.boundary_step(x[:, idx1])
+                alpha1 = self.geo1.isinside(x)
+                continue
+        return x
+
+
 class Ellipse(object):
     def __init__(self, x0, a, b):
         self.x0 = x0
