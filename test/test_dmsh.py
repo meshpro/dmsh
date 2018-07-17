@@ -13,8 +13,6 @@ def test_circle(h0=0.7, show=True):
     # import meshio
     # meshio.write_points_cells("out.vtk", X, {"triangle": cells})
 
-    X = X.T
-
     assert numpy.array_equal(
         cells,
         [
@@ -73,7 +71,6 @@ def test_ellipse(h0=0.7, show=True):
     )
 
     tol = 1.0e-12
-    X = X.T
     ref_norm1 = 22.435407673283038
     assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
     ref_norm2 = 5.121569408475023
@@ -111,7 +108,6 @@ def test_rectangle(h0=0.7, show=True):
     )
 
     tol = 1.0e-12
-    X = X.T
     ref_norm1 = 24.085394014345415
     assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
     ref_norm2 = 5.465484083486126
@@ -151,7 +147,6 @@ def test_union(h0=0.7, show=True):
     )
     tol = 1.0e-12
 
-    X = X.T
     ref_norm1 = 13.500627895090055
     assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
     ref_norm2 = 3.701888886208963
@@ -170,30 +165,26 @@ def test_intersection(h0=0.5, show=True):
     )
     X, cells = dmsh.generate(geo, h0, show=show)
 
-    print(cells)
     assert numpy.array_equal(
         cells,
         [
-            [4, 7, 3],
-            [7, 4, 8],
-            [0, 4, 3],
-            [4, 0, 1],
-            [5, 4, 1],
-            [4, 5, 8],
-            [9, 5, 6],
-            [5, 9, 8],
-            [5, 2, 6],
-            [2, 5, 1],
+            [4, 6, 3],
+            [7, 4, 5],
+            [6, 7, 8],
+            [7, 6, 4],
+            [1, 4, 3],
+            [4, 2, 5],
+            [2, 1, 0],
+            [1, 2, 4],
         ],
     )
     tol = 1.0e-12
 
-    X = X.T
-    ref_norm1 = 13.500627895090055
+    ref_norm1 = 6.2249301192580635
     assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
-    ref_norm2 = 3.701888886208963
+    ref_norm2 = 1.878680087718239
     assert abs(numpy.linalg.norm(X.flatten(), ord=2) - ref_norm2) < tol * ref_norm2
-    ref_norm_inf = 1.5
+    ref_norm_inf = 0.8578313012434592
     assert (
         abs(numpy.linalg.norm(X.flatten(), ord=numpy.inf) - ref_norm_inf)
         < tol * ref_norm_inf

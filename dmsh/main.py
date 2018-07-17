@@ -4,7 +4,7 @@ import fastfunc
 import numpy
 import scipy.spatial
 
-from .helpers import unique_rows, multi_newton, show as show_mesh
+from .helpers import unique_rows, show as show_mesh
 
 
 def element_size_function(x):

@@ -14,17 +14,17 @@ def unique_rows(a):
     return a_unique, inv, cts
 
 
-def multi_newton(x0, geo, tol, max_num_steps=10):
+def multi_newton(x0, is_inside, boundary_step, tol, max_num_steps=10):
     """Newton's minimization method for multiple starting points.
     """
     x = x0.copy()
-    fx = geo.isinside(x.T)
+    fx = is_inside(x.T)
 
     k = 0
     mask = numpy.abs(fx) > tol
     while numpy.any(mask):
-        x[mask] = geo.boundary_step(x[mask].T).T
-        fx = geo.isinside(x.T)
+        x[mask] = boundary_step(x[mask].T).T
+        fx = is_inside(x.T)
         mask = numpy.abs(fx) > tol
         k += 1
         if k >= max_num_steps:

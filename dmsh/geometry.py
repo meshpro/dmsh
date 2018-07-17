@@ -2,6 +2,8 @@
 #
 import numpy
 
+from .helpers import multi_newton
+
 
 class Union(object):
     def __init__(self, geometries):
@@ -100,9 +102,7 @@ class Ellipse(object):
             - 1.0
         )
 
-    def boundary_step(self, x):
-        raise NotImplementedError("TODO")
-
+    def _boundary_step(self, x):
         ax = (x[0] - self.x0[0]) / self.a
         ay = (x[1] - self.x0[1]) / self.b
 
@@ -126,6 +126,11 @@ class Ellipse(object):
 
         p = -numpy.linalg.solve(numpy.moveaxis(hess, -1, 0), jac.T)
         return x + p.T
+
+    def boundary_step(self, x):
+        return multi_newton(
+            x.T, self.isinside, self._boundary_step, 1.0e-10, max_num_steps=10
+        ).T
 
 
 class Circle(object):
