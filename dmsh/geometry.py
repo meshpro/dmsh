@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 import numpy
+import polypy
 
 from .helpers import multi_newton
 
@@ -378,3 +379,29 @@ class HalfSpace(object):
             self.normal, self.normal
         )
         return x + numpy.multiply.outer(self.normal, beta)
+
+
+class Polygon(object):
+    def __init__(self, points):
+        self.points = numpy.array(points)
+        self.bounding_box = [
+            numpy.min(self.points[:, 0]),
+            numpy.max(self.points[:, 0]),
+            numpy.min(self.points[:, 1]),
+            numpy.max(self.points[:, 1]),
+        ]
+        self.polygon = polypy.Polygon(points)
+        return
+
+    def plot(self):
+        import matplotlib.pyplot as plt
+
+        pts = numpy.concatenate([self.points.T, [self.points[:, 0]]])
+        plt.plot(pts[0], pts[1], "-")
+        return
+
+    def isinside(self, x):
+        return self.polygon.signed_squared_distance(x.T)
+
+    def boundary_step(self, x):
+        return self.polygon.closest_points(x.T).T
