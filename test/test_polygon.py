@@ -50,4 +50,4 @@ def test(h0=0.5, show=True):
 
 
 if __name__ == "__main__":
-    test(h0=0.05)
+    test(h0=0.2)

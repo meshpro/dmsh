@@ -25,6 +25,7 @@ class Stretch(object):
             numpy.min(stretched_corners[1]),
             numpy.max(stretched_corners[1]),
         ]
+        self.feature_points = []
         return
 
     def plot(self):
@@ -49,6 +50,7 @@ class Scaling(object):
         self.geometry = geometry
         self.alpha = alpha
         self.bounding_box = alpha * numpy.array(geometry.bounding_box)
+        self.feature_points = []
         return
 
     def plot(self):
@@ -72,6 +74,7 @@ class Translation(object):
             geometry.bounding_box[2] + v[1],
             geometry.bounding_box[3] + v[1],
         ]
+        self.feature_points = []
         return
 
     def plot(self):
@@ -136,6 +139,7 @@ class Union(object):
             numpy.min([geo.bounding_box[2] for geo in geometries]),
             numpy.max([geo.bounding_box[3] for geo in geometries]),
         ]
+        self.feature_points = []
         return
 
     def plot(self):
@@ -166,6 +170,7 @@ class Intersection(object):
             numpy.max([geo.bounding_box[2] for geo in geometries]),
             numpy.min([geo.bounding_box[3] for geo in geometries]),
         ]
+        self.feature_points = []
         return
 
     def plot(self, color="b"):
@@ -201,6 +206,7 @@ class Difference(object):
         self.geo0 = geo0
         self.geo1 = geo1
         self.bounding_box = geo0.bounding_box
+        self.feature_points = []
         return
 
     def plot(self, color="b"):
@@ -236,6 +242,7 @@ class Ellipse(object):
         self.a = a
         self.b = b
         self.bounding_box = [x0[0] - a, x0[0] + a, x0[1] - b, x0[1] + b]
+        self.feature_points = []
         return
 
     def plot(self, color="b"):
@@ -294,6 +301,7 @@ class Circle(object):
         self.x0 = x0
         self.r = r
         self.bounding_box = [x0[0] - r, x0[0] + r, x0[1] - r, x0[1] + r]
+        self.feature_points = []
         return
 
     def plot(self, color="b"):
@@ -323,41 +331,40 @@ class Circle(object):
         return ((x / r * self.r).T + self.x0).T
 
 
-class Rectangle(object):
-    def __init__(self, x0, x1, y0, y1):
-        self.x0 = x0
-        self.x1 = x1
-        self.y0 = y0
-        self.y1 = y1
-        self.bounding_box = [x0, x1, y0, y1]
+class Polygon(object):
+    def __init__(self, points):
+        points = numpy.array(points)
+        self.bounding_box = [
+            numpy.min(points[:, 0]),
+            numpy.max(points[:, 0]),
+            numpy.min(points[:, 1]),
+            numpy.max(points[:, 1]),
+        ]
+        self.polygon = polypy.Polygon(points)
+        self.feature_points = points
         return
 
-    def plot(self, color="b"):
-        import matplotlib.pyplot as plt
-
-        plt.plot(
-            [self.x0, self.x1, self.x1, self.x0, self.x0],
-            [self.y0, self.y0, self.y1, self.y1, self.y0],
-            "-",
-            color=color,
-        )
+    def plot(self):
+        self.polygon.plot()
         return
 
     def isinside(self, x):
-        assert x.shape[0] == 2
-        return numpy.max(
-            numpy.array(
-                [self.x0 - x[0], x[0] - self.x1, self.y0 - x[1], x[1] - self.y1]
-            ),
-            axis=0,
-        )
+        return self.polygon.signed_squared_distance(x.T)
 
     def boundary_step(self, x):
-        x[0] = numpy.maximum(x[0], numpy.full(x[0].shape, self.x0))
-        x[0] = numpy.minimum(x[0], numpy.full(x[0].shape, self.x1))
-        x[1] = numpy.maximum(x[1], numpy.full(x[1].shape, self.y0))
-        x[1] = numpy.minimum(x[1], numpy.full(x[1].shape, self.y1))
-        return x
+        return self.polygon.closest_points(x.T).T
+
+
+class Rectangle(Polygon):
+    def __init__(self, x0, x1, y0, y1):
+        points = numpy.array([
+            [x0, y0],
+            [x1, y0],
+            [x1, y1],
+            [x0, y1],
+        ])
+        super(Rectangle, self).__init__(points)
+        return
 
 
 class HalfSpace(object):
@@ -365,6 +372,7 @@ class HalfSpace(object):
         self.normal = normal
         self.alpha = alpha
         self.bounding_box = [-numpy.inf, +numpy.inf, -numpy.inf, +numpy.inf]
+        self.feature_points = []
         return
 
     def plot(self):
@@ -379,29 +387,3 @@ class HalfSpace(object):
             self.normal, self.normal
         )
         return x + numpy.multiply.outer(self.normal, beta)
-
-
-class Polygon(object):
-    def __init__(self, points):
-        self.points = numpy.array(points)
-        self.bounding_box = [
-            numpy.min(self.points[:, 0]),
-            numpy.max(self.points[:, 0]),
-            numpy.min(self.points[:, 1]),
-            numpy.max(self.points[:, 1]),
-        ]
-        self.polygon = polypy.Polygon(points)
-        return
-
-    def plot(self):
-        import matplotlib.pyplot as plt
-
-        pts = numpy.concatenate([self.points.T, [self.points[:, 0]]])
-        plt.plot(pts[0], pts[1], "-")
-        return
-
-    def isinside(self, x):
-        return self.polygon.signed_squared_distance(x.T)
-
-    def boundary_step(self, x):
-        return self.polygon.closest_points(x.T).T
