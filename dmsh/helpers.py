@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 #
-import matplotlib.pyplot as plt
 import numpy
 
 
@@ -54,13 +53,15 @@ def show(pts, cells, geo):
 
 
 def find_feature_points(geo0, geo1, num_steps=10):
+    """Given two geometries with their parameterization, this methods finds feature
+    points, i.e., points where the boundaries meet. This is done by casting a net over
+    the parameter space and performing `num_steps` Newton steps. Found solutions are
+    checked for uniqueness.
+    """
+    # Throw a net
     t0, t1 = numpy.meshgrid(numpy.linspace(0.0, 1.0, 11), numpy.linspace(0.0, 1.0, 11))
     t = numpy.array([t0, t1]).reshape(2, -1)
     # t = numpy.random.rand(2, 100)
-
-    plt.plot(t[0], t[1], ".")
-    plt.axis("square")
-    plt.show()
 
     tol = 1.0e-15
 
@@ -78,7 +79,7 @@ def find_feature_points(geo0, geo1, num_steps=10):
             t = t[:, ~is_sol]
             f_t = f_t[:, ~is_sol]
 
-        jac_t = numpy.stack([geo0.dp_dt(t[0]), -geo1.dp_dt(t[1])])
+        jac_t = numpy.moveaxis(numpy.stack([geo0.dp_dt(t[0]), -geo1.dp_dt(t[1])]), 0, 1)
 
         # Kick out singular matrices
         det = jac_t[0, 0] * jac_t[1, 1] - jac_t[0, 1] * jac_t[1, 0]
@@ -88,24 +89,20 @@ def find_feature_points(geo0, geo1, num_steps=10):
             f_t = f_t[:, ~is_singular]
             jac_t = jac_t[..., ~is_singular]
 
+        # Simply make it explicitly.
         sols = []
         for k in range(f_t.shape[-1]):
-            sols.append(numpy.linalg.solve(jac_t[..., k].T, f_t[:, k]))
+            sols.append(numpy.linalg.solve(jac_t[..., k], f_t[:, k]))
         sols = numpy.array(sols).T
 
+        # Newton step
         t -= sols
 
         # Kick out everything that leaves the unit square
         still_good = numpy.all((0.0 <= t) & (t <= 1.0), axis=0)
         t = t[:, still_good]
 
-        # plt.plot(t[0], t[1], '.')
-        # plt.axis("square")
-        # plt.show()
-
-    solutions = numpy.column_stack(solutions)
-    unique_sols = unique_float_cols(solutions)
-
+    unique_sols = unique_float_cols(numpy.column_stack(solutions))
     points = geo0.parametrization(unique_sols[0])
     return points.T
 

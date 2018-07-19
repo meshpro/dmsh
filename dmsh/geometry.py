@@ -174,7 +174,10 @@ class Intersection(object):
             numpy.max([geo.bounding_box[2] for geo in geometries]),
             numpy.min([geo.bounding_box[3] for geo in geometries]),
         ]
-        self.feature_points = numpy.array([])
+
+        # TODO do for more geometries
+        if len(geometries) == 2:
+            self.feature_points = find_feature_points(geometries[0], geometries[1])
         return
 
     def plot(self, color="b"):
@@ -210,7 +213,7 @@ class Difference(object):
         self.geo0 = geo0
         self.geo1 = geo1
         self.bounding_box = geo0.bounding_box
-        self.feature_points = numpy.array([])
+        self.feature_points = find_feature_points(geo0, geo1)
         return
 
     def plot(self, color="b"):
