@@ -3,7 +3,7 @@
 import numpy
 import polypy
 
-from .helpers import multi_newton
+from .helpers import multi_newton, find_feature_points
 
 
 class Stretch(object):
@@ -140,7 +140,10 @@ class Union(object):
             numpy.min([geo.bounding_box[2] for geo in geometries]),
             numpy.max([geo.bounding_box[3] for geo in geometries]),
         ]
-        self.feature_points = numpy.array([])
+
+        # TODO do for more geometries
+        if len(geometries) == 2:
+            self.feature_points = find_feature_points(geometries[0], geometries[1])
         return
 
     def plot(self):
@@ -330,6 +333,18 @@ class Circle(object):
         x = (x.T - self.x0).T
         r = numpy.sqrt(numpy.einsum("ij,ij->j", x, x))
         return ((x / r * self.r).T + self.x0).T
+
+    def parametrization(self, t):
+        v = numpy.array([numpy.cos(2 * numpy.pi * t), numpy.sin(2 * numpy.pi * t)])
+        return ((self.r * v).T + self.x0).T
+
+    def dp_dt(self, t):
+        return (
+            self.r
+            * 2
+            * numpy.pi
+            * numpy.array([-numpy.sin(2 * numpy.pi * t), numpy.cos(2 * numpy.pi * t)])
+        )
 
 
 class Polygon(object):
