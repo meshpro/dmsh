@@ -5,7 +5,7 @@ import numpy
 import dmsh
 
 
-def test(h0=0.5, show=True):
+def test(h0=0.8, show=True):
     geo = dmsh.geometry.Polygon(
         [
             [0.0, 0.0],
@@ -22,24 +22,23 @@ def test(h0=0.5, show=True):
     assert numpy.array_equal(
         cells,
         [
-            [8, 5, 10],
-            [0, 1, 3],
-            [0, 4, 2],
-            [4, 0, 3],
-            [5, 4, 3],
-            [4, 5, 8],
-            [5, 9, 10],
-            [6, 5, 3],
-            [1, 6, 3],
-            [9, 6, 7],
-            [6, 9, 5],
+            [8, 1, 3],
+            [9, 7, 3],
+            [8, 7, 0],
+            [7, 8, 3],
+            [11, 10, 4],
+            [10, 9, 3],
+            [1, 2, 3],
+            [10, 6, 9],
+            [6, 10, 11],
+            [6, 11, 5],
         ],
     )
 
     tol = 1.0e-12
-    ref_norm1 = 19.42381978164662
+    ref_norm1 = 19.932424285039232
     assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
-    ref_norm2 = 5.020189840491164
+    ref_norm2 = 5.007357002540644
     assert abs(numpy.linalg.norm(X.flatten(), ord=2) - ref_norm2) < tol * ref_norm2
     ref_norm_inf = 2.0
     assert (

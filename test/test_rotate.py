@@ -11,7 +11,6 @@ def test(h0=0.9, show=True):
     )
     X, cells = dmsh.generate(geo, h0, show=show)
 
-    print(cells)
     assert numpy.array_equal(
         cells, [[1, 5, 2], [0, 1, 2], [3, 1, 4], [3, 5, 1], [6, 3, 4], [5, 3, 6]]
     )

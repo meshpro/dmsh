@@ -25,7 +25,7 @@ class Stretch(object):
             numpy.min(stretched_corners[1]),
             numpy.max(stretched_corners[1]),
         ]
-        self.feature_points = []
+        self.feature_points = numpy.array([])
         return
 
     def plot(self):
@@ -50,7 +50,7 @@ class Scaling(object):
         self.geometry = geometry
         self.alpha = alpha
         self.bounding_box = alpha * numpy.array(geometry.bounding_box)
-        self.feature_points = []
+        self.feature_points = numpy.array([])
         return
 
     def plot(self):
@@ -74,7 +74,7 @@ class Translation(object):
             geometry.bounding_box[2] + v[1],
             geometry.bounding_box[3] + v[1],
         ]
-        self.feature_points = []
+        self.feature_points = numpy.array([])
         return
 
     def plot(self):
@@ -116,6 +116,7 @@ class Rotation(object):
             numpy.min(rotated_corners[1]),
             numpy.max(rotated_corners[1]),
         ]
+        self.feature_points = numpy.array([])
         return
 
     def plot(self):
@@ -139,7 +140,7 @@ class Union(object):
             numpy.min([geo.bounding_box[2] for geo in geometries]),
             numpy.max([geo.bounding_box[3] for geo in geometries]),
         ]
-        self.feature_points = []
+        self.feature_points = numpy.array([])
         return
 
     def plot(self):
@@ -170,7 +171,7 @@ class Intersection(object):
             numpy.max([geo.bounding_box[2] for geo in geometries]),
             numpy.min([geo.bounding_box[3] for geo in geometries]),
         ]
-        self.feature_points = []
+        self.feature_points = numpy.array([])
         return
 
     def plot(self, color="b"):
@@ -206,7 +207,7 @@ class Difference(object):
         self.geo0 = geo0
         self.geo1 = geo1
         self.bounding_box = geo0.bounding_box
-        self.feature_points = []
+        self.feature_points = numpy.array([])
         return
 
     def plot(self, color="b"):
@@ -242,7 +243,7 @@ class Ellipse(object):
         self.a = a
         self.b = b
         self.bounding_box = [x0[0] - a, x0[0] + a, x0[1] - b, x0[1] + b]
-        self.feature_points = []
+        self.feature_points = numpy.array([])
         return
 
     def plot(self, color="b"):
@@ -301,7 +302,7 @@ class Circle(object):
         self.x0 = x0
         self.r = r
         self.bounding_box = [x0[0] - r, x0[0] + r, x0[1] - r, x0[1] + r]
-        self.feature_points = []
+        self.feature_points = numpy.array([])
         return
 
     def plot(self, color="b"):
@@ -357,12 +358,7 @@ class Polygon(object):
 
 class Rectangle(Polygon):
     def __init__(self, x0, x1, y0, y1):
-        points = numpy.array([
-            [x0, y0],
-            [x1, y0],
-            [x1, y1],
-            [x0, y1],
-        ])
+        points = numpy.array([[x0, y0], [x1, y0], [x1, y1], [x0, y1]])
         super(Rectangle, self).__init__(points)
         return
 
@@ -372,7 +368,7 @@ class HalfSpace(object):
         self.normal = normal
         self.alpha = alpha
         self.bounding_box = [-numpy.inf, +numpy.inf, -numpy.inf, +numpy.inf]
-        self.feature_points = []
+        self.feature_points = numpy.array([])
         return
 
     def plot(self):

@@ -63,6 +63,11 @@ def generate(geo, h0, f_scale=1.2, delta_t=0.2, show=False):
     p = element_size_function(pts)
     pts = pts[numpy.random.rand(pts.shape[0]) < p]
 
+    # Add feature points
+    num_feature_points = geo.feature_points.shape[0]
+    if num_feature_points > 0:
+        pts = numpy.concatenate([geo.feature_points, pts])
+
     cells, edges = _recell(pts, geo)
     pts_old = pts.copy()
 
@@ -105,7 +110,7 @@ def generate(geo, h0, f_scale=1.2, delta_t=0.2, show=False):
 
         pts_old2 = pts.copy()
 
-        pts += update
+        pts[num_feature_points:] += update[num_feature_points:]
         # Some boundary points may have been pushed outside; bring them back onto the
         # boundary.
         is_outside = geo.isinside(pts.T) > 0.0

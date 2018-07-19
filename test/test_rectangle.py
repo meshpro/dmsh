@@ -5,34 +5,32 @@ import numpy
 import dmsh
 
 
-def test_rectangle(h0=0.7, show=True):
+def test_rectangle(h0=0.8, show=True):
     geo = dmsh.geometry.Rectangle(-1.0, +2.0, -1.0, +1.0)
     X, cells = dmsh.generate(geo, h0, show=show)
 
     assert numpy.array_equal(
         cells,
         [
-            [2, 7, 6],
-            [1, 2, 6],
-            [1, 5, 0],
-            [5, 1, 6],
-            [3, 7, 2],
-            [8, 3, 4],
-            [3, 8, 7],
-            [7, 11, 6],
-            [11, 10, 6],
-            [5, 10, 9],
-            [10, 5, 6],
-            [12, 11, 7],
-            [12, 8, 13],
-            [8, 12, 7],
+            [5, 6, 8],
+            [9, 6, 1],
+            [6, 9, 8],
+            [4, 7, 0],
+            [4, 5, 8],
+            [7, 4, 8],
+            [12, 11, 8],
+            [12, 9, 2],
+            [9, 12, 8],
+            [7, 10, 3],
+            [10, 7, 8],
+            [11, 10, 8],
         ],
     )
 
     tol = 1.0e-12
-    ref_norm1 = 24.085394014345415
+    ref_norm1 = 23.50010568219156
     assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
-    ref_norm2 = 5.465484083486126
+    ref_norm2 = 5.38518180031268
     assert abs(numpy.linalg.norm(X.flatten(), ord=2) - ref_norm2) < tol * ref_norm2
     ref_norm_inf = 2.0
     assert (
