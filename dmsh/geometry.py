@@ -141,7 +141,17 @@ class Union(object):
             numpy.max([geo.bounding_box[3] for geo in geometries]),
         ]
 
-        self.feature_points = find_feature_points(geometries)
+        fp = [geo.feature_points for geo in geometries]
+        fp.append(find_feature_points(geometries))
+        self.feature_points = numpy.concatenate(fp)
+
+        # Only keep the feature points on the outer boundary
+        alpha = numpy.array([
+            geo.isinside(self.feature_points.T) for geo in geometries
+        ])
+        tol = 1.0e-5
+        is_on_boundary = numpy.all(alpha > -tol, axis=0)
+        self.feature_points = self.feature_points[is_on_boundary]
         return
 
     def plot(self):
@@ -354,6 +364,22 @@ class Circle(object):
         return ((x / r * self.r).T + self.x0).T
 
 
+class LineSegmentPath(object):
+    def __init__(self, x0, x1):
+        self.x0 = x0
+        self.x1 = x1
+        return
+
+    def p(self, t):
+        return numpy.multiply.outer(self.x0, 1 - t) + numpy.multiply.outer(self.x1, t)
+
+    def dp_dt(self, t):
+        ones = numpy.ones(t.shape)
+        return numpy.multiply.outer(self.x0, -ones) + numpy.multiply.outer(
+            self.x1, ones
+        )
+
+
 class Polygon(object):
     def __init__(self, points):
         points = numpy.array(points)
@@ -365,6 +391,11 @@ class Polygon(object):
         ]
         self.polygon = polypy.Polygon(points)
         self.feature_points = points
+
+        self.paths = [
+            LineSegmentPath(p0, p1)
+            for p0, p1 in zip(points, numpy.roll(points, -1, axis=0))
+        ]
         return
 
     def plot(self):
@@ -385,15 +416,10 @@ class Rectangle(Polygon):
         return
 
 
-class HalfSpacePath(object):
-    def __init__(self, normal, alpha):
-        self.normal = normal
-        self.alpha = alpha
-
-        self.tangent = numpy.array([-self.normal[1], self.normal[0]])
-
-        # One point on the line:
-        self.v = self.normal / numpy.dot(self.normal, self.normal) * self.alpha
+class LinePath(object):
+    def __init__(self, v, tangent):
+        self.v = v
+        self.tangent = tangent
         return
 
     def p(self, t):
@@ -420,7 +446,11 @@ class HalfSpace(object):
         self.bounding_box = [-numpy.inf, +numpy.inf, -numpy.inf, +numpy.inf]
         self.feature_points = numpy.array([])
 
-        self.paths = [HalfSpacePath(normal, alpha)]
+        # One point on the line:
+        v = self.normal / numpy.dot(self.normal, self.normal) * self.alpha
+        tangent = numpy.array([-self.normal[1], self.normal[0]])
+
+        self.paths = [LinePath(v, tangent)]
         return
 
     def plot(self):

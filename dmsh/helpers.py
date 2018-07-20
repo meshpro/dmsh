@@ -55,19 +55,22 @@ def show(pts, cells, geo):
 def find_feature_points(geometries, num_steps=10):
     n = len(geometries)
 
-    # collect paths
-    paths = [path for geo in geometries for path in geo.paths]
-    points = []
-    for i in range(n):
-        for j in range(i + 1, n):
-            points.append(
-                _find_feature_points_between_two_paths(
-                    paths[i], paths[j], num_steps
-                )
-            )
+    # collect path pairs
+    path_pairs = [
+        [item0, item1]
+        for i in range(n)
+        for j in range(i + 1, n)
+        for item0 in geometries[i].paths
+        for item1 in geometries[j].paths
+    ]
 
-    points = numpy.column_stack(points)
+    points = numpy.column_stack([
+        _find_feature_points_between_two_paths(path0, path1, num_steps)
+        for path0, path1 in path_pairs
+    ])
+
     unique_points = unique_float_cols(points)
+
     return unique_points.T
 
 
@@ -104,7 +107,9 @@ def _find_feature_points_between_two_paths(path0, path1, num_steps):
             t = t[:, ~is_sol]
             f_t = f_t[:, ~is_sol]
 
-        jac_t = numpy.moveaxis(numpy.stack([path0.dp_dt(t[0]), -path1.dp_dt(t[1])]), 0, 1)
+        jac_t = numpy.moveaxis(
+            numpy.stack([path0.dp_dt(t[0]), -path1.dp_dt(t[1])]), 0, 1
+        )
 
         # Kick out singular matrices
         det = jac_t[0, 0] * jac_t[1, 1] - jac_t[0, 1] * jac_t[1, 0]
@@ -127,9 +132,13 @@ def _find_feature_points_between_two_paths(path0, path1, num_steps):
         still_good = numpy.all((0.0 <= t) & (t <= 1.0), axis=0)
         t = t[:, still_good]
 
-    unique_sols = unique_float_cols(numpy.column_stack(solutions))
-    points0 = path0.p(unique_sols[0])
-    # points1 = path1.p(unique_sols[1])
+    if solutions:
+        unique_sols = unique_float_cols(numpy.column_stack(solutions))
+        points0 = path0.p(unique_sols[0])
+        # points1 = path1.p(unique_sols[1])
+    else:
+        points0 = numpy.array([[], []])
+
     return points0
 
 
