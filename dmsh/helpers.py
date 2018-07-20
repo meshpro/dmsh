@@ -54,12 +54,15 @@ def show(pts, cells, geo):
 
 def find_feature_points(geometries, num_steps=10):
     n = len(geometries)
+
+    # collect paths
+    paths = [path for geo in geometries for path in geo.paths]
     points = []
     for i in range(n):
         for j in range(i + 1, n):
             points.append(
-                _find_feature_points_between_two_geos(
-                    geometries[i], geometries[j], num_steps
+                _find_feature_points_between_two_paths(
+                    paths[i], paths[j], num_steps
                 )
             )
 
@@ -68,7 +71,7 @@ def find_feature_points(geometries, num_steps=10):
     return unique_points.T
 
 
-def _find_feature_points_between_two_geos(geo0, geo1, num_steps):
+def _find_feature_points_between_two_paths(path0, path1, num_steps):
     """Given two geometries with their parameterization, this methods finds feature
     points, i.e., points where the boundaries meet. This is done by casting a net over
     the parameter space and performing `num_steps` Newton steps. Found solutions are
@@ -84,7 +87,7 @@ def _find_feature_points_between_two_geos(geo0, geo1, num_steps):
     # multi_newton(x0, is_inside, boundary_step, tol, max_num_steps=10):
     solutions = []
     for k in range(num_steps):
-        f_t = geo0.parametrization(t[0]) - geo1.parametrization(t[1])
+        f_t = path0.p(t[0]) - path1.p(t[1])
 
         # remove all inf values
         is_infinite = numpy.any(numpy.isinf(f_t), axis=0)
@@ -101,7 +104,7 @@ def _find_feature_points_between_two_geos(geo0, geo1, num_steps):
             t = t[:, ~is_sol]
             f_t = f_t[:, ~is_sol]
 
-        jac_t = numpy.moveaxis(numpy.stack([geo0.dp_dt(t[0]), -geo1.dp_dt(t[1])]), 0, 1)
+        jac_t = numpy.moveaxis(numpy.stack([path0.dp_dt(t[0]), -path1.dp_dt(t[1])]), 0, 1)
 
         # Kick out singular matrices
         det = jac_t[0, 0] * jac_t[1, 1] - jac_t[0, 1] * jac_t[1, 0]
@@ -125,8 +128,8 @@ def _find_feature_points_between_two_geos(geo0, geo1, num_steps):
         t = t[:, still_good]
 
     unique_sols = unique_float_cols(numpy.column_stack(solutions))
-    points0 = geo0.parametrization(unique_sols[0])
-    # points1 = geo1.parametrization(unique_sols[1])
+    points0 = path0.p(unique_sols[0])
+    # points1 = path1.p(unique_sols[1])
     return points0
 
 

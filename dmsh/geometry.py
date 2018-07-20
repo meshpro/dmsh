@@ -299,11 +299,31 @@ class Ellipse(object):
         ).T
 
 
+class CirclePath(object):
+    def __init__(self, x0, r):
+        self.x0 = x0
+        self.r = r
+        return
+
+    def p(self, t):
+        v = numpy.array([numpy.cos(2 * numpy.pi * t), numpy.sin(2 * numpy.pi * t)])
+        return ((self.r * v).T + self.x0).T
+
+    def dp_dt(self, t):
+        return (
+            self.r
+            * 2
+            * numpy.pi
+            * numpy.array([-numpy.sin(2 * numpy.pi * t), numpy.cos(2 * numpy.pi * t)])
+        )
+
+
 class Circle(object):
     def __init__(self, x0, r):
         self.x0 = x0
         self.r = r
         self.bounding_box = [x0[0] - r, x0[0] + r, x0[1] - r, x0[1] + r]
+        self.paths = [CirclePath(x0, r)]
         self.feature_points = numpy.array([])
         return
 
@@ -332,18 +352,6 @@ class Circle(object):
         x = (x.T - self.x0).T
         r = numpy.sqrt(numpy.einsum("ij,ij->j", x, x))
         return ((x / r * self.r).T + self.x0).T
-
-    def parametrization(self, t):
-        v = numpy.array([numpy.cos(2 * numpy.pi * t), numpy.sin(2 * numpy.pi * t)])
-        return ((self.r * v).T + self.x0).T
-
-    def dp_dt(self, t):
-        return (
-            self.r
-            * 2
-            * numpy.pi
-            * numpy.array([-numpy.sin(2 * numpy.pi * t), numpy.cos(2 * numpy.pi * t)])
-        )
 
 
 class Polygon(object):
@@ -377,7 +385,7 @@ class Rectangle(Polygon):
         return
 
 
-class HalfSpace(object):
+class HalfSpacePath(object):
     def __init__(self, normal, alpha):
         self.normal = normal
         self.alpha = alpha
@@ -386,9 +394,33 @@ class HalfSpace(object):
 
         # One point on the line:
         self.v = self.normal / numpy.dot(self.normal, self.normal) * self.alpha
+        return
+
+    def p(self, t):
+        """This parametrization of the line is (inf, inf) for t=0 and t=1.
+        """
+        # Don't warn on division by 0
+        with numpy.errstate(divide="ignore"):
+            out = (
+                numpy.multiply.outer(self.tangent, (2 * t - 1) / t / (1 - t)).T + self.v
+            ).T
+        return out
+
+    def dp_dt(self, t):
+        with numpy.errstate(divide="ignore"):
+            dt = 1 / t ** 2 + 1 / (1 - t) ** 2
+        return numpy.multiply.outer(self.tangent, dt)
+
+
+class HalfSpace(object):
+    def __init__(self, normal, alpha):
+        self.normal = normal
+        self.alpha = alpha
 
         self.bounding_box = [-numpy.inf, +numpy.inf, -numpy.inf, +numpy.inf]
         self.feature_points = numpy.array([])
+
+        self.paths = [HalfSpacePath(normal, alpha)]
         return
 
     def plot(self):
@@ -403,18 +435,3 @@ class HalfSpace(object):
             self.normal, self.normal
         )
         return x + numpy.multiply.outer(self.normal, beta)
-
-    def parametrization(self, t):
-        """This parametrization of the line is (inf, inf) for t=0 and t=1.
-        """
-        # Don't warn on division by 0
-        with numpy.errstate(divide="ignore"):
-            out = (
-                numpy.multiply.outer(self.tangent, (2 * t - 1) / t / (1 - t)).T + self.v
-            ).T
-        return out
-
-    def dp_dt(self, t):
-        with numpy.errstate(divide="ignore"):
-            dt = 1 / t ** 2 + 1 / (1 - t) ** 2
-        return numpy.multiply.outer(self.tangent, dt)
