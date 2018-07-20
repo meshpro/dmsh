@@ -209,7 +209,7 @@ class Difference(object):
         self.geo0 = geo0
         self.geo1 = geo1
         self.bounding_box = geo0.bounding_box
-        self.feature_points = find_feature_points(geo0, geo1)
+        self.feature_points = find_feature_points([geo0, geo1])
         return
 
     def plot(self, color="b"):
@@ -381,6 +381,12 @@ class HalfSpace(object):
     def __init__(self, normal, alpha):
         self.normal = normal
         self.alpha = alpha
+
+        self.tangent = numpy.array([-self.normal[1], self.normal[0]])
+
+        # One point on the line:
+        self.v = self.normal / numpy.dot(self.normal, self.normal) * self.alpha
+
         self.bounding_box = [-numpy.inf, +numpy.inf, -numpy.inf, +numpy.inf]
         self.feature_points = numpy.array([])
         return
@@ -397,3 +403,18 @@ class HalfSpace(object):
             self.normal, self.normal
         )
         return x + numpy.multiply.outer(self.normal, beta)
+
+    def parametrization(self, t):
+        """This parametrization of the line is (inf, inf) for t=0 and t=1.
+        """
+        # Don't warn on division by 0
+        with numpy.errstate(divide="ignore"):
+            out = (
+                numpy.multiply.outer(self.tangent, (2 * t - 1) / t / (1 - t)).T + self.v
+            ).T
+        return out
+
+    def dp_dt(self, t):
+        with numpy.errstate(divide="ignore"):
+            dt = 1 / t ** 2 + 1 / (1 - t) ** 2
+        return numpy.multiply.outer(self.tangent, dt)

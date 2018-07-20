@@ -86,6 +86,12 @@ def _find_feature_points_between_two_geos(geo0, geo1, num_steps):
     for k in range(num_steps):
         f_t = geo0.parametrization(t[0]) - geo1.parametrization(t[1])
 
+        # remove all inf values
+        is_infinite = numpy.any(numpy.isinf(f_t), axis=0)
+        if numpy.any(is_infinite):
+            t = t[:, ~is_infinite]
+            f_t = f_t[:, ~is_infinite]
+
         f_dot_f = numpy.einsum("ij,ij->j", f_t, f_t)
         is_sol = f_dot_f < tol
 
