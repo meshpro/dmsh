@@ -173,9 +173,7 @@ class Intersection(object):
             numpy.min([geo.bounding_box[3] for geo in geometries]),
         ]
 
-        # TODO do for more geometries
-        if len(geometries) == 2:
-            self.feature_points = find_feature_points(geometries[0], geometries[1])
+        self.feature_points = find_feature_points(geometries)
         return
 
     def plot(self, color="b"):
