@@ -52,7 +52,21 @@ def show(pts, cells, geo):
     return
 
 
-def find_feature_points(geo0, geo1, num_steps=10):
+def find_feature_points(geometries, num_steps=10):
+    n = len(geometries)
+    points = []
+    for i in range(n):
+        for j in range(i + 1, n):
+            points.append(_find_feature_points_between_two_geos(
+                geometries[i], geometries[j], num_steps
+            ))
+
+    points = numpy.column_stack(points)
+    unique_points = unique_float_cols(points)
+    return unique_points.T
+
+
+def _find_feature_points_between_two_geos(geo0, geo1, num_steps):
     """Given two geometries with their parameterization, this methods finds feature
     points, i.e., points where the boundaries meet. This is done by casting a net over
     the parameter space and performing `num_steps` Newton steps. Found solutions are
@@ -63,7 +77,7 @@ def find_feature_points(geo0, geo1, num_steps=10):
     t = numpy.array([t0, t1]).reshape(2, -1)
     # t = numpy.random.rand(2, 100)
 
-    tol = 1.0e-15
+    tol = 1.0e-20
 
     # multi_newton(x0, is_inside, boundary_step, tol, max_num_steps=10):
     solutions = []
@@ -103,20 +117,28 @@ def find_feature_points(geo0, geo1, num_steps=10):
         t = t[:, still_good]
 
     unique_sols = unique_float_cols(numpy.column_stack(solutions))
-    points = geo0.parametrization(unique_sols[0])
-    return points.T
+    points0 = geo0.parametrization(unique_sols[0])
+    # points1 = geo1.parametrization(unique_sols[1])
+    return points0
 
 
-def unique_float_cols(data, tol=1.0e-10):
+def unique_float_cols(data, k=0, tol=1.0e-10):
     """In a (k, n) array `data`, find the unique columns.
     """
-    # Sort the columns
-    data = numpy.sort(data, axis=-1)
+    if k == data.shape[0]:
+        return data[:, 0]
 
-    # Find where two columns differ normwise by more than tol
-    diff = data[:, 1:] - data[:, :-1]
-    norm_diff = numpy.einsum("ij,ij->j", diff, diff)
-    cut = norm_diff > tol
+    idx = numpy.argsort(data[k])
+    data = data[:, idx]
 
-    # Take the first column and all where there is a cut
-    return numpy.column_stack([data[:, 0], data[:, 1:][:, cut]])
+    diff = data[k, 1:] - data[k, :-1]
+    cut = diff > tol
+
+    idx = numpy.where(cut)[0]
+    chunks = numpy.split(data, idx + 1, axis=1)
+
+    out = numpy.column_stack([
+        unique_float_cols(chunk, k + 1, tol)
+        for chunk in chunks
+    ])
+    return out
