@@ -64,10 +64,12 @@ def find_feature_points(geometries, num_steps=10):
         for item1 in geometries[j].paths
     ]
 
-    points = numpy.column_stack([
-        _find_feature_points_between_two_paths(path0, path1, num_steps)
-        for path0, path1 in path_pairs
-    ])
+    points = numpy.column_stack(
+        [
+            _find_feature_points_between_two_paths(path0, path1, num_steps)
+            for path0, path1 in path_pairs
+        ]
+    )
 
     unique_points = unique_float_cols(points)
 

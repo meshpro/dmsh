@@ -146,9 +146,7 @@ class Union(object):
         self.feature_points = numpy.concatenate(fp)
 
         # Only keep the feature points on the outer boundary
-        alpha = numpy.array([
-            geo.isinside(self.feature_points.T) for geo in geometries
-        ])
+        alpha = numpy.array([geo.isinside(self.feature_points.T) for geo in geometries])
         tol = 1.0e-5
         is_on_boundary = numpy.all(alpha > -tol, axis=0)
         self.feature_points = self.feature_points[is_on_boundary]
