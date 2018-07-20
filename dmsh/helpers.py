@@ -57,9 +57,11 @@ def find_feature_points(geometries, num_steps=10):
     points = []
     for i in range(n):
         for j in range(i + 1, n):
-            points.append(_find_feature_points_between_two_geos(
-                geometries[i], geometries[j], num_steps
-            ))
+            points.append(
+                _find_feature_points_between_two_geos(
+                    geometries[i], geometries[j], num_steps
+                )
+            )
 
     points = numpy.column_stack(points)
     unique_points = unique_float_cols(points)
@@ -137,8 +139,5 @@ def unique_float_cols(data, k=0, tol=1.0e-10):
     idx = numpy.where(cut)[0]
     chunks = numpy.split(data, idx + 1, axis=1)
 
-    out = numpy.column_stack([
-        unique_float_cols(chunk, k + 1, tol)
-        for chunk in chunks
-    ])
+    out = numpy.column_stack([unique_float_cols(chunk, k + 1, tol) for chunk in chunks])
     return out
