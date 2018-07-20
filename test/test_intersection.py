@@ -21,19 +21,19 @@ def test_intersection(h0=0.5, show=True):
             [6, 4, 7],
             [10, 8, 6],
             [9, 10, 6],
-            [10, 9, 0],
+            [10, 9, 1],
             [3, 2, 6],
             [2, 4, 6],
-            [2, 3, 1],
+            [2, 3, 0],
         ],
     )
     tol = 1.0e-12
 
-    ref_norm1 = 8.08910757280533
+    ref_norm1 = 8.08910757330533
     assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
-    ref_norm2 = 2.0887854791992484
+    ref_norm2 = 2.088785479836415
     assert abs(numpy.linalg.norm(X.flatten(), ord=2) - ref_norm2) < tol * ref_norm2
-    ref_norm_inf = 0.8660254037531557
+    ref_norm_inf = 0.8660254037740615
     assert (
         abs(numpy.linalg.norm(X.flatten(), ord=numpy.inf) - ref_norm_inf)
         < tol * ref_norm_inf
