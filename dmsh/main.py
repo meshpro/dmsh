@@ -50,8 +50,8 @@ def create_staggered_grid(h, bounding_box):
         midpoint[0] + x_step * numpy.arange(-num_x_steps // 2, num_x_steps // 2 + 1),
         midpoint[1] + y_step * numpy.arange(-num_y_steps // 2, num_y_steps // 2 + 1),
     )
-    # staggered
-    x[1::2] += h / 2
+    # staggered, such that the midpoint is not moved
+    x[num_x_steps % 2 :: 2] += h / 2
     return numpy.column_stack([x.reshape(-1), y.reshape(-1)])
 
 
