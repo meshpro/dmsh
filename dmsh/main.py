@@ -7,7 +7,7 @@ import scipy.spatial
 from .helpers import unique_rows, show as show_mesh
 
 
-def element_size_function(x):
+def homogenous(x):
     return numpy.ones(x.shape[0])
 
 
@@ -18,7 +18,7 @@ def _recell(pts, geo):
 
     # kick out all cells whose barycenter is not in the geometry
     bc = numpy.sum(pts[cells], axis=1) / 3.0
-    cells = cells[geo.isinside(bc.T) < 0.0]
+    cells = cells[geo.dist(bc.T) < 0.0]
 
     # Determine edges
     edges = numpy.concatenate([cells[:, [0, 1]], cells[:, [1, 2]], cells[:, [2, 0]]])
@@ -27,7 +27,9 @@ def _recell(pts, geo):
     return cells, edges
 
 
-def generate(geo, h0, f_scale=1.2, delta_t=0.2, show=False):
+def generate(
+    geo, h0, f_scale=1.2, delta_t=0.2, show=False, mesh_density_function=homogenous
+):
     x_step = h0
     y_step = h0 * numpy.sqrt(3) / 2
     bb_width = geo.bounding_box[1] - geo.bounding_box[0]
@@ -57,10 +59,10 @@ def generate(geo, h0, f_scale=1.2, delta_t=0.2, show=False):
     eps = 1.0e-10
 
     # remove points outside of the region
-    pts = pts[geo.isinside(pts.T) < eps]
+    pts = pts[geo.dist(pts.T) < eps]
 
     # evaluate the element size function, remove points according to it
-    p = element_size_function(pts)
+    p = mesh_density_function(pts.T)
     pts = pts[numpy.random.rand(pts.shape[0]) < p]
 
     # Add feature points
@@ -87,7 +89,7 @@ def generate(geo, h0, f_scale=1.2, delta_t=0.2, show=False):
 
         # Evaluate element sizes at edge midpoints
         edge_midpoints = (pts[edges[:, 1]] + pts[edges[:, 0]]) / 2
-        p = element_size_function(edge_midpoints)
+        p = mesh_density_function(edge_midpoints.T)
 
         desired_lengths = (
             p
@@ -113,7 +115,7 @@ def generate(geo, h0, f_scale=1.2, delta_t=0.2, show=False):
         pts[num_feature_points:] += update[num_feature_points:]
         # Some boundary points may have been pushed outside; bring them back onto the
         # boundary.
-        is_outside = geo.isinside(pts.T) > 0.0
+        is_outside = geo.dist(pts.T) > 0.0
         pts[is_outside] = geo.boundary_step(pts[is_outside].T).T
 
         diff = pts - pts_old2

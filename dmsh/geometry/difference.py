@@ -16,7 +16,7 @@ class Difference(object):
         self.feature_points = numpy.concatenate(fp)
 
         # Only keep the feature points on the outer boundary
-        alpha = self.isinside(self.feature_points.T)
+        alpha = self.dist(self.feature_points.T)
         tol = 1.0e-5
         is_on_boundary = (-tol < alpha) & (alpha < tol)
         self.feature_points = self.feature_points[is_on_boundary]
@@ -27,23 +27,23 @@ class Difference(object):
         self.geo1.plot()
         return
 
-    def isinside(self, x):
-        return numpy.max([self.geo0.isinside(x), -self.geo1.isinside(x)], axis=0)
+    def dist(self, x):
+        return numpy.max([self.geo0.dist(x), -self.geo1.dist(x)], axis=0)
 
     def boundary_step(self, x, tol=1.0e-12):
         # step for the is_inside with the smallest value
-        alpha0 = self.geo0.isinside(x)
-        alpha1 = self.geo1.isinside(x)
+        alpha0 = self.geo0.dist(x)
+        alpha1 = self.geo1.dist(x)
         while numpy.any(alpha0 > tol) or numpy.any(alpha1 < -tol):
             idx0 = alpha0 > tol
             if numpy.any(idx0):
                 x[:, idx0] = self.geo0.boundary_step(x[:, idx0])
-                alpha0 = self.geo0.isinside(x)
+                alpha0 = self.geo0.dist(x)
                 continue
 
             idx1 = alpha1 < -tol
             if numpy.any(idx1):
                 x[:, idx1] = self.geo1.boundary_step(x[:, idx1])
-                alpha1 = self.geo1.isinside(x)
+                alpha1 = self.geo1.dist(x)
                 continue
         return x

@@ -28,11 +28,11 @@ class Stretch(object):
     def plot(self):
         return
 
-    def isinside(self, x):
+    def dist(self, x):
         # scale the component of x in direction v by 1/alpha
         vx = numpy.multiply.outer(numpy.dot(self.v, x), self.v)
         y = vx / self.alpha + (x.T - vx)
-        return self.geometry.isinside(y.T)
+        return self.geometry.dist(y.T)
 
     def boundary_step(self, x):
         vx = numpy.multiply.outer(numpy.dot(self.v, x), self.v)

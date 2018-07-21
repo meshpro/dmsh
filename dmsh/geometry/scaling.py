@@ -14,8 +14,8 @@ class Scaling(object):
     def plot(self):
         return
 
-    def isinside(self, x):
-        return self.geometry.isinside(x / self.alpha)
+    def dist(self, x):
+        return self.geometry.dist(x / self.alpha)
 
     def boundary_step(self, x):
         return self.geometry.boundary_step(x / self.alpha) * self.alpha

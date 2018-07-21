@@ -26,7 +26,7 @@ class Ellipse(object):
         )
         return
 
-    def isinside(self, x):
+    def dist(self, x):
         assert x.shape[0] == 2
         return (
             ((x[0] - self.x0[0]) / self.a) ** 2
@@ -61,5 +61,5 @@ class Ellipse(object):
 
     def boundary_step(self, x):
         return multi_newton(
-            x.T, self.isinside, self._boundary_step, 1.0e-10, max_num_steps=10
+            x.T, self.dist, self._boundary_step, 1.0e-10, max_num_steps=10
         ).T

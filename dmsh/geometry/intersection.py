@@ -23,12 +23,12 @@ class Intersection(object):
             geo.plot()
         return
 
-    def isinside(self, x):
-        return numpy.max([geo.isinside(x) for geo in self.geometries], axis=0)
+    def dist(self, x):
+        return numpy.max([geo.dist(x) for geo in self.geometries], axis=0)
 
     def boundary_step(self, x, tol=1.0e-12):
         # step for the is_inside with the smallest value
-        alpha = numpy.array([geo.isinside(x) for geo in self.geometries])
+        alpha = numpy.array([geo.dist(x) for geo in self.geometries])
         while numpy.any(alpha > tol):
             # Only consider the nodes which are truly outside of the domain
             has_pos = numpy.any(alpha > tol, axis=0)
@@ -42,5 +42,5 @@ class Intersection(object):
                     x_pos[:, idx == k] = geo.boundary_step(x_pos[:, idx == k])
 
             x[:, has_pos] = x_pos
-            alpha = numpy.array([geo.isinside(x) for geo in self.geometries])
+            alpha = numpy.array([geo.dist(x) for geo in self.geometries])
         return x

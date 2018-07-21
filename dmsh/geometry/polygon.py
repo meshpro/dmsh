@@ -42,7 +42,7 @@ class Polygon(object):
         self.polygon.plot(color="#1f77b4")
         return
 
-    def isinside(self, x):
+    def dist(self, x):
         return self.polygon.signed_squared_distance(x.T)
 
     def boundary_step(self, x):

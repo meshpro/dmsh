@@ -38,8 +38,8 @@ class Rotation(object):
     def plot(self):
         return
 
-    def isinside(self, x):
-        return self.geometry.isinside(numpy.dot(self.R_inv, x))
+    def dist(self, x):
+        return self.geometry.dist(numpy.dot(self.R_inv, x))
 
     def boundary_step(self, x):
         y = numpy.dot(self.R_inv, x)

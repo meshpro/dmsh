@@ -20,8 +20,8 @@ class Translation(object):
     def plot(self):
         return
 
-    def isinside(self, x):
-        return self.geometry.isinside((x.T - self.v).T)
+    def dist(self, x):
+        return self.geometry.dist((x.T - self.v).T)
 
     def boundary_step(self, x):
         return (self.geometry.boundary_step((x.T - self.v).T).T + self.v).T

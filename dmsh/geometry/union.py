@@ -20,7 +20,7 @@ class Union(object):
         self.feature_points = numpy.concatenate(fp)
 
         # Only keep the feature points on the outer boundary
-        alpha = numpy.array([geo.isinside(self.feature_points.T) for geo in geometries])
+        alpha = numpy.array([geo.dist(self.feature_points.T) for geo in geometries])
         tol = 1.0e-5
         is_on_boundary = numpy.all(alpha > -tol, axis=0)
         self.feature_points = self.feature_points[is_on_boundary]
@@ -31,12 +31,12 @@ class Union(object):
             geo.plot()
         return
 
-    def isinside(self, x):
-        return numpy.min([geo.isinside(x) for geo in self.geometries], axis=0)
+    def dist(self, x):
+        return numpy.min([geo.dist(x) for geo in self.geometries], axis=0)
 
     def boundary_step(self, x):
         # step for the is_inside with the smallest value
-        alpha = numpy.array([geo.isinside(x) for geo in self.geometries])
+        alpha = numpy.array([geo.dist(x) for geo in self.geometries])
         alpha[alpha < 0] = numpy.inf
         idx = numpy.argmin(alpha, axis=0)
         for k, geo in enumerate(self.geometries):

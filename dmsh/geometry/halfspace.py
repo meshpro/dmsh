@@ -43,7 +43,7 @@ class HalfSpace(object):
     def plot(self):
         return
 
-    def isinside(self, x):
+    def dist(self, x):
         assert x.shape[0] == 2
         return self.alpha - numpy.dot(self.normal, x)
 

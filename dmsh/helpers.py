@@ -37,7 +37,7 @@ def show(pts, cells, geo):
     import matplotlib.pyplot as plt
 
     eps = 1.0e-10
-    is_inside = geo.isinside(pts.T) < eps
+    is_inside = geo.dist(pts.T) < eps
     plt.plot(pts[is_inside, 0], pts[is_inside, 1], ".")
     plt.plot(pts[~is_inside, 0], pts[~is_inside, 1], ".", color="r")
     plt.triplot(pts[:, 0], pts[:, 1], cells)

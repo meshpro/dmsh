@@ -43,7 +43,7 @@ class Circle(object):
         )
         return
 
-    def isinside(self, x):
+    def dist(self, x):
         assert x.shape[0] == 2
         return (
             ((x[0] - self.x0[0]) / self.r) ** 2
