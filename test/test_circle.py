@@ -6,7 +6,7 @@ import dmsh
 
 
 def test_circle(h0=0.7, show=True):
-    geo = dmsh.geometry.Circle([0.0, 0.0], 1.0)
+    geo = dmsh.Circle([0.0, 0.0], 1.0)
     X, cells = dmsh.generate(geo, h0, show=show)
 
     # X = numpy.column_stack([X[0], X[1], numpy.zeros(X.shape[1])])

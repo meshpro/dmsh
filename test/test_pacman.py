@@ -6,9 +6,9 @@ import dmsh
 
 
 def test_pacman(h0=0.6, show=True):
-    geo = dmsh.geometry.Difference(
-        dmsh.geometry.Circle([0.0, 0.0], 1.0),
-        dmsh.geometry.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
+    geo = dmsh.Difference(
+        dmsh.Circle([0.0, 0.0], 1.0),
+        dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
     )
     X, cells = dmsh.generate(geo, h0, show=show)
 

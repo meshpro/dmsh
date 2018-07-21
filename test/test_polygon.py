@@ -6,7 +6,7 @@ import dmsh
 
 
 def test(h0=0.8, show=True):
-    geo = dmsh.geometry.Polygon(
+    geo = dmsh.Polygon(
         [
             [0.0, 0.0],
             [1.1, 0.0],

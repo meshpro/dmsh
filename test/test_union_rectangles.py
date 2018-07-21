@@ -6,10 +6,10 @@ import dmsh
 
 
 def test_union(h0=0.9, show=True):
-    geo = dmsh.geometry.Union(
+    geo = dmsh.Union(
         [
-            dmsh.geometry.Rectangle(-1.0, +0.5, -1.0, +0.5),
-            dmsh.geometry.Rectangle(-0.5, +1.0, -0.5, +1.0),
+            dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5),
+            dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0),
         ]
     )
     X, cells = dmsh.generate(geo, h0, show=show)

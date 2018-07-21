@@ -6,10 +6,10 @@ import dmsh
 
 
 def test_halfspace(h0=0.4, show=True):
-    geo = dmsh.geometry.Intersection(
+    geo = dmsh.Intersection(
         [
-            dmsh.geometry.HalfSpace(numpy.sqrt(0.5) * numpy.array([1.0, 1.0]), 0.0),
-            dmsh.geometry.Circle([0.0, 0.0], 1.0),
+            dmsh.HalfSpace(numpy.sqrt(0.5) * numpy.array([1.0, 1.0]), 0.0),
+            dmsh.Circle([0.0, 0.0], 1.0),
         ]
     )
     X, cells = dmsh.generate(geo, h0, show=show)

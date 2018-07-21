@@ -6,7 +6,7 @@ import dmsh
 
 
 def test_rectangle(h0=0.8, show=True):
-    geo = dmsh.geometry.Rectangle(-1.0, +2.0, -1.0, +1.0)
+    geo = dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0)
     X, cells = dmsh.generate(geo, h0, show=show)
 
     assert numpy.array_equal(

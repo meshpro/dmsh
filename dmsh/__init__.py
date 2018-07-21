@@ -4,7 +4,20 @@ from __future__ import print_function
 
 from .__about__ import __author__, __email__, __license__, __version__, __status__
 
-from . import geometry
+from .geometry import (
+    Union,
+    Difference,
+    Rectangle,
+    Polygon,
+    Circle,
+    Ellipse,
+    Intersection,
+    HalfSpace,
+    Stretch,
+    Scaling,
+    Rotation,
+    Translation,
+)
 from .main import generate
 
 __all__ = [
@@ -14,7 +27,18 @@ __all__ = [
     "__version__",
     "__status__",
     "generate",
-    "geometry",
+    "Union",
+    "Difference",
+    "Rectangle",
+    "Polygon",
+    "Circle",
+    "Ellipse",
+    "Intersection",
+    "HalfSpace",
+    "Stretch",
+    "Scaling",
+    "Rotation",
+    "Translation",
 ]
 
 # try:

@@ -7,11 +7,11 @@ import dmsh
 
 def test_union(h0=1.4, show=True):
     angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
-    geo = dmsh.geometry.Union(
+    geo = dmsh.Union(
         [
-            dmsh.geometry.Circle([numpy.cos(angles[0]), numpy.sin(angles[0])], 1.0),
-            dmsh.geometry.Circle([numpy.cos(angles[1]), numpy.sin(angles[1])], 1.0),
-            dmsh.geometry.Circle([numpy.cos(angles[2]), numpy.sin(angles[2])], 1.0),
+            dmsh.Circle([numpy.cos(angles[0]), numpy.sin(angles[0])], 1.0),
+            dmsh.Circle([numpy.cos(angles[1]), numpy.sin(angles[1])], 1.0),
+            dmsh.Circle([numpy.cos(angles[2]), numpy.sin(angles[2])], 1.0),
         ]
     )
     X, cells = dmsh.generate(geo, h0, show=show)

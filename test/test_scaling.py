@@ -6,7 +6,7 @@ import dmsh
 
 
 def test(h0=1.8, show=True):
-    geo = dmsh.geometry.Scaling(dmsh.geometry.Rectangle(-1.0, +2.0, -1.0, +1.0), 2.0)
+    geo = dmsh.Scaling(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 2.0)
     X, cells = dmsh.generate(geo, h0, show=show)
 
     assert numpy.array_equal(

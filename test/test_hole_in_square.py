@@ -5,9 +5,9 @@ import dmsh
 
 
 def test(h0=1.0, show=False):
-    geo = dmsh.geometry.Difference(
-        dmsh.geometry.Rectangle(0.0, 5.0, 0.0, 5.0),
-        dmsh.geometry.Polygon([[1, 1], [4, 1], [4, 4], [1, 4]]),
+    geo = dmsh.Difference(
+        dmsh.Rectangle(0.0, 5.0, 0.0, 5.0),
+        dmsh.Polygon([[1, 1], [4, 1], [4, 4], [1, 4]]),
     )
     X, cells = dmsh.generate(geo, h0, show=show)
 

@@ -6,8 +6,8 @@ import dmsh
 
 
 def test_intersection(h0=0.5, show=True):
-    geo = dmsh.geometry.Intersection(
-        [dmsh.geometry.Circle([-0.5, 0.0], 1.0), dmsh.geometry.Circle([+0.5, 0.0], 1.0)]
+    geo = dmsh.Intersection(
+        [dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)]
     )
     X, cells = dmsh.generate(geo, h0, show=show)
 
