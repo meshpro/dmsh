@@ -26,15 +26,14 @@ def test_circle(h0=0.7, show=True):
             [1, 4, 3],
         ],
     )
+
     tol = 1.0e-12
+    X = X.flatten()
 
     ref_norm1 = 8.153528671130776
-    assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
+    assert abs(numpy.linalg.norm(X, ord=1) - ref_norm1) < tol * ref_norm1
     ref_norm2 = 2.490883422065319
-    assert abs(numpy.linalg.norm(X.flatten(), ord=2) - ref_norm2) < tol * ref_norm2
+    assert abs(numpy.linalg.norm(X, ord=2) - ref_norm2) < tol * ref_norm2
     ref_norm_inf = 1.0
-    assert (
-        abs(numpy.linalg.norm(X.flatten(), ord=numpy.inf) - ref_norm_inf)
-        < tol * ref_norm_inf
-    )
+    assert abs(numpy.linalg.norm(X, ord=numpy.inf) - ref_norm_inf) < tol * ref_norm_inf
     return

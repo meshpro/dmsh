@@ -32,17 +32,16 @@ def test_union(h0=1.4, show=True):
             [5, 6, 8],
         ],
     )
+
     tol = 1.0e-12
+    X = X.flatten()
 
     ref_norm1 = 17.387135311724656
-    assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
+    assert abs(numpy.linalg.norm(X, ord=1) - ref_norm1) < tol * ref_norm1
     ref_norm2 = 4.9055252285569075
-    assert abs(numpy.linalg.norm(X.flatten(), ord=2) - ref_norm2) < tol * ref_norm2
+    assert abs(numpy.linalg.norm(X, ord=2) - ref_norm2) < tol * ref_norm2
     ref_norm_inf = 2.0
-    assert (
-        abs(numpy.linalg.norm(X.flatten(), ord=numpy.inf) - ref_norm_inf)
-        < tol * ref_norm_inf
-    )
+    assert abs(numpy.linalg.norm(X, ord=numpy.inf) - ref_norm_inf) < tol * ref_norm_inf
     return
 
 

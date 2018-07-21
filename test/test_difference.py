@@ -31,17 +31,16 @@ def test_difference(h0=0.5, show=True):
             [3, 0, 6],
         ],
     )
+
     tol = 1.0e-12
+    X = X.flatten()
 
     ref_norm1 = 19.873204312684507
-    assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
+    assert abs(numpy.linalg.norm(X, ord=1) - ref_norm1) < tol * ref_norm1
     ref_norm2 = 4.316711705494604
-    assert abs(numpy.linalg.norm(X.flatten(), ord=2) - ref_norm2) < tol * ref_norm2
+    assert abs(numpy.linalg.norm(X, ord=2) - ref_norm2) < tol * ref_norm2
     ref_norm_inf = 1.4834095117965043
-    assert (
-        abs(numpy.linalg.norm(X.flatten(), ord=numpy.inf) - ref_norm_inf)
-        < tol * ref_norm_inf
-    )
+    assert abs(numpy.linalg.norm(X, ord=numpy.inf) - ref_norm_inf) < tol * ref_norm_inf
     return
 
 

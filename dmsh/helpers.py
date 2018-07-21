@@ -71,9 +71,10 @@ def find_feature_points(geometries, num_steps=10):
         ]
     )
 
-    unique_points = unique_float_cols(points)
+    if points:
+        points = unique_float_cols(points)
 
-    return unique_points.T
+    return points.T
 
 
 def _find_feature_points_between_two_paths(path0, path1, num_steps):
@@ -147,6 +148,7 @@ def _find_feature_points_between_two_paths(path0, path1, num_steps):
 def unique_float_cols(data, k=0, tol=1.0e-10):
     """In a (k, n) array `data`, find the unique columns.
     """
+    print(data)
     if k == data.shape[0]:
         return data[:, 0]
 

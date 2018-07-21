@@ -28,13 +28,12 @@ def test_rectangle(h0=0.8, show=True):
     )
 
     tol = 1.0e-12
+    X = X.flatten()
+
     ref_norm1 = 23.50010568219156
-    assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
+    assert abs(numpy.linalg.norm(X, ord=1) - ref_norm1) < tol * ref_norm1
     ref_norm2 = 5.38518180031268
-    assert abs(numpy.linalg.norm(X.flatten(), ord=2) - ref_norm2) < tol * ref_norm2
+    assert abs(numpy.linalg.norm(X, ord=2) - ref_norm2) < tol * ref_norm2
     ref_norm_inf = 2.0
-    assert (
-        abs(numpy.linalg.norm(X.flatten(), ord=numpy.inf) - ref_norm_inf)
-        < tol * ref_norm_inf
-    )
+    assert abs(numpy.linalg.norm(X, ord=numpy.inf) - ref_norm_inf) < tol * ref_norm_inf
     return

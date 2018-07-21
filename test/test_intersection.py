@@ -11,7 +11,6 @@ def test_intersection(h0=0.5, show=True):
     )
     X, cells = dmsh.generate(geo, h0, show=show)
 
-    print(cells)
     assert numpy.array_equal(
         cells,
         [
@@ -27,17 +26,16 @@ def test_intersection(h0=0.5, show=True):
             [2, 3, 0],
         ],
     )
+
     tol = 1.0e-12
+    X = X.flatten()
 
     ref_norm1 = 8.08910757330533
-    assert abs(numpy.linalg.norm(X.flatten(), ord=1) - ref_norm1) < tol * ref_norm1
+    assert abs(numpy.linalg.norm(X, ord=1) - ref_norm1) < tol * ref_norm1
     ref_norm2 = 2.088785479836415
-    assert abs(numpy.linalg.norm(X.flatten(), ord=2) - ref_norm2) < tol * ref_norm2
+    assert abs(numpy.linalg.norm(X, ord=2) - ref_norm2) < tol * ref_norm2
     ref_norm_inf = 0.8660254037740615
-    assert (
-        abs(numpy.linalg.norm(X.flatten(), ord=numpy.inf) - ref_norm_inf)
-        < tol * ref_norm_inf
-    )
+    assert abs(numpy.linalg.norm(X, ord=numpy.inf) - ref_norm_inf) < tol * ref_norm_inf
     return
 
 

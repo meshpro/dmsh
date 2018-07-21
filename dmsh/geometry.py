@@ -217,7 +217,6 @@ class Difference(object):
         self.geo0 = geo0
         self.geo1 = geo1
         self.bounding_box = geo0.bounding_box
-        self.feature_points = find_feature_points([geo0, geo1])
 
         fp = [geo0.feature_points, geo1.feature_points]
         fp.append(find_feature_points([geo0, geo1]))
