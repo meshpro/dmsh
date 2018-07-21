@@ -55,9 +55,7 @@ def create_staggered_grid(h, bounding_box):
     return numpy.column_stack([x.reshape(-1), y.reshape(-1)])
 
 
-def generate(
-    geo, edge_size, f_scale=1.2, delta_t=0.2, show=False
-):
+def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, show=False):
     # Find h0 from edge_size (function)
     if callable(edge_size):
         edge_size_function = edge_size
