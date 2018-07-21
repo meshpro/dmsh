@@ -4,44 +4,36 @@ import numpy
 
 import dmsh
 
+from helpers import assert_norm_equality
+
 
 def test_ellipse(h0=0.7, show=True):
     geo = dmsh.Ellipse([0.0, 0.0], 2.0, 1.0)
     X, cells = dmsh.generate(geo, h0, show=show)
 
-    # X = numpy.column_stack([X[0], X[1], numpy.zeros(X.shape[1])])
-    # import meshio
-    # meshio.write_points_cells("out.vtk", X, {"triangle": cells})
-
     assert numpy.array_equal(
         cells,
         [
-            [14, 8, 9],
-            [8, 4, 9],
-            [6, 10, 5],
-            [0, 6, 5],
-            [14, 13, 8],
-            [3, 4, 8],
-            [6, 11, 10],
-            [1, 6, 0],
-            [3, 7, 2],
+            [12, 7, 8],
             [7, 3, 8],
-            [7, 1, 2],
-            [1, 7, 6],
-            [7, 13, 12],
-            [13, 7, 8],
-            [11, 7, 12],
-            [7, 11, 6],
+            [5, 9, 4],
+            [9, 5, 10],
+            [12, 11, 7],
+            [0, 5, 4],
+            [5, 0, 1],
+            [2, 3, 7],
+            [6, 5, 1],
+            [2, 6, 1],
+            [6, 2, 7],
+            [5, 6, 10],
+            [6, 11, 10],
+            [11, 6, 7],
         ],
     )
 
-    X = X.flatten()
-
-    tol = 1.0e-12
-    ref_norm1 = 22.435407673283038
-    assert abs(numpy.linalg.norm(X, ord=1) - ref_norm1) < tol * ref_norm1
-    ref_norm2 = 5.121569408475023
-    assert abs(numpy.linalg.norm(X, ord=2) - ref_norm2) < tol * ref_norm2
-    ref_norm_inf = 2.0
-    assert abs(numpy.linalg.norm(X, ord=numpy.inf) - ref_norm_inf) < tol * ref_norm_inf
+    assert_norm_equality(
+        X.flatten(),
+        [1.7698621425909550e+01, 4.3034771316326301e+00, 1.6798867227554060e+00],
+        1.0e-12,
+    )
     return

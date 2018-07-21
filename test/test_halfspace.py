@@ -4,6 +4,8 @@ import numpy
 
 import dmsh
 
+from helpers import assert_norm_equality
+
 
 def test_halfspace(h0=0.4, show=True):
     geo = dmsh.Intersection(
@@ -14,34 +16,32 @@ def test_halfspace(h0=0.4, show=True):
     )
     X, cells = dmsh.generate(geo, h0, show=show)
 
-    print(cells)
     assert numpy.array_equal(
         cells,
         [
-            [6, 9, 0],
-            [8, 4, 5],
-            [2, 4, 3],
-            [2, 1, 5],
-            [4, 2, 5],
-            [9, 7, 10],
-            [7, 9, 6],
-            [7, 6, 3],
-            [4, 7, 3],
-            [8, 11, 4],
-            [11, 7, 4],
+            [3, 2, 1],
+            [10, 11, 0],
+            [5, 3, 6],
+            [3, 5, 2],
+            [2, 5, 4],
+            [5, 8, 4],
+            [11, 7, 12],
             [7, 11, 10],
+            [7, 13, 12],
+            [13, 7, 8],
+            [7, 10, 4],
+            [8, 7, 4],
+            [9, 13, 8],
+            [9, 5, 6],
+            [5, 9, 8],
         ],
     )
 
-    tol = 1.0e-12
-    X = X.flatten()
-
-    ref_norm1 = 11.918316817462927
-    assert abs(numpy.linalg.norm(X, ord=1) - ref_norm1) < tol * ref_norm1
-    ref_norm2 = 2.8472772880595607
-    assert abs(numpy.linalg.norm(X, ord=2) - ref_norm2) < tol * ref_norm2
-    ref_norm_inf = 0.9664827275008776
-    assert abs(numpy.linalg.norm(X, ord=numpy.inf) - ref_norm_inf) < tol * ref_norm_inf
+    assert_norm_equality(
+        X.flatten(),
+        [1.3905252276781415e+01, 3.0919890978059588e+00, 9.9320349979775846e-01],
+        1.0e-12,
+    )
     return
 
 
