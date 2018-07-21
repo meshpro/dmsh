@@ -80,6 +80,16 @@ def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, show=False):
     alpha = 1.0 / edge_size_function(pts.T) ** 2
     pts = pts[numpy.random.rand(pts.shape[0]) < alpha / numpy.max(alpha)]
 
+    # remove all points which are equal to a feature point
+    diff = numpy.array([
+        [pt - fp for fp in geo.feature_points]
+        for pt in pts
+    ])
+    dist = numpy.einsum("...k,...k->...", diff, diff)
+    tol = h0 / 10
+    equals_feature_point = numpy.any(dist < tol**2, axis=1)
+    pts = pts[~equals_feature_point]
+
     # Add feature points
     num_feature_points = geo.feature_points.shape[0]
     if num_feature_points > 0:
