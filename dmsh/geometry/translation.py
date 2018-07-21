@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+#
+import numpy
+
+
+class Translation(object):
+    def __init__(self, geometry, v):
+        self.geometry = geometry
+        self.v = v
+
+        self.bounding_box = [
+            geometry.bounding_box[0] + v[0],
+            geometry.bounding_box[1] + v[0],
+            geometry.bounding_box[2] + v[1],
+            geometry.bounding_box[3] + v[1],
+        ]
+        self.feature_points = numpy.array([])
+        return
+
+    def plot(self):
+        return
+
+    def isinside(self, x):
+        return self.geometry.isinside((x.T - self.v).T)
+
+    def boundary_step(self, x):
+        return (self.geometry.boundary_step((x.T - self.v).T).T + self.v).T

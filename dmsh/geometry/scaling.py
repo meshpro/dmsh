@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+#
+import numpy
+
+
+class Scaling(object):
+    def __init__(self, geometry, alpha):
+        self.geometry = geometry
+        self.alpha = alpha
+        self.bounding_box = alpha * numpy.array(geometry.bounding_box)
+        self.feature_points = numpy.array([])
+        return
+
+    def plot(self):
+        return
+
+    def isinside(self, x):
+        return self.geometry.isinside(x / self.alpha)
+
+    def boundary_step(self, x):
+        return self.geometry.boundary_step(x / self.alpha) * self.alpha
+
+
