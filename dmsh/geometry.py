@@ -218,9 +218,19 @@ class Difference(object):
         self.geo1 = geo1
         self.bounding_box = geo0.bounding_box
         self.feature_points = find_feature_points([geo0, geo1])
+
+        fp = [geo0.feature_points, geo1.feature_points]
+        fp.append(find_feature_points([geo0, geo1]))
+        self.feature_points = numpy.concatenate(fp)
+
+        # Only keep the feature points on the outer boundary
+        alpha = self.isinside(self.feature_points.T)
+        tol = 1.0e-5
+        is_on_boundary = (-tol < alpha) & (alpha < tol)
+        self.feature_points = self.feature_points[is_on_boundary]
         return
 
-    def plot(self, color="b"):
+    def plot(self):
         self.geo0.plot()
         self.geo1.plot()
         return
@@ -256,7 +266,7 @@ class Ellipse(object):
         self.feature_points = numpy.array([])
         return
 
-    def plot(self, color="b"):
+    def plot(self, color="#1f77b4"):
         import matplotlib.pyplot as plt
 
         t = numpy.linspace(0.0, 2 * numpy.pi, 100)
@@ -332,10 +342,10 @@ class Circle(object):
         self.r = r
         self.bounding_box = [x0[0] - r, x0[0] + r, x0[1] - r, x0[1] + r]
         self.paths = [CirclePath(x0, r)]
-        self.feature_points = numpy.array([])
+        self.feature_points = numpy.array([[], []]).T
         return
 
-    def plot(self, color="b"):
+    def plot(self, color="#1f77b4"):
         import matplotlib.pyplot as plt
 
         t = numpy.linspace(0.0, 2 * numpy.pi, 100)
@@ -397,7 +407,7 @@ class Polygon(object):
         return
 
     def plot(self):
-        self.polygon.plot()
+        self.polygon.plot(color="#1f77b4")
         return
 
     def isinside(self, x):
