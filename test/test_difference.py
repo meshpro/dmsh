@@ -6,9 +6,7 @@ import dmsh
 
 
 def test_difference(h0=0.5, show=True):
-    geo = dmsh.Difference(
-        dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)
-    )
+    geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
     X, cells = dmsh.generate(geo, h0, show=show)
 
     print(cells)

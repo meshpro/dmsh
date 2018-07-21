@@ -6,9 +6,7 @@ import dmsh
 
 
 def test_union(h0=0.9, show=True):
-    geo = dmsh.Union(
-        [dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)]
-    )
+    geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
     X, cells = dmsh.generate(geo, h0, show=show)
 
     assert numpy.array_equal(

@@ -6,9 +6,7 @@ import dmsh
 
 
 def test(h0=0.9, show=True):
-    geo = dmsh.Rotation(
-        dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 0.1 * numpy.pi
-    )
+    geo = dmsh.Rotation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 0.1 * numpy.pi)
     X, cells = dmsh.generate(geo, h0, show=show)
 
     assert numpy.array_equal(

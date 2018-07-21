@@ -19,5 +19,3 @@ class Scaling(object):
 
     def boundary_step(self, x):
         return self.geometry.boundary_step(x / self.alpha) * self.alpha
-
-
