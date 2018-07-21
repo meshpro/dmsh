@@ -45,14 +45,11 @@ class Circle(object):
 
     def dist(self, x):
         assert x.shape[0] == 2
-        return (
-            ((x[0] - self.x0[0]) / self.r) ** 2
-            + ((x[1] - self.x0[1]) / self.r) ** 2
-            - 1.0
-        )
+        y = (x.T - self.x0).T
+        return numpy.sqrt(numpy.einsum("ij,ij->j", y, y)) - self.r
 
     def boundary_step(self, x):
         # simply project onto the circle
-        x = (x.T - self.x0).T
-        r = numpy.sqrt(numpy.einsum("ij,ij->j", x, x))
-        return ((x / r * self.r).T + self.x0).T
+        y = (x.T - self.x0).T
+        r = numpy.sqrt(numpy.einsum("ij,ij->j", y, y))
+        return ((y / r * self.r).T + self.x0).T

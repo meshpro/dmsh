@@ -27,16 +27,14 @@ def _recell(pts, geo):
     return cells, edges
 
 
-def generate(
-    geo, h0, f_scale=1.2, delta_t=0.2, show=False, mesh_density_function=homogenous
-):
-    x_step = h0
-    y_step = h0 * numpy.sqrt(3) / 2
-    bb_width = geo.bounding_box[1] - geo.bounding_box[0]
-    bb_height = geo.bounding_box[3] - geo.bounding_box[2]
+def create_staggered_grid(h, bounding_box):
+    x_step = h
+    y_step = h * numpy.sqrt(3) / 2
+    bb_width = bounding_box[1] - bounding_box[0]
+    bb_height = bounding_box[3] - bounding_box[2]
     midpoint = [
-        (geo.bounding_box[0] + geo.bounding_box[1]) / 2,
-        (geo.bounding_box[2] + geo.bounding_box[3]) / 2,
+        (bounding_box[0] + bounding_box[1]) / 2,
+        (bounding_box[2] + bounding_box[3]) / 2,
     ]
 
     num_x_steps = int(bb_width / x_step)
@@ -53,8 +51,27 @@ def generate(
         midpoint[1] + y_step * numpy.arange(-num_y_steps // 2, num_y_steps // 2 + 1),
     )
     # staggered
-    x[1::2] += h0 / 2
-    pts = numpy.column_stack([x.reshape(-1), y.reshape(-1)])
+    x[1::2] += h / 2
+    return numpy.column_stack([x.reshape(-1), y.reshape(-1)])
+
+
+def generate(
+    geo, edge_size, f_scale=1.2, delta_t=0.2, show=False
+):
+    # Find h0 from edge_size (function)
+    if callable(edge_size):
+        edge_size_function = edge_size
+        # Find h0 by sampling
+        h00 = (geo.bounding_box[1] - geo.bounding_box[0]) / 100
+        pts = create_staggered_grid(h00, geo.bounding_box)
+        h0 = numpy.min(edge_size_function(pts.T))
+    else:
+        h0 = edge_size
+
+        def edge_size_function(pts):
+            return numpy.full(pts.shape[1], edge_size)
+
+    pts = create_staggered_grid(h0, geo.bounding_box)
 
     eps = 1.0e-10
 
@@ -62,8 +79,8 @@ def generate(
     pts = pts[geo.dist(pts.T) < eps]
 
     # evaluate the element size function, remove points according to it
-    p = mesh_density_function(pts.T)
-    pts = pts[numpy.random.rand(pts.shape[0]) < p]
+    alpha = 1.0 / edge_size_function(pts.T) ** 2
+    pts = pts[numpy.random.rand(pts.shape[0]) < alpha / numpy.max(alpha)]
 
     # Add feature points
     num_feature_points = geo.feature_points.shape[0]
@@ -89,13 +106,7 @@ def generate(
 
         # Evaluate element sizes at edge midpoints
         edge_midpoints = (pts[edges[:, 1]] + pts[edges[:, 0]]) / 2
-        p = mesh_density_function(edge_midpoints.T)
-
-        desired_lengths = (
-            p
-            * f_scale
-            * numpy.sqrt(numpy.dot(edge_lengths, edge_lengths) / numpy.dot(p, p))
-        )
+        desired_lengths = f_scale * edge_size_function(edge_midpoints.T)
 
         force_abs = desired_lengths - edge_lengths
         # only consider repulsive forces
