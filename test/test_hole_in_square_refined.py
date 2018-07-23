@@ -15,7 +15,7 @@ def test(h=0.5, show=False):
     X, cells = dmsh.generate(geo, lambda pts: numpy.abs(c.dist(pts)) / 3 + h, show=show)
 
     assert_norm_equality(
-        X.flatten(), [1.7202767571152140e+01, 3.8045089816131590e+00, 1.0], 1.0e-12
+        X.flatten(), [1.6821817302741366e+01, 3.7795131600282290e+00, 1.0], 1.0e-12
     )
     return
 

@@ -14,12 +14,12 @@ def test_intersection(h0=0.5, show=True):
     X, cells = dmsh.generate(geo, h0, show=show)
 
     assert numpy.array_equal(
-        cells, [[0, 2, 3], [2, 0, 4], [5, 1, 3], [1, 5, 4], [2, 5, 3], [5, 2, 4]]
+        cells, [[5, 1, 3], [1, 5, 4], [0, 2, 3], [2, 0, 4], [2, 5, 3], [5, 2, 4]]
     ), cells
 
     assert_norm_equality(
         X.flatten(),
-        [3.3225196794944698e+00, 1.4745598476401574e+00, 8.6602540377406145e-01],
+        [3.5584318158645152e+00, 1.5301806378937797e+00, 8.6602540377406145e-01],
         1.0e-12,
     )
     return

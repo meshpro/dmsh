@@ -35,7 +35,7 @@ def test_union(h0=1.4, show=True):
     ), cells
 
     assert_norm_equality(
-        X.flatten(), [2.0113881038241519e+01, 5.2084888088384611e+00, 2.0], 1.0e-12
+        X.flatten(), [2.0113882877340394e+01, 5.2084888257243884e+00, 2.0], 1.0e-12
     )
     return
 
