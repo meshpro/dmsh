@@ -5,6 +5,7 @@ from .difference import Difference
 from .ellipse import Ellipse
 from .halfspace import HalfSpace
 from .intersection import Intersection
+from .path import Path
 from .polygon import Polygon
 from .rectangle import Rectangle
 from .rotation import Rotation
@@ -19,6 +20,7 @@ __all__ = [
     "Ellipse",
     "HalfSpace",
     "Intersection",
+    "Path",
     "Polygon",
     "Rectangle",
     "Rotation",

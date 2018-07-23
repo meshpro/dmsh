@@ -5,18 +5,19 @@ from __future__ import print_function
 from .__about__ import __author__, __email__, __license__, __version__, __status__
 
 from .geometry import (
-    Union,
-    Difference,
-    Rectangle,
-    Polygon,
     Circle,
+    Difference,
     Ellipse,
-    Intersection,
     HalfSpace,
-    Stretch,
-    Scaling,
+    Intersection,
+    Path,
+    Polygon,
+    Rectangle,
     Rotation,
+    Scaling,
+    Stretch,
     Translation,
+    Union,
 )
 from .main import generate
 
@@ -27,18 +28,19 @@ __all__ = [
     "__version__",
     "__status__",
     "generate",
-    "Union",
-    "Difference",
-    "Rectangle",
-    "Polygon",
     "Circle",
+    "Difference",
     "Ellipse",
-    "Intersection",
     "HalfSpace",
+    "Intersection",
+    "Path",
+    "Polygon",
+    "Rectangle",
+    "Rotation",
     "Stretch",
     "Scaling",
-    "Rotation",
     "Translation",
+    "Union",
 ]
 
 # try:

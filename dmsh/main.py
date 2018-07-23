@@ -138,7 +138,6 @@ def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, show=False):
 
         diff = pts - pts_old2
         move2 = numpy.einsum("ij,ij->i", diff, diff)
-        print(move2)
         if numpy.all(move2 < tol ** 2):
             break
 
