@@ -4,6 +4,8 @@ import numpy
 
 import dmsh
 
+from helpers import assert_norm_equality
+
 
 def test_union(h0=0.7, show=True):
     angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
@@ -16,21 +18,16 @@ def test_union(h0=0.7, show=True):
     )
     X, cells = dmsh.generate(geo, h0, show=show)
 
-    print(cells)
     assert numpy.array_equal(
         cells,
-        [[5, 6, 4], [2, 6, 1], [6, 2, 4], [6, 0, 1], [5, 7, 6], [0, 7, 3], [7, 0, 6]],
+        [[2, 7, 1], [7, 0, 1], [0, 7, 3], [7, 5, 3], [2, 6, 7], [5, 6, 4], [6, 5, 7]],
     )
 
-    tol = 1.0e-12
-    X = X.flatten()
-
-    ref_norm1 = 5.398493299171385
-    assert abs(numpy.linalg.norm(X, ord=1) - ref_norm1) < tol * ref_norm1
-    ref_norm2 = 1.6297882283557934
-    assert abs(numpy.linalg.norm(X, ord=2) - ref_norm2) < tol * ref_norm2
-    ref_norm_inf = 0.7247448713853791
-    assert abs(numpy.linalg.norm(X, ord=numpy.inf) - ref_norm_inf) < tol * ref_norm_inf
+    assert_norm_equality(
+        X.flatten(),
+        [5.4792267313642213e+00, 1.6303714045908726e+00, 7.2474487138537913e-01],
+        1.0e-12,
+    )
     return
 
 

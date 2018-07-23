@@ -4,6 +4,8 @@ import numpy
 
 import dmsh
 
+from helpers import assert_norm_equality
+
 
 def test_union(h0=0.9, show=True):
     geo = dmsh.Union(
@@ -31,15 +33,11 @@ def test_union(h0=0.9, show=True):
         ],
     )
 
-    tol = 1.0e-12
-    X = X.flatten()
-
-    ref_norm1 = 18.117948759942017
-    assert abs(numpy.linalg.norm(X, ord=1) - ref_norm1) < tol * ref_norm1
-    ref_norm2 = 3.8159074945459786
-    assert abs(numpy.linalg.norm(X, ord=2) - ref_norm2) < tol * ref_norm2
-    ref_norm_inf = 1.0
-    assert abs(numpy.linalg.norm(X, ord=numpy.inf) - ref_norm_inf) < tol * ref_norm_inf
+    assert_norm_equality(
+        X.flatten(),
+        [1.3905252276781415e+01, 3.0919890978059588e+00, 9.9320349979775846e-01],
+        1.0e-12,
+    )
     return
 
 

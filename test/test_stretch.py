@@ -4,6 +4,8 @@ import numpy
 
 import dmsh
 
+from helpers import assert_norm_equality
+
 
 def test(h0=0.9, show=True):
     geo = dmsh.Stretch(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), [1.0, 1.0])
@@ -27,14 +29,11 @@ def test(h0=0.9, show=True):
         ],
     )
 
-    tol = 1.0e-12
-    X = X.flatten()
-    ref_norm1 = 25.123192052335945
-    assert abs(numpy.linalg.norm(X, ord=1) - ref_norm1) < tol * ref_norm1
-    ref_norm2 = 6.217716013864884
-    assert abs(numpy.linalg.norm(X, ord=2) - ref_norm2) < tol * ref_norm2
-    ref_norm_inf = 2.621320343559643
-    assert abs(numpy.linalg.norm(X, ord=numpy.inf) - ref_norm_inf) < tol * ref_norm_inf
+    assert_norm_equality(
+        X.flatten(),
+        [1.3905252276781415e+01, 3.0919890978059588e+00, 9.9320349979775846e-01],
+        1.0e-12,
+    )
     return
 
 

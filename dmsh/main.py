@@ -7,10 +7,6 @@ import scipy.spatial
 from .helpers import unique_rows, show as show_mesh
 
 
-def homogenous(x):
-    return numpy.ones(x.shape[0])
-
-
 def _recell(pts, geo):
     # compute Delaunay triangulation
     tri = scipy.spatial.Delaunay(pts)
@@ -80,19 +76,15 @@ def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, show=False):
     alpha = 1.0 / edge_size_function(pts.T) ** 2
     pts = pts[numpy.random.rand(pts.shape[0]) < alpha / numpy.max(alpha)]
 
-    # remove all points which are equal to a feature point
-    diff = numpy.array([
-        [pt - fp for fp in geo.feature_points]
-        for pt in pts
-    ])
-    dist = numpy.einsum("...k,...k->...", diff, diff)
-    tol = h0 / 10
-    equals_feature_point = numpy.any(dist < tol**2, axis=1)
-    pts = pts[~equals_feature_point]
-
-    # Add feature points
     num_feature_points = geo.feature_points.shape[0]
     if num_feature_points > 0:
+        # remove all points which are equal to a feature point
+        diff = numpy.array([[pt - fp for fp in geo.feature_points] for pt in pts])
+        dist = numpy.einsum("...k,...k->...", diff, diff)
+        tol = h0 / 10
+        equals_feature_point = numpy.any(dist < tol ** 2, axis=1)
+        pts = pts[~equals_feature_point]
+        # Add feature points
         pts = numpy.concatenate([geo.feature_points, pts])
 
     cells, edges = _recell(pts, geo)
@@ -114,7 +106,12 @@ def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, show=False):
 
         # Evaluate element sizes at edge midpoints
         edge_midpoints = (pts[edges[:, 1]] + pts[edges[:, 0]]) / 2
-        desired_lengths = f_scale * edge_size_function(edge_midpoints.T)
+        p = edge_size_function(edge_midpoints.T)
+        desired_lengths = (
+            f_scale
+            * p
+            * numpy.sqrt(numpy.dot(edge_lengths, edge_lengths) / numpy.dot(p, p))
+        )
 
         force_abs = desired_lengths - edge_lengths
         # only consider repulsive forces

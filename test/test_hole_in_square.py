@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-import numpy
 import dmsh
+
+from helpers import assert_norm_equality
 
 
 def test(h0=1.0, show=False):
@@ -11,14 +12,9 @@ def test(h0=1.0, show=False):
     )
     X, cells = dmsh.generate(geo, h0, show=show)
 
-    tol = 1.0e-12
-    ref_norm1 = 135.0
-    X = X.flatten()
-    assert abs(numpy.linalg.norm(X, ord=1) - ref_norm1) < tol * ref_norm1
-    ref_norm2 = 22.81303143058649
-    assert abs(numpy.linalg.norm(X, ord=2) - ref_norm2) < tol * ref_norm2
-    ref_norm_inf = 5.0
-    assert abs(numpy.linalg.norm(X, ord=numpy.inf) - ref_norm_inf) < tol * ref_norm_inf
+    assert_norm_equality(
+        X.flatten(), [1.3164332799822722e+02, 2.2675860884415908e+01, 5.0], 1.0e-12
+    )
     return
 
 
