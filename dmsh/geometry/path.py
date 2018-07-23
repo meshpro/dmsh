@@ -33,8 +33,7 @@ class Path(object):
         self.feature_points = points
 
         self.paths = [
-            LineSegmentPath(p0, p1)
-            for p0, p1 in zip(points[:-1], points[1:])
+            LineSegmentPath(p0, p1) for p0, p1 in zip(points[:-1], points[1:])
         ]
         return
 
