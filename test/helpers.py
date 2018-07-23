@@ -18,3 +18,17 @@ def assert_norm_equality(X, ref_norm, tol):
         *ref_norm, *vals
     )
     return
+
+
+def save(filename, X, cells):
+    import meshplex
+
+    mesh = meshplex.MeshTri(X, cells, flat_cell_correction=None)
+    mesh.save(
+        filename,
+        show_centroids=False,
+        show_coedges=False,
+        show_axes=False,
+        nondelaunay_edge_color="k",
+    )
+    return

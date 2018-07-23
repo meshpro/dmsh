@@ -1,25 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-import numpy
-
 import dmsh
 
-from helpers import assert_norm_equality
+from helpers import assert_norm_equality, save
 
 
-def test_circle(h0=0.7, show=True):
+def test_circle(show=True):
     geo = dmsh.Circle([0.0, 0.0], 1.0)
-    X, cells = dmsh.generate(geo, h0, show=show)
+    X, cells = dmsh.generate(geo, 0.1, show=show)
 
-    assert numpy.array_equal(
-        cells, [[3, 5, 2], [0, 3, 2], [6, 3, 4], [3, 6, 5], [3, 1, 4], [0, 1, 3]]
-    ), cells
-
-    assert_norm_equality(
-        X.flatten(), [7.4641016151377535e+00, 2.4494897427831779e+00, 1.0], 1.0e-12
-    )
-    return
+    ref_norms = [3.2795193920779542e+02, 1.4263721858241993e+01, 1.0000000000000000e+00]
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
+    return X, cells
 
 
 if __name__ == "__main__":
-    test_circle(0.3)
+    X, cells = test_circle(show=False)
+    save("circle.png", X, cells)

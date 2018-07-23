@@ -6,7 +6,16 @@
 [![PyPi Version](https://img.shields.io/pypi/v/dmsh.svg)](https://pypi.org/project/dmsh)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/dmsh.svg?logo=github&label=Stars)](https://github.com/nschloe/dmsh)
 
-MEsh generator inspired by [distmesh](http://persson.berkeley.edu/distmesh/).
+Mesh generator inspired by [distmesh](http://persson.berkeley.edu/distmesh/).
+
+### Examples
+
+#### Circle
+
+```python
+geo = dmsh.Circle([0.0, 0.0], 1.0)
+X, cells = dmsh.generate(geo, 0.1)
+```
 
 
 ### Installation
