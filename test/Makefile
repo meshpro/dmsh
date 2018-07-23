@@ -5,5 +5,5 @@ png:
 	for file in test_*.py; do \
 	  python3 $$file; \
 	done
-	for file in *.png; do convert $$file -trim -resize 250x250 $$file; done
+	for file in *.png; do convert $$file -trim -resize x200 $$file; done
 	for file in *.png; do optipng $$file; done

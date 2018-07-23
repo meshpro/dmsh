@@ -2,7 +2,7 @@
 #
 import dmsh
 
-from helpers import assert_norm_equality, save
+from helpers import save  # assert_norm_equality
 
 
 def test_ellipse(show=True):
