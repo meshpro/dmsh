@@ -62,7 +62,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ##### Union
 
-| ![union](https://nschloe.github.io/dmsh/union.png) | ![union-rect](https://nschloe.github.io/dmsh/union-rectangles.png) |
+| ![union](https://nschloe.github.io/dmsh/union.png) | ![union-rect](https://nschloe.github.io/dmsh/union_rectangles.png) |
 
 ```python
 geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
