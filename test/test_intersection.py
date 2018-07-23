@@ -1,29 +1,21 @@
 # -*- coding: utf-8 -*-
 #
-import numpy
-
 import dmsh
 
-from helpers import assert_norm_equality
+from helpers import assert_norm_equality, save
 
 
-def test_intersection(h0=0.5, show=True):
+def test_intersection(show=True):
     geo = dmsh.Intersection(
-        [dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)]
+        [dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)]
     )
-    X, cells = dmsh.generate(geo, h0, show=show)
+    X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-10)
 
-    assert numpy.array_equal(
-        cells, [[5, 1, 3], [1, 5, 4], [0, 2, 3], [2, 0, 4], [2, 5, 3], [5, 2, 4]]
-    ), cells
-
-    assert_norm_equality(
-        X.flatten(),
-        [3.5584318158645152e+00, 1.5301806378937797e+00, 8.6602540377406145e-01],
-        1.0e-12,
-    )
-    return
+    ref_norms = [8.6619344595913475e+01, 6.1599895121114274e+00, 8.6602540378466342e-01]
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
+    return X, cells
 
 
 if __name__ == "__main__":
-    test_intersection(0.1)
+    X, cells = test_intersection(show=False)
+    save("intersection.png", X, cells)

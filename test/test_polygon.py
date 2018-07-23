@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 #
-import numpy
-
 import dmsh
 
-from helpers import assert_norm_equality
+from helpers import assert_norm_equality, save
 
 
-def test(h0=0.8, show=True):
+def test(show=True):
     geo = dmsh.Polygon(
         [
             [0.0, 0.0],
@@ -19,29 +17,13 @@ def test(h0=0.8, show=True):
             [0.5, 1.5],
         ]
     )
-    X, cells = dmsh.generate(geo, h0, show=show)
+    X, cells = dmsh.generate(geo, 0.1, show=show)
 
-    assert numpy.array_equal(
-        cells,
-        [
-            [7, 3, 0],
-            [7, 1, 3],
-            [9, 8, 4],
-            [8, 9, 5],
-            [6, 8, 5],
-            [8, 6, 3],
-            [3, 6, 0],
-            [8, 2, 4],
-            [1, 2, 3],
-            [2, 8, 3],
-        ],
-    ), cells
-
-    assert_norm_equality(
-        X.flatten(), [1.7852872484930099e+01, 4.8521496373584130e+00, 2.0], 1.0e-12
-    )
-    return
+    ref_norms = [4.1468030858462305e+02, 2.1861920662017866e+01, 2.0]
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
+    return X, cells
 
 
 if __name__ == "__main__":
-    test(h0=0.2)
+    X, cells = test(show=False)
+    save("polygon.png", X, cells)

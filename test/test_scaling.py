@@ -1,33 +1,19 @@
 # -*- coding: utf-8 -*-
 #
-import numpy
-
 import dmsh
 
-from helpers import assert_norm_equality
+from helpers import assert_norm_equality, save
 
 
 def test(h0=1.8, show=True):
     geo = dmsh.Scaling(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 2.0)
-    X, cells = dmsh.generate(geo, h0, show=show)
+    X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-5)
 
-    assert numpy.array_equal(
-        cells,
-        [
-            [1, 4, 0],
-            [4, 3, 0],
-            [3, 4, 6],
-            [5, 1, 2],
-            [1, 5, 4],
-            [4, 7, 6],
-            [5, 7, 4],
-            [7, 5, 8],
-        ],
-    ), cells
-
-    assert_norm_equality(X.flatten(), [3.3e+01, 9.3310450883084606e+00, 4.0], 1.0e-12)
-    return
+    ref_norms = [7.7120645429243405e+03, 1.2509238632152577e+02, 4.0]
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
+    return X, cells
 
 
 if __name__ == "__main__":
-    test(h0=0.1)
+    X, cells = test(show=False)
+    save("scaling.png", X, cells)

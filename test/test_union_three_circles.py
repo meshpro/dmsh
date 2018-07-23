@@ -4,10 +4,10 @@ import numpy
 
 import dmsh
 
-from helpers import assert_norm_equality
+from helpers import assert_norm_equality, save
 
 
-def test_union(h0=1.4, show=True):
+def test_union(show=True):
     angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
     geo = dmsh.Union(
         [
@@ -16,29 +16,13 @@ def test_union(h0=1.4, show=True):
             dmsh.Circle([numpy.cos(angles[2]), numpy.sin(angles[2])], 1.0),
         ]
     )
-    X, cells = dmsh.generate(geo, h0, show=show)
+    X, cells = dmsh.generate(geo, 0.2, show=show, tol=1.0e-10)
 
-    assert numpy.array_equal(
-        cells,
-        [
-            [3, 2, 8],
-            [4, 1, 2],
-            [0, 4, 2],
-            [4, 0, 6],
-            [10, 0, 2],
-            [3, 10, 2],
-            [10, 9, 0],
-            [9, 10, 7],
-            [1, 5, 2],
-            [2, 5, 8],
-        ],
-    ), cells
-
-    assert_norm_equality(
-        X.flatten(), [2.0113882877340394e+01, 5.2084888257243884e+00, 2.0], 1.0e-12
-    )
-    return
+    ref_norms = [4.1390554922002769e+02, 2.1440246410944471e+01, 1.9947113226010518e+00]
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
+    return X, cells
 
 
 if __name__ == "__main__":
-    test_union(h0=0.3)
+    X, cells = test_union(show=False)
+    save("union_three_circles.png", X, cells)
