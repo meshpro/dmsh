@@ -13,7 +13,7 @@ def test_circle(h0=0.7, show=True):
 
     assert numpy.array_equal(
         cells, [[3, 5, 2], [0, 3, 2], [6, 3, 4], [3, 6, 5], [3, 1, 4], [0, 1, 3]]
-    )
+    ), cells
 
     assert_norm_equality(
         X.flatten(), [7.4641016151377535e+00, 2.4494897427831779e+00, 1.0], 1.0e-12

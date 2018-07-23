@@ -30,7 +30,9 @@ class Difference(object):
     def dist(self, x):
         return numpy.max([self.geo0.dist(x), -self.geo1.dist(x)], axis=0)
 
-    def boundary_step(self, x, tol=1.0e-12):
+    # Choose tolerance above sqrt(machine_eps). This is necessary as the polygon
+    # dist() is only accurate to that precision.
+    def boundary_step(self, x, tol=1.0e-7):
         # step for the is_inside with the smallest value
         alpha0 = self.geo0.dist(x)
         alpha1 = self.geo1.dist(x)

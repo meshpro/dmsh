@@ -34,3 +34,7 @@ def test_rectangle(h0=0.8, show=True):
         X.flatten(), [2.2613990510663321e+01, 5.4775659192375228e+00, 2.0], 1.0e-12
     )
     return
+
+
+if __name__ == "__main__":
+    test_rectangle(0.1)

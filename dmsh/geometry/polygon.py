@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 import numpy
-import polypy
+import pypathlib
 
 
 class LineSegmentPath(object):
@@ -29,7 +29,7 @@ class Polygon(object):
             numpy.min(points[:, 1]),
             numpy.max(points[:, 1]),
         ]
-        self.polygon = polypy.Polygon(points)
+        self.polygon = pypathlib.ClosedPath(points)
         self.feature_points = points
 
         self.paths = [
@@ -43,7 +43,17 @@ class Polygon(object):
         return
 
     def dist(self, x):
-        return self.polygon.signed_squared_distance(x.T)
+        out = self.polygon.signed_distance(x.T)
+        return out
 
     def boundary_step(self, x):
-        return self.polygon.closest_points(x.T).T
+        # print("b")
+        # print(x.T)
+        # print("{:.16e}".format(x[0][0]))
+        # print("{:.16e}".format(x[1][0]))
+        # print("{:.16e}".format(self.dist(x)[0]))
+        out = self.polygon.closest_points(x.T).T
+        # print(out.T)
+        # print(x.T - out.T)
+        # print()
+        return out

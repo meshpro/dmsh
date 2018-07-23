@@ -51,14 +51,16 @@ def create_staggered_grid(h, bounding_box):
     return numpy.column_stack([x.reshape(-1), y.reshape(-1)])
 
 
-def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, show=False):
+def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, show=False):
     # Find h0 from edge_size (function)
     if callable(edge_size):
         edge_size_function = edge_size
         # Find h0 by sampling
         h00 = (geo.bounding_box[1] - geo.bounding_box[0]) / 100
         pts = create_staggered_grid(h00, geo.bounding_box)
-        h0 = numpy.min(edge_size_function(pts.T))
+        sizes = edge_size_function(pts.T)
+        assert numpy.all(sizes > 0.0), "edge_size_function must be strictly positive."
+        h0 = numpy.min(sizes)
     else:
         h0 = edge_size
 
@@ -81,8 +83,8 @@ def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, show=False):
         # remove all points which are equal to a feature point
         diff = numpy.array([[pt - fp for fp in geo.feature_points] for pt in pts])
         dist = numpy.einsum("...k,...k->...", diff, diff)
-        tol = h0 / 10
-        equals_feature_point = numpy.any(dist < tol ** 2, axis=1)
+        ftol = h0 / 10
+        equals_feature_point = numpy.any(dist < ftol ** 2, axis=1)
         pts = pts[~equals_feature_point]
         # Add feature points
         pts = numpy.concatenate([geo.feature_points, pts])
@@ -136,7 +138,8 @@ def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, show=False):
 
         diff = pts - pts_old2
         move2 = numpy.einsum("ij,ij->i", diff, diff)
-        if numpy.all(move2 < 1.0e-5 ** 2):
+        print(move2)
+        if numpy.all(move2 < tol ** 2):
             break
 
     return pts, cells
