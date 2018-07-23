@@ -19,4 +19,4 @@ def test(h0=1.0, show=False):
 
 
 if __name__ == "__main__":
-    test(h0=1.0, show=True)
+    test(h0=1.0, show=False)
