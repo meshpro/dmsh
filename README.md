@@ -65,7 +65,7 @@ X, cells = dmsh.generate(geo, 0.1)
 ![difference](https://nschloe.github.io/dmsh/difference.png) |
 ![pacman](https://nschloe.github.io/dmsh/pacman.png) |
 ![square_hole_refined](https://nschloe.github.io/dmsh/square_hole_refined.png)
-:-------------------:|:------------------:|
+:-------------------:|:------------------:|:----:|
 
 ```python
 geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
