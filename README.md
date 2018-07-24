@@ -63,12 +63,20 @@ X, cells = dmsh.generate(geo, 0.1)
 ##### Difference
 
 ![difference](https://nschloe.github.io/dmsh/difference.png) |
+![pacman](https://nschloe.github.io/dmsh/pacman.png) |
 ![square_hole_refined](https://nschloe.github.io/dmsh/square_hole_refined.png)
 :-------------------:|:------------------:|
 
 ```python
 geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
 X, cells = dmsh.generate(geo, 0.1)
+```
+```python
+geo = dmsh.Difference(
+    dmsh.Circle([0.0, 0.0], 1.0),
+    dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
+)
+X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 
 The following example uses a nonconstant edge length; it depends on the distance to the
@@ -117,6 +125,7 @@ X, cells = dmsh.generate(geo, 0.15)
 
 ![intersection](https://nschloe.github.io/dmsh/intersection.png) |
 ![intersection-three-circles](https://nschloe.github.io/dmsh/intersection_three_circles.png) |
+![halfspace](https://nschloe.github.io/dmsh/halfspace.png)
 :-------------------:|:------------------:|:----:|
 
 ```python
@@ -138,6 +147,37 @@ geo = dmsh.Intersection(
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 
+The following uses the `HalfSpace` primtive for cutting of a circle.
+```python
+geo = dmsh.Intersection(
+    [
+        dmsh.HalfSpace(numpy.sqrt(0.5) * numpy.array([1.0, 1.0]), 0.0),
+        dmsh.Circle([0.0, 0.0], 1.0),
+    ]
+)
+X, cells = dmsh.generate(geo, 0.1)
+```
+
+### Other manipulations
+
+#### Rotation
+
+![rotation](https://nschloe.github.io/dmsh/rotation.png) |
+![scaling](https://nschloe.github.io/dmsh/scaling.png)
+|:----:|:----:|
+
+```python
+geo = dmsh.Rotation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 0.1 * numpy.pi)
+X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
+```
+```python
+geo = dmsh.Translation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), [1.0, 1.0])
+X, cells = dmsh.generate(geo, 0.1, show=show)
+```
+```python
+geo = dmsh.Scaling(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 2.0)
+X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-5)
+```
 
 ### Installation
 
