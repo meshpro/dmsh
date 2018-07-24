@@ -10,7 +10,7 @@ def test_difference(show=False):
     X, cells = dmsh.generate(geo, 0.1, show=show)
 
     ref_norms = [2.9445552442961758e+02, 1.5856356670813716e+01, 1.4999999157880513e+00]
-    assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-9)
     return X, cells
 
 
