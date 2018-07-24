@@ -60,18 +60,82 @@ X, cells = dmsh.generate(geo, 0.1)
 
 #### Combinations
 
+##### Difference
+
+![difference](https://nschloe.github.io/dmsh/difference.png) |
+![square_hole_refined](https://nschloe.github.io/dmsh/square_hole_refined.png)
+:-------------------:|:------------------:|
+
+```python
+geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
+X, cells = dmsh.generate(geo, 0.1)
+```
+
+The following example uses a nonconstant edge length; it depends on the distance to the
+circle `c`.
+```python
+r = dmsh.Rectangle(-1.0, +1.0, -1.0, +1.0)
+c = dmsh.Circle([0.0, 0.0], 0.3)
+geo = dmsh.Difference(r, c)
+
+numpy.random.seed(0)
+X, cells = dmsh.generate(
+    geo, lambda pts: numpy.abs(c.dist(pts)) / 5 + 0.05, tol=1.0e-10
+)
+```
+
 ##### Union
 
 ![union](https://nschloe.github.io/dmsh/union.png) |
 ![union-rect](https://nschloe.github.io/dmsh/union_rectangles.png) |
-:-------------------:|:------------------:|
+![union-three-circles](https://nschloe.github.io/dmsh/union_three_circles.png) |
+:-------------------:|:------------------:|:----:|
 
 ```python
 geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
-# geo = dmsh.Union(
-#     [dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5), dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)]
-# )
 X, cells = dmsh.generate(geo, 0.15)
+```
+```python
+geo = dmsh.Union(
+    [dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5), dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)]
+)
+X, cells = dmsh.generate(geo, 0.15)
+```
+```python
+angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
+geo = dmsh.Union(
+    [
+        dmsh.Circle([numpy.cos(angles[0]), numpy.sin(angles[0])], 1.0),
+        dmsh.Circle([numpy.cos(angles[1]), numpy.sin(angles[1])], 1.0),
+        dmsh.Circle([numpy.cos(angles[2]), numpy.sin(angles[2])], 1.0),
+    ]
+)
+X, cells = dmsh.generate(geo, 0.15)
+```
+
+#### Intersection
+
+![intersection](https://nschloe.github.io/dmsh/intersection.png) |
+![intersection-three-circles](https://nschloe.github.io/dmsh/intersection_three_circles.png) |
+:-------------------:|:------------------:|:----:|
+
+```python
+geo = dmsh.Intersection(
+    [dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)]
+)
+X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
+```
+
+```python
+angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
+geo = dmsh.Intersection(
+    [
+        dmsh.Circle([numpy.cos(angles[0]), numpy.sin(angles[0])], 1.5),
+        dmsh.Circle([numpy.cos(angles[1]), numpy.sin(angles[1])], 1.5),
+        dmsh.Circle([numpy.cos(angles[2]), numpy.sin(angles[2])], 1.5),
+    ]
+)
+X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 
 
