@@ -16,9 +16,10 @@ though, and if it works, it produces pretty nice meshes. Might be useful.
 
 #### Primitives
 
-##### Circle
-
-![circle](https://nschloe.github.io/dmsh/circle.png)
+![circle](https://nschloe.github.io/dmsh/circle.png) |
+![rectangle](https://nschloe.github.io/dmsh/rectangle.png) |
+![polygon](https://nschloe.github.io/dmsh/polygon.png)
+|:---:|:---:|:---:|
 
 ```python
 import dmsh
@@ -30,18 +31,10 @@ X, cells = dmsh.generate(geo, 0.1)
 # meshio.write_points_and_cells("circle.vtk", X, {"triangle": cells})
 ```
 
-##### Rectangle
-
-![rectangle](https://nschloe.github.io/dmsh/rectangle.png)
-
 ```python
 geo = dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0)
 X, cells = dmsh.generate(geo, 0.1)
 ```
-
-##### Polygon
-
-![polygon](https://nschloe.github.io/dmsh/polygon.png)
 
 ```python
 geo = dmsh.Polygon(
