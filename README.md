@@ -8,9 +8,16 @@
 
 The worst mesh generator you'll ever use.
 
-Inspired by [distmesh](http://persson.berkeley.edu/distmesh/), dmsh is slow, requires a
-lot of memory, and isn't terribly robust either. It's got a simple enough interface
-though, and if it works, it produces pretty nice meshes. Might be useful.
+Inspired by [distmesh](http://persson.berkeley.edu/distmesh/), dmsh
+
+ * is slow,
+ * requires a lot of memory, and
+ * isn't terribly robust either.
+
+On the plus side,
+
+ * it's got a usable interface, amd
+ * if it works, it produces pretty high-quality meshes.
 
 ### Examples
 
