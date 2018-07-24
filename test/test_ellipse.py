@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-import dmsh
-
-from helpers import save  # assert_norm_equality
+# import dmsh
+#
+# from helpers import save  # assert_norm_equality
 
 
 # def test_ellipse(show=True):
