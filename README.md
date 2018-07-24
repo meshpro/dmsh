@@ -16,7 +16,8 @@ Inspired by [distmesh](http://persson.berkeley.edu/distmesh/), dmsh
 
 On the plus side,
 
- * it's got a usable interface, amd
+ * it's got a usable interface,
+ * is pure Python (and hence easily installable on any system), and
  * if it works, it produces pretty high-quality meshes.
 
 ### Examples
@@ -183,7 +184,7 @@ X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-5)
 
 All objects can be used to refine the mesh according to the distance to the object;
 e.g. a `Path`:
-```
+```python
 geo = dmsh.Rectangle(0.0, 1.0, 0.0, 1.0)
 
 p1 = dmsh.Path([[0.4, 0.6], [0.6, 0.4]])
