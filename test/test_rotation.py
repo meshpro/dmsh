@@ -18,4 +18,4 @@ def test(show=True):
 
 if __name__ == "__main__":
     X, cells = test(show=False)
-    save("rotate.png", X, cells)
+    save("rotation.png", X, cells)

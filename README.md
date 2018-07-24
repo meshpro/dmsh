@@ -158,9 +158,7 @@ geo = dmsh.Intersection(
 X, cells = dmsh.generate(geo, 0.1)
 ```
 
-### Other manipulations
-
-#### Rotation
+### Rotation, translation, scaling
 
 ![rotation](https://nschloe.github.io/dmsh/rotation.png) |
 ![scaling](https://nschloe.github.io/dmsh/scaling.png)
@@ -181,7 +179,7 @@ X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-5)
 
 ### Local refinement
 
-![refinement-line](https://nschloe.github.io/dmsh/refinement-line.png)
+![refinement-line](https://nschloe.github.io/dmsh/refinement_line.png)
 
 All objects can be used to refine the mesh according to the distance to the object;
 e.g. a `Path`:
