@@ -5,7 +5,7 @@ import dmsh
 from helpers import assert_norm_equality, save
 
 
-def test(show=True):
+def test(show=False):
     geo = dmsh.Polygon(
         [
             [0.0, 0.0],

@@ -7,7 +7,7 @@ import dmsh
 from helpers import assert_norm_equality, save
 
 
-def test(show=True):
+def test(show=False):
     geo = dmsh.Rectangle(0.0, 1.0, 0.0, 1.0)
 
     # p0 = dmsh.Path([[0.0, 0.0]])

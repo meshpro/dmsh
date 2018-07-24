@@ -5,7 +5,7 @@ import dmsh
 from helpers import assert_norm_equality, save
 
 
-def test_pacman(show=True):
+def test_pacman(show=False):
     geo = dmsh.Difference(
         dmsh.Circle([0.0, 0.0], 1.0),
         dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),

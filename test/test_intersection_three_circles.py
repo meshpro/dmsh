@@ -7,7 +7,7 @@ import dmsh
 from helpers import assert_norm_equality, save
 
 
-def test_union(show=True):
+def test_union(show=False):
     angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
     geo = dmsh.Intersection(
         [

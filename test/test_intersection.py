@@ -5,7 +5,7 @@ import dmsh
 from helpers import assert_norm_equality, save
 
 
-def test_intersection(show=True):
+def test_intersection(show=False):
     geo = dmsh.Intersection(
         [dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)]
     )

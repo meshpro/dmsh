@@ -7,7 +7,7 @@ import dmsh
 from helpers import assert_norm_equality, save
 
 
-def test_halfspace(show=True):
+def test_halfspace(show=False):
     geo = dmsh.Intersection(
         [
             dmsh.HalfSpace(numpy.sqrt(0.5) * numpy.array([1.0, 1.0]), 0.0),

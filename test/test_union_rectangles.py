@@ -5,7 +5,7 @@ import dmsh
 from helpers import assert_norm_equality, save
 
 
-def test_union(show=True):
+def test_union(show=False):
     geo = dmsh.Union(
         [dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5), dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)]
     )
