@@ -179,6 +179,25 @@ geo = dmsh.Scaling(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 2.0)
 X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-5)
 ```
 
+### Local refinement
+
+![refinement-line](https://nschloe.github.io/dmsh/refinement-line.png)
+
+All objects can be used to refine the mesh according to the distance to the object;
+e.g. a `Path`:
+```
+geo = dmsh.Rectangle(0.0, 1.0, 0.0, 1.0)
+
+p1 = dmsh.Path([[0.4, 0.6], [0.6, 0.4]])
+
+def edge_size(x):
+    return 0.03 + 0.1 * p1.dist(x)
+
+X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)
+```
+
+
+
 ### Installation
 
 dmsh is [available from the Python Package
