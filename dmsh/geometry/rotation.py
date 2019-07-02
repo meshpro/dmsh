@@ -1,7 +1,7 @@
 import numpy
 
 
-class Rotation():
+class Rotation:
     def __init__(self, geometry, angle):
         self.geometry = geometry
 

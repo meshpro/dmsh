@@ -1,8 +1,10 @@
-import fastfunc
 import numpy
 import scipy.spatial
 
-from .helpers import unique_rows, show as show_mesh
+import fastfunc
+
+from .helpers import show as show_mesh
+from .helpers import unique_rows
 
 
 def _recell(pts, geo):

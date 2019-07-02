@@ -1,6 +1,6 @@
 import numpy
-import dmsh
 
+import dmsh
 from helpers import assert_norm_equality, save
 
 

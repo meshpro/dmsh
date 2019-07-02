@@ -1,8 +1,9 @@
 import numpy
+
 import pypathlib
 
 
-class LineSegmentPath():
+class LineSegmentPath:
     def __init__(self, x0, x1):
         self.x0 = x0
         self.x1 = x1
@@ -18,7 +19,7 @@ class LineSegmentPath():
         )
 
 
-class Path():
+class Path:
     def __init__(self, points):
         points = numpy.array(points)
         self.path = pypathlib.Path(points)

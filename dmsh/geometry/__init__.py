@@ -7,8 +7,8 @@ from .path import Path
 from .polygon import Polygon
 from .rectangle import Rectangle
 from .rotation import Rotation
-from .stretch import Stretch
 from .scaling import Scaling
+from .stretch import Stretch
 from .translation import Translation
 from .union import Union
 

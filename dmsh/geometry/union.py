@@ -3,7 +3,7 @@ import numpy
 from ..helpers import find_feature_points
 
 
-class Union():
+class Union:
     def __init__(self, geometries):
         self.geometries = geometries
         self.bounding_box = [

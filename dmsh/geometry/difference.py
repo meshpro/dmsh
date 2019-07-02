@@ -3,7 +3,7 @@ import numpy
 from ..helpers import find_feature_points
 
 
-class Difference():
+class Difference:
     def __init__(self, geo0, geo1):
         self.geo0 = geo0
         self.geo1 = geo1

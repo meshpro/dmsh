@@ -1,5 +1,4 @@
 import dmsh
-
 from helpers import assert_norm_equality, save
 
 
