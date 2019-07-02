@@ -33,9 +33,6 @@ class Rotation:
         self.feature_points = numpy.array([])
         return
 
-    def plot(self):
-        return
-
     def dist(self, x):
         return self.geometry.dist(numpy.dot(self.R_inv, x))
 

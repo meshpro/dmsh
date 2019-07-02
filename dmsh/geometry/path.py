@@ -36,12 +36,6 @@ class Path:
         ]
         return
 
-    def plot(self):
-        import matplotlib.pyplot as plt
-
-        plt.plot([self.x0[0], self.x1[0]], [self.x0[1], self.x1[1]], color="#1f77b4")
-        return
-
     def dist(self, x):
         return self.path.distance(x.T)
 

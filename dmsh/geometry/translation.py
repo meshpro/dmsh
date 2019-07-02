@@ -15,9 +15,6 @@ class Translation:
         self.feature_points = numpy.array([])
         return
 
-    def plot(self):
-        return
-
     def dist(self, x):
         return self.geometry.dist((x.T - self.v).T)
 
