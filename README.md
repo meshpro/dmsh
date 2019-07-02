@@ -202,9 +202,9 @@ X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)
 dmsh is [available from the Python Package
 Index](https://pypi.org/project/dmsh/), so simply type
 ```
-pip install -U dmsh
+pip3 install dmsh --user
 ```
-to install or upgrade.
+to install.
 
 ### Testing
 

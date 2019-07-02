@@ -9,9 +9,6 @@ class Scaling:
         self.feature_points = numpy.array([])
         return
 
-    def plot(self):
-        return
-
     def dist(self, x):
         return self.geometry.dist(x / self.alpha)
 

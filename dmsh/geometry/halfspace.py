@@ -38,9 +38,6 @@ class HalfSpace:
         self.paths = [LinePath(v, tangent)]
         return
 
-    def plot(self):
-        return
-
     def dist(self, x):
         assert x.shape[0] == 2
         return self.alpha - numpy.dot(self.normal, x)
