@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # import dmsh
 #
 # from helpers import assert_norm_equality, save

@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-#
 import numpy
 import pypathlib
 
 
-class LineSegmentPath(object):
+class LineSegmentPath():
     def __init__(self, x0, x1):
         self.x0 = x0
         self.x1 = x1
@@ -20,7 +18,7 @@ class LineSegmentPath(object):
         )
 
 
-class Polygon(object):
+class Polygon():
     def __init__(self, points):
         points = numpy.array(points)
         self.bounding_box = [

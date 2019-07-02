@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-#
 import numpy
 
 
-class Stretch(object):
+class Stretch():
     def __init__(self, geometry, v):
         self.geometry = geometry
         self.alpha = numpy.sqrt(numpy.dot(v, v))

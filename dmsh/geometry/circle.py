@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-#
 import numpy
 
 
-class CirclePath(object):
+class CirclePath():
     def __init__(self, x0, r):
         self.x0 = x0
         self.r = r
@@ -22,7 +20,7 @@ class CirclePath(object):
         )
 
 
-class Circle(object):
+class Circle():
     def __init__(self, x0, r):
         self.x0 = x0
         self.r = r

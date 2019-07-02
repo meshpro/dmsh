@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 import fastfunc
 import numpy
 import scipy.spatial

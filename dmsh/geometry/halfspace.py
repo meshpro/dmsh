@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-#
 import numpy
 
 
-class LinePath(object):
+class LinePath():
     def __init__(self, v, tangent):
         self.v = v
         self.tangent = tangent
@@ -25,7 +23,7 @@ class LinePath(object):
         return numpy.multiply.outer(self.tangent, dt)
 
 
-class HalfSpace(object):
+class HalfSpace():
     def __init__(self, normal, alpha):
         self.normal = normal
         self.alpha = alpha
