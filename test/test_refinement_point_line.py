@@ -10,8 +10,6 @@ def test(show=False):
     # p0 = dmsh.Path([[0.0, 0.0]])
     p1 = dmsh.Path([[0.4, 0.6], [0.6, 0.4]])
 
-    p1.plot()
-
     def edge_size(x):
         return 0.03 + 0.1 * p1.dist(x)
 
