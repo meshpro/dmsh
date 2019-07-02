@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-#
 import numpy
 
 import dmsh
-
 from helpers import assert_norm_equality, save
 
 
@@ -18,7 +15,7 @@ def test_union(show=False):
     )
     X, cells = dmsh.generate(geo, 0.2, show=show, tol=1.0e-10)
 
-    ref_norms = [4.1390554922002769e+02, 2.1440246410944471e+01, 1.9947113226010518e+00]
+    ref_norms = [4.1390554922002769e02, 2.1440246410944471e01, 1.9947113226010518e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
     return X, cells
 

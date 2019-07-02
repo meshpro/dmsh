@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-#
 import dmsh
-
 from helpers import assert_norm_equality, save
 
 
@@ -11,7 +8,9 @@ def test_intersection(show=False):
     )
     X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-10)
 
-    ref_norms = [8.6619344595913475e+01, 6.1599895121114274e+00, 8.6602540378466342e-01]
+    geo.plot()
+
+    ref_norms = [8.6619344595913475e01, 6.1599895121114274e00, 8.6602540378466342e-01]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
     return X, cells
 

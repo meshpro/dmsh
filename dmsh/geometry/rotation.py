@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-#
 import numpy
 
 
-class Rotation(object):
+class Rotation:
     def __init__(self, geometry, angle):
         self.geometry = geometry
 

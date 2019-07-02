@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-#
 import dmsh
-
 from helpers import assert_norm_equality, save
 
 
@@ -19,7 +16,9 @@ def test(show=False):
     )
     X, cells = dmsh.generate(geo, 0.1, show=show)
 
-    ref_norms = [4.1468030858462305e+02, 2.1861920662017866e+01, 2.0]
+    geo.plot()
+
+    ref_norms = [4.1468030858462305e02, 2.1861920662017866e01, 2.0]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-5)
     return X, cells
 

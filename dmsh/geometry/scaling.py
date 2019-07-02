@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-#
 import numpy
 
 
-class Scaling(object):
+class Scaling:
     def __init__(self, geometry, alpha):
         self.geometry = geometry
         self.alpha = alpha

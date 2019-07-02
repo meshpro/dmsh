@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
-#
 import numpy
 
 from ..helpers import multi_newton
 
 
-class Ellipse(object):
+class Ellipse:
     def __init__(self, x0, a, b):
         self.x0 = x0
         self.a = a

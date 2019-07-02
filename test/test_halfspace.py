@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-#
 import numpy
 
 import dmsh
-
 from helpers import assert_norm_equality, save
 
 
@@ -16,7 +13,7 @@ def test_halfspace(show=False):
     )
     X, cells = dmsh.generate(geo, 0.1, show=show)
 
-    ref_norms = [1.6445971629723411e+02, 1.0032823867864321e+01, 9.9962000746451751e-01]
+    ref_norms = [1.6445971629723411e02, 1.0032823867864321e01, 9.9962000746451751e-01]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
     return X, cells
 
