@@ -125,7 +125,11 @@ def _find_feature_points_between_two_paths(path0, path1, num_steps):
         # Simply make it explicitly.
         sols = []
         for k in range(f_t.shape[-1]):
-            sols.append(numpy.linalg.solve(jac_t[..., k], f_t[:, k]))
+            try:
+                sols.append(numpy.linalg.solve(jac_t[..., k], f_t[:, k]))
+            except numpy.linalg.linalg.LinAlgError:
+                # singular matrix
+                sols.append(numpy.zeros(f_t[:, k].shape))
         sols = numpy.array(sols).T
 
         # Newton step
