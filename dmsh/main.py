@@ -1,8 +1,6 @@
 import numpy
 import scipy.spatial
 
-import fastfunc
-
 from .helpers import show as show_mesh
 from .helpers import unique_rows
 
@@ -122,9 +120,17 @@ def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, show=False):
         # force vectors
         force = edges_vec * force_abs[..., None]
 
-        force_per_node = numpy.zeros(pts.shape)
-        fastfunc.add.at(force_per_node, edges[:, 0], -force)
-        fastfunc.add.at(force_per_node, edges[:, 1], +force)
+        # bincount replacement for the slow numpy.add.at
+        n = pts.shape[0]
+        force_per_node0 = numpy.array([
+            numpy.bincount(edges[:, 0], weights=-force[:, 0], minlength=n),
+            numpy.bincount(edges[:, 0], weights=-force[:, 1], minlength=n)
+        ])
+        force_per_node1 = numpy.array([
+            numpy.bincount(edges[:, 1], weights=+force[:, 0], minlength=n),
+            numpy.bincount(edges[:, 1], weights=+force[:, 1], minlength=n)
+        ])
+        force_per_node = (force_per_node0 + force_per_node1).T
 
         update = delta_t * force_per_node
 
