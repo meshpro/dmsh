@@ -124,14 +124,18 @@ def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, show=False):
         # more speed-up can be achieved if the weights where contiguous in memory, i.e.,
         # if force[k] was used
         n = pts.shape[0]
-        force_per_node0 = numpy.array([
-            numpy.bincount(edges[:, 0], weights=-force[:, k], minlength=n)
-            for k in range(force.shape[1])
-        ])
-        force_per_node1 = numpy.array([
-            numpy.bincount(edges[:, 1], weights=+force[:, k], minlength=n)
-            for k in range(force.shape[1])
-        ])
+        force_per_node0 = numpy.array(
+            [
+                numpy.bincount(edges[:, 0], weights=-force[:, k], minlength=n)
+                for k in range(force.shape[1])
+            ]
+        )
+        force_per_node1 = numpy.array(
+            [
+                numpy.bincount(edges[:, 1], weights=+force[:, k], minlength=n)
+                for k in range(force.shape[1])
+            ]
+        )
         force_per_node = (force_per_node0 + force_per_node1).T
 
         update = delta_t * force_per_node
