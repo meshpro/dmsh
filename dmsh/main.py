@@ -1,8 +1,6 @@
 import numpy
 import scipy.spatial
 
-import fastfunc
-
 from .helpers import show as show_mesh
 from .helpers import unique_rows
 
@@ -51,7 +49,9 @@ def create_staggered_grid(h, bounding_box):
     return numpy.column_stack([x.reshape(-1), y.reshape(-1)])
 
 
-def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, show=False):
+def generate(
+    geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, random_seed=0, show=False
+):
     # Find h0 from edge_size (function)
     if callable(edge_size):
         edge_size_function = edge_size
@@ -66,6 +66,9 @@ def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, show=False):
 
         def edge_size_function(pts):
             return numpy.full(pts.shape[1], edge_size)
+
+    if random_seed is not None:
+        numpy.random.seed(random_seed)
 
     pts = create_staggered_grid(h0, geo.bounding_box)
 
@@ -122,9 +125,17 @@ def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, show=False):
         # force vectors
         force = edges_vec * force_abs[..., None]
 
-        force_per_node = numpy.zeros(pts.shape)
-        fastfunc.add.at(force_per_node, edges[:, 0], -force)
-        fastfunc.add.at(force_per_node, edges[:, 1], +force)
+        # bincount replacement for the slow numpy.add.at
+        # more speed-up can be achieved if the weights where contiguous in memory, i.e.,
+        # if force[k] was used
+        n = pts.shape[0]
+        force_per_node = numpy.array(
+            [
+                numpy.bincount(edges[:, 0], weights=-force[:, k], minlength=n)
+                + numpy.bincount(edges[:, 1], weights=+force[:, k], minlength=n)
+                for k in range(force.shape[1])
+            ]
+        ).T
 
         update = delta_t * force_per_node
 
