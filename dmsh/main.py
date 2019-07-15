@@ -49,7 +49,9 @@ def create_staggered_grid(h, bounding_box):
     return numpy.column_stack([x.reshape(-1), y.reshape(-1)])
 
 
-def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, show=False):
+def generate(
+    geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, random_seed=0, show=False
+):
     # Find h0 from edge_size (function)
     if callable(edge_size):
         edge_size_function = edge_size
@@ -64,6 +66,9 @@ def generate(geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, show=False):
 
         def edge_size_function(pts):
             return numpy.full(pts.shape[1], edge_size)
+
+    if random_seed is not None:
+        numpy.random.seed(random_seed)
 
     pts = create_staggered_grid(h0, geo.bounding_box)
 
