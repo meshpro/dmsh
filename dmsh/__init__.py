@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 from .__about__ import __author__, __email__, __license__, __status__, __version__
 from .geometry import (
     Circle,

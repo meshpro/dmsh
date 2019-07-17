@@ -23,6 +23,7 @@ setup(
     author_email=about["__email__"],
     install_requires=["numpy", "scipy", "pypathlib"],
     extras_require={"all": ["matplotlib"], "plot": ["matplotlib"]},
+    python_requires=">=3",
     description="High-quality 2D mesh generator based on distmesh",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
