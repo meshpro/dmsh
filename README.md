@@ -1,12 +1,14 @@
-# dmsh
+<p align="center">
+  <a href="https://github.com/nschloe/dmsh"><img alt="dmsh" src="https://nschloe.github.io/dmsh/logo-with-text.svg" width="60%"></a>
+  <p align="center">The worst mesh generator you'll ever use.</p>
+</p>
 
 [![CircleCI](https://img.shields.io/circleci/project/github/nschloe/dmsh/master.svg?style=flat-square)](https://circleci.com/gh/nschloe/dmsh/tree/master)
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/dmsh.svg?style=flat-square)](https://codecov.io/gh/nschloe/dmsh)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/ambv/black)
 [![PyPi Version](https://img.shields.io/pypi/v/dmsh.svg?style=flat-square)](https://pypi.org/project/dmsh)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/dmsh.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/dmsh)
-
-The worst mesh generator you'll ever use.
+[![PyPi downloads](https://img.shields.io/pypi/dd/dmsh.svg?style=flat-square)](https://pypistats.org/packages/dmsh)
 
 Inspired by [distmesh](http://persson.berkeley.edu/distmesh/), dmsh
 
@@ -19,6 +21,9 @@ On the plus side,
  * it's got a usable interface,
  * is pure Python (and hence easily installable on any system), and
  * if it works, it produces pretty high-quality meshes.
+
+Combined with [optimesh](https://github.com/nschloe/optimesh), dmsh produces the
+highest-quality 2D meshes in the west.
 
 ### Examples
 
@@ -35,8 +40,13 @@ import dmsh
 geo = dmsh.Circle([0.0, 0.0], 1.0)
 X, cells = dmsh.generate(geo, 0.1)
 
-# import meshio
-# meshio.write_points_and_cells("circle.vtk", X, {"triangle": cells})
+# optionally optimize the mesh
+import optimesh
+X, cells = optimesh.cvt.quasi_newton_uniform_full(X, cells, 1.0e-10, 100)
+
+# and write it to a file
+import meshio
+meshio.write_points_cells("circle.vtk", X, {"triangle": cells})
 ```
 
 ```python
