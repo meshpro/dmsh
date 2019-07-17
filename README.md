@@ -1,4 +1,7 @@
-# dmsh
+<p align="center">
+  <a href="https://github.com/nschloe/dmsh"><img alt="dmsh" src="https://nschloe.github.io/dmsh/logo-with-text.svg" width="60%"></a>
+  <p align="center">The worst mesh generator you'll ever use.</p>
+</p>
 
 [![CircleCI](https://img.shields.io/circleci/project/github/nschloe/dmsh/master.svg?style=flat-square)](https://circleci.com/gh/nschloe/dmsh/tree/master)
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/dmsh.svg?style=flat-square)](https://codecov.io/gh/nschloe/dmsh)
@@ -6,8 +9,6 @@
 [![PyPi Version](https://img.shields.io/pypi/v/dmsh.svg?style=flat-square)](https://pypi.org/project/dmsh)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/dmsh.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/dmsh)
 [![PyPi downloads](https://img.shields.io/pypi/dd/dmsh.svg?style=flat-square)](https://pypistats.org/packages/dmsh)
-
-The worst mesh generator you'll ever use.
 
 Inspired by [distmesh](http://persson.berkeley.edu/distmesh/), dmsh
 
