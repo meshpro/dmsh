@@ -22,6 +22,8 @@ class Union:
         tol = 1.0e-5
         is_on_boundary = numpy.all(alpha > -tol, axis=0)
         self.feature_points = self.feature_points[is_on_boundary]
+
+        self.paths = [path for geo in self.geometries for path in geo.paths]
         return
 
     def plot(self):
