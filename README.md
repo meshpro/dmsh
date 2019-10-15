@@ -5,10 +5,10 @@
 
 [![CircleCI](https://img.shields.io/circleci/project/github/nschloe/dmsh/master.svg?style=flat-square)](https://circleci.com/gh/nschloe/dmsh/tree/master)
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/dmsh.svg?style=flat-square)](https://codecov.io/gh/nschloe/dmsh)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/ambv/black)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 [![PyPi Version](https://img.shields.io/pypi/v/dmsh.svg?style=flat-square)](https://pypi.org/project/dmsh)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/dmsh.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/dmsh)
-[![PyPi downloads](https://img.shields.io/pypi/dd/dmsh.svg?style=flat-square)](https://pypistats.org/packages/dmsh)
+[![PyPi downloads](https://img.shields.io/pypi/dm/dmsh.svg?style=flat-square)](https://pypistats.org/packages/dmsh)
 
 Inspired by [distmesh](http://persson.berkeley.edu/distmesh/), dmsh
 
