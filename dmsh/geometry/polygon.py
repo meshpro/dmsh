@@ -30,29 +30,17 @@ class Polygon:
         ]
         self.polygon = pypathlib.ClosedPath(points)
         self.feature_points = points
-
         self.paths = [
             LineSegmentPath(p0, p1)
             for p0, p1 in zip(points, numpy.roll(points, -1, axis=0))
         ]
-        return
+        self.diameter = self.polygon.diameter
 
     def plot(self):
-        self.polygon.plot(color="#1f77b4")
-        return
+        self.polygon.plot(color="C0")
 
     def dist(self, x):
-        out = self.polygon.signed_distance(x.T)
-        return out
+        return self.polygon.signed_distance(x.T)
 
     def boundary_step(self, x):
-        # print("b")
-        # print(x.T)
-        # print("{:.16e}".format(x[0][0]))
-        # print("{:.16e}".format(x[1][0]))
-        # print("{:.16e}".format(self.dist(x)[0]))
-        out = self.polygon.closest_points(x.T).T
-        # print(out.T)
-        # print(x.T - out.T)
-        # print()
-        return out
+        return self.polygon.closest_points(x.T).T
