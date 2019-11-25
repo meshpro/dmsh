@@ -57,7 +57,7 @@ def generate(
     tol=1.0e-5,
     random_seed=0,
     show=False,
-    max_steps=1000,
+    max_steps=10000,
     verbose=False,
 ):
     # Find h0 from edge_size (function)
