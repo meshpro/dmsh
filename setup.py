@@ -21,7 +21,7 @@ setup(
     url="https://github.com/nschloe/dmsh",
     author=about["__author__"],
     author_email=about["__email__"],
-    install_requires=["numpy", "scipy", "pypathlib"],
+    install_requires=["numpy", "scipy", "pypathlib >= 0.1.3"],
     extras_require={"all": ["matplotlib"], "plot": ["matplotlib"]},
     python_requires=">=3",
     description="High-quality 2D mesh generator based on distmesh",
