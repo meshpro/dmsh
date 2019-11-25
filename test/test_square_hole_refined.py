@@ -9,7 +9,6 @@ def test(show=False):
     c = dmsh.Circle([0.0, 0.0], 0.3)
     geo = dmsh.Difference(r, c)
 
-    numpy.random.seed(0)
     X, cells = dmsh.generate(
         geo, lambda pts: numpy.abs(c.dist(pts)) / 5 + 0.05, show=show, tol=1.0e-10
     )

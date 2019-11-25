@@ -50,7 +50,15 @@ def create_staggered_grid(h, bounding_box):
 
 
 def generate(
-    geo, edge_size, f_scale=1.2, delta_t=0.2, tol=1.0e-5, random_seed=0, show=False
+    geo,
+    edge_size,
+    f_scale=1.2,
+    delta_t=0.2,
+    tol=1.0e-5,
+    random_seed=0,
+    show=False,
+    max_steps=10000,
+    verbose=False,
 ):
     # Find h0 from edge_size (function)
     if callable(edge_size):
@@ -95,7 +103,13 @@ def generate(
     cells, edges = _recell(pts, geo)
     pts_old = pts.copy()
 
+    k = 0
     while True:
+        if verbose:
+            print("step {}".format(k))
+
+        assert k <= max_steps, "Exceeded max_steps ({}).".format(max_steps)
+        k += 1
         diff = pts - pts_old
         move2 = numpy.einsum("ij,ij->i", diff, diff)
         if numpy.any(move2 > 1.0e-2 ** 2):
@@ -142,6 +156,7 @@ def generate(
         pts_old2 = pts.copy()
 
         pts[num_feature_points:] += update[num_feature_points:]
+
         # Some boundary points may have been pushed outside; bring them back onto the
         # boundary.
         is_outside = geo.dist(pts.T) > 0.0
@@ -149,6 +164,10 @@ def generate(
 
         diff = pts - pts_old2
         move2 = numpy.einsum("ij,ij->i", diff, diff)
+
+        if verbose:
+            print("max_move: {:.6e}".format(numpy.sqrt(numpy.max(move2))))
+
         if numpy.all(move2 < tol ** 2):
             break
 

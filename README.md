@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/nschloe/dmsh"><img alt="dmsh" src="https://nschloe.github.io/dmsh/logo-with-text.svg" width="60%"></a>
+  <a href="https://github.com/nschloe/dmsh"><img alt="dmsh" src="https://nschloe.github.io/dmsh/logo-with-text.svg" width="50%"></a>
   <p align="center">The worst mesh generator you'll ever use.</p>
 </p>
 
@@ -7,6 +7,7 @@
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/dmsh.svg?style=flat-square)](https://codecov.io/gh/nschloe/dmsh)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 [![PyPi Version](https://img.shields.io/pypi/v/dmsh.svg?style=flat-square)](https://pypi.org/project/dmsh)
+[![Debian CI](https://badges.debian.net/badges/debian/testing/python3-dmsh/version.svg?style=flat-square)](https://tracker.debian.org/pkg/python-dmsh)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/dmsh.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/dmsh)
 [![PyPi downloads](https://img.shields.io/pypi/dm/dmsh.svg?style=flat-square)](https://pypistats.org/packages/dmsh)
 
@@ -97,7 +98,6 @@ r = dmsh.Rectangle(-1.0, +1.0, -1.0, +1.0)
 c = dmsh.Circle([0.0, 0.0], 0.3)
 geo = dmsh.Difference(r, c)
 
-numpy.random.seed(0)
 X, cells = dmsh.generate(
     geo, lambda pts: numpy.abs(c.dist(pts)) / 5 + 0.05, tol=1.0e-10
 )
