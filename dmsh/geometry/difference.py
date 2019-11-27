@@ -27,10 +27,6 @@ class Difference(Geometry):
     # Choose tolerance above sqrt(machine_eps). This is necessary as the polygon
     # dist() is only accurate to that precision.
     def boundary_step(self, x, tol=1.0e-7, max_steps=100):
-        # step for the is_inside with the smallest value
-        alpha0 = self.geo0.dist(x)
-        alpha1 = self.geo1.dist(x)
-
         # Scale the tolerance with the domain diameter. This is necessary at least for
         # polygons where the distance calculation is flawed with round-off proportional
         # to the edge lengths.
@@ -39,18 +35,19 @@ class Difference(Geometry):
         except AttributeError:
             pass
 
+        # step for the is_inside with the smallest value
+        idx0 = self.geo0.dist(x) > tol
+        idx1 = self.geo1.dist(x) < -tol
+
         k = 0
-        while numpy.any(alpha0 > tol) or numpy.any(alpha1 < -tol):
+        while numpy.any(idx0) or numpy.any(idx1):
             assert k <= max_steps, "Exceeded maximum number of boundary steps."
             k += 1
-            idx0 = alpha0 > tol
             if numpy.any(idx0):
                 x[:, idx0] = self.geo0.boundary_step(x[:, idx0])
-
-            idx1 = alpha1 < -tol
             if numpy.any(idx1):
                 x[:, idx1] = self.geo1.boundary_step(x[:, idx1])
 
-            alpha0 = self.geo0.dist(x)
-            alpha1 = self.geo1.dist(x)
+            idx0 = self.geo0.dist(x) > tol
+            idx1 = self.geo1.dist(x) < -tol
         return x
