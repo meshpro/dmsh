@@ -1,9 +1,10 @@
 import numpy
 
+from .geometry import Geometry
 from ..helpers import find_feature_points
 
 
-class Difference:
+class Difference(Geometry):
     def __init__(self, geo0, geo1):
         self.geo0 = geo0
         self.geo1 = geo1
@@ -18,11 +19,6 @@ class Difference:
         tol = 1.0e-5
         is_on_boundary = (-tol < alpha) & (alpha < tol)
         self.feature_points = self.feature_points[is_on_boundary]
-        return
-
-    def plot(self):
-        self.geo0.plot()
-        self.geo1.plot()
         return
 
     def dist(self, x):

@@ -30,18 +30,6 @@ class Circle(Geometry):
         self.paths = [CirclePath(x0, r)]
         self.feature_points = numpy.array([[], []]).T
 
-    def plot(self, color="#1f77b4"):
-        import matplotlib.pyplot as plt
-
-        t = numpy.linspace(0.0, 2 * numpy.pi, 100)
-        plt.plot(
-            self.x0[0] + self.r * numpy.cos(t),
-            self.x0[1] + self.r * numpy.sin(t),
-            "-",
-            color=color,
-        )
-        plt.gca().set_aspect("equal")
-
     def dist(self, x):
         assert x.shape[0] == 2
         y = (x.T - self.x0).T

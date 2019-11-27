@@ -1,27 +1,16 @@
 import numpy
 
+from .geometry import Geometry
 from ..helpers import multi_newton
 
 
-class Ellipse:
+class Ellipse(Geometry):
     def __init__(self, x0, a, b):
         self.x0 = x0
         self.a = a
         self.b = b
         self.bounding_box = [x0[0] - a, x0[0] + a, x0[1] - b, x0[1] + b]
         self.feature_points = numpy.array([])
-        return
-
-    def plot(self, color="#1f77b4"):
-        import matplotlib.pyplot as plt
-
-        t = numpy.linspace(0.0, 2 * numpy.pi, 100)
-        plt.plot(
-            self.x0[0] + self.a * numpy.cos(t),
-            self.x0[1] + self.b * numpy.sin(t),
-            "-",
-            color=color,
-        )
         return
 
     def dist(self, x):

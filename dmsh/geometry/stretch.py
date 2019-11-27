@@ -1,7 +1,9 @@
 import numpy
 
+from .geometry import Geometry
 
-class Stretch:
+
+class Stretch(Geometry):
     def __init__(self, geometry, v):
         self.geometry = geometry
         self.alpha = numpy.sqrt(numpy.dot(v, v))
@@ -21,9 +23,6 @@ class Stretch:
             numpy.max(stretched_corners[1]),
         ]
         self.feature_points = numpy.array([])
-
-    def plot(self):
-        return
 
     def dist(self, x):
         # scale the component of x in direction v by 1/alpha

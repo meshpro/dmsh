@@ -1,9 +1,10 @@
 import numpy
 
+from .geometry import Geometry
 from ..helpers import find_feature_points
 
 
-class Union:
+class Union(Geometry):
     def __init__(self, geometries):
         self.geometries = geometries
         self.bounding_box = [
@@ -24,11 +25,6 @@ class Union:
         self.feature_points = self.feature_points[is_on_boundary]
 
         self.paths = [path for geo in self.geometries for path in geo.paths]
-        return
-
-    def plot(self):
-        for geo in self.geometries:
-            geo.plot()
         return
 
     def dist(self, x):

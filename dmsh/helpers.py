@@ -45,12 +45,9 @@ def show(pts, cells, geo, title=None):
         plt.title(title)
 
     try:
-        geo.plot()
+        geo.show(level_set=False)
     except AttributeError:
         pass
-
-    plt.show()
-    return
 
 
 def find_feature_points(geometries, num_steps=10):

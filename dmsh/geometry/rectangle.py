@@ -1,5 +1,4 @@
 import numpy
-import matplotlib.pyplot as plt
 
 from .geometry import Geometry
 from .polygon import LineSegmentPath
@@ -27,11 +26,6 @@ class Rectangle(Geometry):
             LineSegmentPath(p0, p1)
             for p0, p1 in zip(self.points, numpy.roll(self.points, -1, axis=0))
         ]
-
-    def plot(self):
-        x, y = numpy.concatenate([self.points, [self.points[0]]]).T
-        plt.gca().set_aspect("equal")
-        plt.plot(x, y, "-", color="C0")
 
     def dist(self, x):
         # outside dist

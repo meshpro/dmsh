@@ -1,5 +1,7 @@
 import numpy
 
+from .geometry import Geometry
+
 
 class LinePath:
     def __init__(self, v, tangent):
@@ -23,7 +25,7 @@ class LinePath:
         return numpy.multiply.outer(self.tangent, dt)
 
 
-class HalfSpace:
+class HalfSpace(Geometry):
     def __init__(self, normal, alpha):
         self.normal = normal
         self.alpha = alpha

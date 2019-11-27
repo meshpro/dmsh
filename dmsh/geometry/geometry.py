@@ -5,13 +5,7 @@ class Geometry:
     def __init__(self):
         return
 
-    def show(self, *args, **kwargs):
-        import matplotlib.pyplot as plt
-
-        self.plot(*args, **kwargs)
-        plt.show()
-
-    def show_level_set(self):
+    def plot(self, level_set=True):
         import matplotlib.pyplot as plt
 
         x0, x1, y0, y1 = self.bounding_box
@@ -24,13 +18,20 @@ class Geometry:
 
         Z = self.dist(numpy.array([X, Y]))
 
-        alpha = max([abs(numpy.min(Z)), abs(numpy.min(Z))])
-        cf = plt.contourf(
-            X, Y, Z, levels=20, cmap=plt.cm.coolwarm, vmin=-alpha, vmax=alpha
-        )
+        if level_set:
+            alpha = max([abs(numpy.min(Z)), abs(numpy.min(Z))])
+            cf = plt.contourf(
+                X, Y, Z, levels=20, cmap=plt.cm.coolwarm, vmin=-alpha, vmax=alpha
+            )
+            plt.colorbar(cf)
+
         # mark the 0-level (the domain boundary)
         plt.contour(X, Y, Z, levels=[0.0], colors="k")
-        plt.colorbar(cf)
 
         plt.gca().set_aspect("equal")
+
+    def show(self, *args, **kwargs):
+        import matplotlib.pyplot as plt
+
+        self.plot(*args, **kwargs)
         plt.show()

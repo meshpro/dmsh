@@ -38,9 +38,6 @@ class Polygon(Geometry):
         ]
         self.diameter = self.polygon.diameter
 
-    def plot(self):
-        self.polygon.plot(color="C0")
-
     def dist(self, x):
         assert x.shape[0] == 2
         X = x.reshape(2, -1)

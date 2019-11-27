@@ -1,7 +1,9 @@
 import numpy
 
+from .geometry import Geometry
 
-class Translation:
+
+class Translation(Geometry):
     def __init__(self, geometry, v):
         self.geometry = geometry
         self.v = v

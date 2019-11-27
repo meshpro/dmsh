@@ -1,7 +1,9 @@
 import numpy
 
+from .geometry import Geometry
 
-class Scaling:
+
+class Scaling(Geometry):
     def __init__(self, geometry, alpha):
         self.geometry = geometry
         self.alpha = alpha
