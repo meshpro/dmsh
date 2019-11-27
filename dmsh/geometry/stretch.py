@@ -21,7 +21,6 @@ class Stretch:
             numpy.max(stretched_corners[1]),
         ]
         self.feature_points = numpy.array([])
-        return
 
     def plot(self):
         return

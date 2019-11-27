@@ -10,5 +10,5 @@ def test_large():
 
     X, cells = dmsh.generate(geo, 2.0, tol=1.0e-5, max_steps=10000)
 
-    ref_norms = [4.4714910237327376e03, 2.3785742555298563e02, 2.0000000000000000e01]
+    ref_norms = [4.4970075945171939e03, 2.3877448919247402e02, 2.0000000000000000e01]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
