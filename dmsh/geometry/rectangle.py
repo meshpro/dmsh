@@ -51,9 +51,20 @@ class Rectangle(Geometry):
         return dist
 
     def boundary_step(self, x):
+        cx = (self.x0 + self.x1) / 2
+        cy = (self.y0 + self.y1) / 2
+        w = self.x1 - self.x0
+        h = self.y1 - self.y0
+
+        X = x[0] - cx
+        Y = x[1] - cy
         out = x.copy()
-        out[0][x[0] < self.x0] = self.x0
-        out[0][x[0] > self.x1] = self.x1
-        out[1][x[1] < self.y0] = self.y0
-        out[1][x[1] > self.y1] = self.y1
+
+        a = h * X < w * Y
+        b = -h * X < w * Y
+
+        out[1][a & b] = self.y1
+        out[1][~a & ~b] = self.y0
+        out[0][a & ~b] = self.x0
+        out[0][~a & b] = self.x1
         return out
