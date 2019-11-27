@@ -1,5 +1,7 @@
 import numpy
 
+from .geometry import Geometry
+
 
 class CirclePath:
     def __init__(self, x0, r):
@@ -20,14 +22,13 @@ class CirclePath:
         )
 
 
-class Circle:
+class Circle(Geometry):
     def __init__(self, x0, r):
         self.x0 = x0
         self.r = r
         self.bounding_box = [x0[0] - r, x0[0] + r, x0[1] - r, x0[1] + r]
         self.paths = [CirclePath(x0, r)]
         self.feature_points = numpy.array([[], []]).T
-        return
 
     def plot(self, color="#1f77b4"):
         import matplotlib.pyplot as plt
@@ -39,12 +40,12 @@ class Circle:
             "-",
             color=color,
         )
-        return
+        plt.gca().set_aspect("equal")
 
     def dist(self, x):
         assert x.shape[0] == 2
         y = (x.T - self.x0).T
-        return numpy.sqrt(numpy.einsum("ij,ij->j", y, y)) - self.r
+        return numpy.sqrt(numpy.einsum("i...,i...->...", y, y)) - self.r
 
     def boundary_step(self, x):
         # simply project onto the circle
