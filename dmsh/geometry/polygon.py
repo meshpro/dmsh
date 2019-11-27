@@ -2,6 +2,8 @@ import numpy
 
 import pypathlib
 
+from .geometry import Geometry
+
 
 class LineSegmentPath:
     def __init__(self, x0, x1):
@@ -19,7 +21,7 @@ class LineSegmentPath:
         )
 
 
-class Polygon:
+class Polygon(Geometry):
     def __init__(self, points):
         points = numpy.array(points)
         self.bounding_box = [
@@ -40,7 +42,10 @@ class Polygon:
         self.polygon.plot(color="C0")
 
     def dist(self, x):
-        return self.polygon.signed_distance(x.T)
+        assert x.shape[0] == 2
+        X = x.reshape(2, -1)
+        out = self.polygon.signed_distance(X.T)
+        return out.reshape(x.shape[1:])
 
     def boundary_step(self, x):
         return self.polygon.closest_points(x.T).T
