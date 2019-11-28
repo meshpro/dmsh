@@ -206,6 +206,21 @@ X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)
 ```
 
 
+### Debugging
+
+![level-set-poly](https://nschloe.github.io/dmsh/levelset-polygon.png) |
+![level-set-rect-hole](https://nschloe.github.io/dmsh/levelset-rect-hole.png)
+|:----:|:----:|
+
+dmsh is rather fragile, but sometimes the break-downs are due to an incorrectly defined
+geometry. Use
+```
+geo.show()
+```
+to inspect the level set function of your domain. (It must be negative inside the
+domain and positive outside. The 0-level set forms the domain boundary.)
+
+
 
 ### Installation
 

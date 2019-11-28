@@ -1,9 +1,10 @@
 import numpy
 
 from ..helpers import find_feature_points
+from .geometry import Geometry
 
 
-class Intersection:
+class Intersection(Geometry):
     def __init__(self, geometries):
         self.geometries = geometries
         self.bounding_box = [
@@ -14,11 +15,6 @@ class Intersection:
         ]
 
         self.feature_points = find_feature_points(geometries)
-        return
-
-    def plot(self, color="b"):
-        for geo in self.geometries:
-            geo.plot()
         return
 
     def dist(self, x):

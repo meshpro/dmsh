@@ -15,18 +15,12 @@ def assert_norm_equality(X, ref_norm, tol):
     ), "Expected: [{:.16e}, {:.16e}, {:.16e}]\nComputed: [{:.16e}, {:.16e}, {:.16e}]".format(
         *ref_norm, *vals
     )
-    return
 
 
 def save(filename, X, cells):
     import meshplex
 
-    mesh = meshplex.MeshTri(X, cells, flat_cell_correction=None)
+    mesh = meshplex.MeshTri(X, cells)
     mesh.save(
-        filename,
-        show_centroids=False,
-        show_coedges=False,
-        show_axes=False,
-        nondelaunay_edge_color="k",
+        filename, show_coedges=False, show_axes=False, nondelaunay_edge_color="k",
     )
-    return

@@ -1,9 +1,10 @@
 import numpy
 
 from ..helpers import find_feature_points
+from .geometry import Geometry
 
 
-class Union:
+class Union(Geometry):
     def __init__(self, geometries):
         self.geometries = geometries
         self.bounding_box = [
@@ -26,20 +27,17 @@ class Union:
         self.paths = [path for geo in self.geometries for path in geo.paths]
         return
 
-    def plot(self):
-        for geo in self.geometries:
-            geo.plot()
-        return
-
     def dist(self, x):
         return numpy.min([geo.dist(x) for geo in self.geometries], axis=0)
 
     def boundary_step(self, x):
-        # step for the is_inside with the smallest value
+        # Step to the geometry with the smallest distance. The new point is not always
+        # on the domain boundary.
+        out = x.copy()
         alpha = numpy.array([geo.dist(x) for geo in self.geometries])
-        alpha[alpha < 0] = numpy.inf
-        idx = numpy.argmin(alpha, axis=0)
+        idx = numpy.argmin(numpy.abs(alpha), axis=0)
         for k, geo in enumerate(self.geometries):
-            if numpy.any(idx == k):
-                x[:, idx == k] = geo.boundary_step(x[:, idx == k])
-        return x
+            j = idx == k
+            if numpy.any(j):
+                out[:, j] = geo.boundary_step(x[:, j])
+        return out

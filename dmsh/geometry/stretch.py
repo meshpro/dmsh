@@ -1,7 +1,9 @@
 import numpy
 
+from .geometry import Geometry
 
-class Stretch:
+
+class Stretch(Geometry):
     def __init__(self, geometry, v):
         self.geometry = geometry
         self.alpha = numpy.sqrt(numpy.dot(v, v))
@@ -21,16 +23,16 @@ class Stretch:
             numpy.max(stretched_corners[1]),
         ]
         self.feature_points = numpy.array([])
-        return
-
-    def plot(self):
-        return
 
     def dist(self, x):
         # scale the component of x in direction v by 1/alpha
+        x_shape = x.shape
+        assert x.shape[0] == 2
+        x = x.reshape(2, -1)
         vx = numpy.multiply.outer(numpy.dot(self.v, x), self.v)
         y = vx / self.alpha + (x.T - vx)
-        return self.geometry.dist(y.T)
+        y = y.T.reshape(x_shape)
+        return self.geometry.dist(y)
 
     def boundary_step(self, x):
         vx = numpy.multiply.outer(numpy.dot(self.v, x), self.v)
