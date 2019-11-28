@@ -26,9 +26,13 @@ class Stretch(Geometry):
 
     def dist(self, x):
         # scale the component of x in direction v by 1/alpha
+        x_shape = x.shape
+        assert x.shape[0] == 2
+        x = x.reshape(2, -1)
         vx = numpy.multiply.outer(numpy.dot(self.v, x), self.v)
         y = vx / self.alpha + (x.T - vx)
-        return self.geometry.dist(y.T)
+        y = y.T.reshape(x_shape)
+        return self.geometry.dist(y)
 
     def boundary_step(self, x):
         vx = numpy.multiply.outer(numpy.dot(self.v, x), self.v)
