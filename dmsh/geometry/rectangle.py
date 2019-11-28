@@ -54,6 +54,14 @@ class Rectangle(Geometry):
         return dist
 
     def boundary_step(self, x):
+        x = numpy.asarray(x)
+        assert x.shape[0] == 2
+
+        is_one_dimensional = False
+        if len(x.shape) == 1:
+            is_one_dimensional = True
+            x = x.reshape(-1, 1)
+
         cx = (self.x0 + self.x1) / 2
         cy = (self.y0 + self.y1) / 2
         w = self.x1 - self.x0
@@ -61,13 +69,26 @@ class Rectangle(Geometry):
 
         X = x[0] - cx
         Y = x[1] - cy
-        out = x.copy()
 
+        # Take care of the outside points
+        X[X < -w / 2] = -w / 2
+        X[X > +w / 2] = +w / 2
+        Y[Y < -h / 2] = -h / 2
+        Y[Y > +h / 2] = +h / 2
+
+        # Interior points
+        is_interior = (-w / 2 < X) & (X < w / 2) & (-h / 2 < Y) & (Y < h / 2)
         a = h * X < w * Y
         b = -h * X < w * Y
+        Y[is_interior & a & b] = h / 2
+        Y[is_interior & ~a & ~b] = -h / 2
+        X[is_interior & ~a & b] = w / 2
+        X[is_interior & a & ~b] = -w / 2
 
-        out[1][a & b] = self.y1
-        out[1][~a & ~b] = self.y0
-        out[0][a & ~b] = self.x0
-        out[0][~a & b] = self.x1
+        X += cx
+        Y += cy
+
+        out = numpy.array([X, Y])
+        if is_one_dimensional:
+            out = out.reshape(-1)
         return out
