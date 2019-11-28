@@ -1,7 +1,7 @@
 import numpy
 
-from .geometry import Geometry
 from ..helpers import find_feature_points
+from .geometry import Geometry
 
 
 class Union(Geometry):
@@ -37,7 +37,7 @@ class Union(Geometry):
         alpha = numpy.array([geo.dist(x) for geo in self.geometries])
         idx = numpy.argmin(numpy.abs(alpha), axis=0)
         for k, geo in enumerate(self.geometries):
-            j = (idx == k)
+            j = idx == k
             if numpy.any(j):
                 out[:, j] = geo.boundary_step(x[:, j])
         return out

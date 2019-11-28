@@ -1,7 +1,7 @@
 import numpy
 
-from .geometry import Geometry
 from ..helpers import find_feature_points
+from .geometry import Geometry
 
 
 class Intersection(Geometry):

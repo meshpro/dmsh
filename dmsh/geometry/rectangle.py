@@ -30,6 +30,7 @@ class Rectangle(Geometry):
     def dist(self, x):
         # outside dist
         # https://gamedev.stackexchange.com/a/44496
+        x = numpy.asarray(x)
         w = self.x1 - self.x0
         h = self.y1 - self.y0
         cx = (self.x0 + self.x1) / 2
@@ -41,12 +42,14 @@ class Rectangle(Geometry):
         dy[dy < 0.0] = 0.0
         dist = numpy.sqrt(dx ** 2 + dy ** 2)
         # inside dist
-        a = numpy.array([
-            x[0, is_inside] - self.x0,
-            self.x1 - x[0, is_inside],
-            x[1, is_inside] - self.y0,
-            self.y1 - x[1, is_inside],
-        ])
+        a = numpy.array(
+            [
+                x[0, is_inside] - self.x0,
+                self.x1 - x[0, is_inside],
+                x[1, is_inside] - self.y0,
+                self.y1 - x[1, is_inside],
+            ]
+        )
         dist[is_inside] = -numpy.min(a, axis=0)
         return dist
 

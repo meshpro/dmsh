@@ -1,7 +1,7 @@
 import numpy
 
-from .geometry import Geometry
 from ..helpers import multi_newton
+from .geometry import Geometry
 
 
 class Ellipse(Geometry):
