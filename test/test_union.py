@@ -1,7 +1,7 @@
 import numpy
 
 import dmsh
-from helpers import assert_norm_equality, save, assert_equality
+from helpers import assert_equality, assert_norm_equality, save
 
 
 def test_boundary_step():
@@ -30,5 +30,5 @@ def test_union(show=False):
 
 if __name__ == "__main__":
     test_boundary_step()
-    # X, cells = test_union(show=False)
-    # save("union.png", X, cells)
+    X, cells = test_union(show=False)
+    save("union.png", X, cells)

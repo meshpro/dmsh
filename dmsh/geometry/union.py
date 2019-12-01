@@ -58,7 +58,7 @@ class Union(Geometry):
             # boundary.)
             idx = numpy.argmin(dists[:, needs_stepping], axis=0)
             for i, geo in enumerate(self.geometries):
-                j = (idx == i)
+                j = idx == i
                 if numpy.any(j):
                     out[:, j] = geo.boundary_step(out[:, j])
 

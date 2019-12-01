@@ -6,9 +6,9 @@ def assert_equality(a, b, tol):
     b = numpy.asarray(b)
     fmt_a = ", ".join(["{:.16e}"] * len(a))
     fmt_b = ", ".join(["{:.16e}"] * len(b))
-    assert numpy.all(
-        numpy.abs(a - b) < tol
-    ), ("[{}]\n[{}]".format(fmt_a, fmt_b)).format(*a, *b)
+    assert numpy.all(numpy.abs(a - b) < tol), (
+        "[{}]\n[{}]".format(fmt_a, fmt_b)
+    ).format(*a, *b)
 
 
 def assert_norm_equality(X, ref_norm, tol):
