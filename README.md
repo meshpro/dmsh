@@ -234,8 +234,9 @@ to install.
 
 To run the dmsh unit tests, check out this repository and type
 ```
-pytest
+MPLBACKEND=Agg pytest
 ```
+(Setting the environment variable prevents the test figures from being displayed.)
 
 ### License
 
