@@ -1,0 +1,35 @@
+version: 2
+
+jobs:
+  lint:
+    docker:
+      - image: circleci/python:3
+    steps:
+      - checkout
+      - run: pip3 install -U black flake8 --user
+      - run: black --check .
+      - run: flake8 .
+  build:
+    working_directory: ~/work
+    docker:
+      - image: circleci/python:3
+    steps:
+      - run: pip3 install pytest pytest-cov --user
+      - checkout
+      - run: pip install .[all] --user
+      - run: pip install -r test_requirements.txt --user
+      # The tests
+      - run:
+          command: pytest --cov pypathlib
+          working_directory: test/
+          env:
+            MPLBACKEND: Agg
+      # submit to codecov
+      - run: bash <(curl -s https://codecov.io/bash)
+
+workflows:
+  version: 2
+  lint_and_build:
+    jobs:
+      - lint
+      - build

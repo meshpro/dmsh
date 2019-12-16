@@ -1,6 +1,6 @@
 import numpy
 
-import pypathlib
+from . import pypathlib
 
 
 class LineSegmentPath:
