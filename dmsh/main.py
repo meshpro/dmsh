@@ -106,9 +106,9 @@ def generate(
     k = 0
     while True:
         if verbose:
-            print("step {}".format(k))
+            print(f"step {k}")
 
-        assert k <= max_steps, "Exceeded max_steps ({}).".format(max_steps)
+        assert k <= max_steps, f"Exceeded max_steps ({max_steps})."
         k += 1
         diff = pts - pts_old
         move2 = numpy.einsum("ij,ij->i", diff, diff)
