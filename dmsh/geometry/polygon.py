@@ -1,7 +1,6 @@
 import numpy
 
 from . import pypathlib
-
 from .geometry import Geometry
 
 
