@@ -8,8 +8,8 @@ def test_difference(show=False):
 
     geo.plot()
 
-    ref_norms = [2.9445552442961758e02, 1.5856356670813716e01, 1.4999999157880513e00]
-    assert_norm_equality(X.flatten(), ref_norms, 1.0e-9)
+    ref_norms = [2.9445555e02, 1.58563569e01, 1.499999914e00]
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-7)
     return X, cells
 
 
