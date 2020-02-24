@@ -7,7 +7,7 @@ from .path import Path
 class ClosedPath(Path):
     def __init__(self, points):
         closed_points = numpy.concatenate([points, [points[0]]])
-        super(ClosedPath, self).__init__(closed_points)
+        super().__init__(closed_points)
 
         assert self.points.shape[0] > 2
         assert self.points.shape[1] == 2

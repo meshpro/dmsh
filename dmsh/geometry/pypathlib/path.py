@@ -1,7 +1,7 @@
 import numpy
 
 
-class Path(object):
+class Path:
     def __init__(self, points):
         self.points = numpy.asarray(points)
         assert self.points.shape[1] == 2
