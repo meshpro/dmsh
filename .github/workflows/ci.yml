@@ -9,7 +9,7 @@ jobs:
     - uses: actions/setup-python@v1
       with:
         python-version: "3.x"
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Lint with flake8
       run: |
         pip install --upgrade pip
@@ -22,17 +22,20 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
     steps:
     - uses: actions/setup-python@v1
       with:
         python-version: "3.x"
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
       with:
         lfs: true
     - name: Install package
       run: |
         pip install --upgrade pip
-        pip install -r test_requirements.txt --user
+        pip install -r test_requirements.txt
         pip install .[all]
     - name: Test with pytest
       run: |
