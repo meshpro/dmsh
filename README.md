@@ -227,7 +227,7 @@ domain and positive outside. The 0-level set forms the domain boundary.)
 dmsh is [available from the Python Package
 Index](https://pypi.org/project/dmsh/), so simply type
 ```
-pip3 install dmsh --user
+pip install dmsh
 ```
 to install.
 
