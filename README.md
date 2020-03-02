@@ -208,8 +208,8 @@ X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)
 
 ### Comparison with Gmsh
 
-![speed](https://nschloe.github.io/dmsh/gmsh-speed.png) |
-![avg-quality](https://nschloe.github.io/dmsh/gmsh-quality.png)
+![speed](https://nschloe.github.io/dmsh/gmsh-speed.svg) |
+![avg-quality](https://nschloe.github.io/dmsh/gmsh-quality.svg)
 :-------------------:|:------------------:|
 
 While dmsh can be slow at times, it can easily outperform other popular mesh generators
