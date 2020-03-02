@@ -5,7 +5,6 @@ import numpy as np
 
 import dmsh
 import meshplex
-import optimesh
 import pygmsh
 
 
