@@ -38,15 +38,31 @@ def create_staggered_grid(h, bounding_box):
     if num_y_steps % 2 == 1:
         num_y_steps -= 1
 
-    # Generate initial (staggered) point list from bounding box
-    # Make the meshgrid symmetric around the bounding box midpoint
+    # Generate initial (staggered) point list from bounding box.
+    # Make sure that the midpoint is one point in the grid.
+    x2 = num_x_steps // 2
+    y2 = num_y_steps // 2
+
     x, y = numpy.meshgrid(
-        midpoint[0] + x_step * numpy.arange(-num_x_steps // 2, num_x_steps // 2 + 1),
-        midpoint[1] + y_step * numpy.arange(-num_y_steps // 2, num_y_steps // 2 + 1),
+        midpoint[0] + x_step * numpy.arange(-x2, x2 + 1),
+        midpoint[1] + y_step * numpy.arange(-y2, y2 + 1),
     )
-    # staggered, such that the midpoint is not moved
-    x[num_x_steps % 2 :: 2] += h / 2
-    return numpy.column_stack([x.reshape(-1), y.reshape(-1)])
+
+    # Staggered, such that the midpoint is not moved.
+    # Unconditionally move to the right, then add more points to the left.
+    offset = (y2 + 1) % 2
+    x[offset::2] += h / 2
+
+    out = numpy.column_stack([x.reshape(-1), y.reshape(-1)])
+
+    # add points in the staggered lines to preserve symmetry
+    n = 2 * (-(-y2 // 2))
+    extra = numpy.empty((n, 2))
+    extra[:, 0] = midpoint[0] - x_step * x2 - h / 2
+    extra[:, 1] = midpoint[1] + y_step * numpy.arange(-y2 + offset, y2 + 1, 2)
+
+    out = numpy.concatenate([out, extra])
+    return out
 
 
 def generate(

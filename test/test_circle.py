@@ -1,16 +1,25 @@
+import numpy
+import pytest
+
 import dmsh
 from helpers import assert_norm_equality, save
 
 
-def test_circle(show=True):
+@pytest.mark.parametrize(
+    "radius,ref_norms",
+    [(0.1, [327.95194, 14.263721, 1.0]), (0.4, [18.899253166, 3.70111746, 1.0])],
+)
+def test_circle(radius, ref_norms, show=False):
     geo = dmsh.Circle([0.0, 0.0], 1.0)
-    X, cells = dmsh.generate(geo, 0.1, show=show)
+    X, cells = dmsh.generate(geo, radius, show=show)
 
-    ref_norms = [327.95194, 14.263721, 1.0]
+    # make sure the origin is part of the mesh
+    assert numpy.sum(numpy.einsum("ij,ij->i", X, X) < 1.0e-10) == 1
+
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-5)
     return X, cells
 
 
 if __name__ == "__main__":
-    X, cells = test_circle(show=False)
+    X, cells = test_circle(0.1, [327.95194, 14.263721, 1.0], show=False)
     save("circle.png", X, cells)
