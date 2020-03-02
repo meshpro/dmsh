@@ -14,7 +14,7 @@
 
 Inspired by [distmesh](http://persson.berkeley.edu/distmesh/), dmsh
 
- * is slow,
+ * can be slow,
  * requires a lot of memory, and
  * isn't terribly robust either.
 
