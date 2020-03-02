@@ -7,8 +7,7 @@ def test(show=False):
     X, cells = dmsh.generate(geo, 0.1, show=show)
 
     ref_norms = [1.7525e03, 5.5677441324948013e01, 3.0]
-    assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
-    return
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
 
 
 if __name__ == "__main__":

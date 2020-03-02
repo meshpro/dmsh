@@ -14,7 +14,7 @@ def test_boundary_step():
     assert numpy.array_equal(a, [-0.5, 1.0])
 
     a = geo.boundary_step([0.05, 0.05])
-    assert_equality(a, [-4.4469961425821203e-01, 9.9846976285554556e-01], 1.0e-12)
+    assert_equality(a, [-4.4469961425821203e-01, 9.9846976285554556e-01], 1.0e-10)
 
 
 def test_union(show=False):
@@ -24,7 +24,7 @@ def test_union(show=False):
     geo.plot()
 
     ref_norms = [3.0088043884612756e02, 1.5785099320497183e01, 1.5]
-    assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
 

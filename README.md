@@ -14,7 +14,7 @@
 
 Inspired by [distmesh](http://persson.berkeley.edu/distmesh/), dmsh
 
- * is slow,
+ * [can be slow](#comparison-with-gmsh),
  * requires a lot of memory, and
  * isn't terribly robust either.
 
@@ -205,6 +205,16 @@ def edge_size(x):
 
 X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)
 ```
+
+### Comparison with Gmsh
+
+![speed](https://nschloe.github.io/dmsh/gmsh-speed.svg) |
+![avg-quality](https://nschloe.github.io/dmsh/gmsh-quality.svg)
+:-------------------:|:------------------:|
+
+While dmsh can be slow at times, it can easily outperform other popular mesh generators
+(e.g., [Gmsh](http://gmsh.info/)) if the domain is fairly regular.  The average quality
+the of the mesh is also much better of course.
 
 
 ### Debugging
