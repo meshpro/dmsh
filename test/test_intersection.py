@@ -11,7 +11,7 @@ def test_intersection(show=False):
     geo.plot()
 
     ref_norms = [8.6619344595913475e01, 6.1599895121114274e00, 8.6602540378466342e-01]
-    assert_norm_equality(X.flatten(), ref_norms, 1.0e-12)
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
 

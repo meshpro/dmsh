@@ -4,9 +4,9 @@ from helpers import assert_norm_equality, save
 
 def test(show=True):
     geo = dmsh.Stretch(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), [1.0, 1.0])
-    X, cells = dmsh.generate(geo, 0.2, show=show, tol=1.0e-3)
+    X, cells = dmsh.generate(geo, 0.3, show=show, tol=1.0e-3)
 
-    ref_norms = [4.30e02, 2.35e01, 2.6213203435596428e00]
+    ref_norms = [1.9391178579025609e02, 1.5890693098212086e01, 2.6213203435596428e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-2)
     return X, cells
 
