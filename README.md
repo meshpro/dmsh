@@ -31,9 +31,7 @@ highest-quality 2D meshes in the west.
 
 #### Primitives
 
-![circle](https://nschloe.github.io/dmsh/circle.png) |
-![rectangle](https://nschloe.github.io/dmsh/rectangle.png) |
-![polygon](https://nschloe.github.io/dmsh/polygon.png)
+![circle](https://nschloe.github.io/dmsh/circle.png) | ![rectangle](https://nschloe.github.io/dmsh/rectangle.png) | ![polygon](https://nschloe.github.io/dmsh/polygon.png)
 |:---:|:---:|:---:|
 
 ```python
@@ -75,9 +73,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ##### Difference
 
-![difference](https://nschloe.github.io/dmsh/difference.png) |
-![pacman](https://nschloe.github.io/dmsh/pacman.png) |
-![square_hole_refined](https://nschloe.github.io/dmsh/square_hole_refined.png)
+![difference](https://nschloe.github.io/dmsh/difference.png) | ![pacman](https://nschloe.github.io/dmsh/pacman.png) | ![square_hole_refined](https://nschloe.github.io/dmsh/square_hole_refined.png)
 :-------------------:|:------------------:|:----:|
 
 ```python
@@ -106,9 +102,7 @@ X, cells = dmsh.generate(
 
 ##### Union
 
-![union](https://nschloe.github.io/dmsh/union.png) |
-![union-rect](https://nschloe.github.io/dmsh/union_rectangles.png) |
-![union-three-circles](https://nschloe.github.io/dmsh/union_three_circles.png) |
+![union](https://nschloe.github.io/dmsh/union.png) | ![union-rect](https://nschloe.github.io/dmsh/union_rectangles.png) | ![union-three-circles](https://nschloe.github.io/dmsh/union_three_circles.png) |
 :-------------------:|:------------------:|:----:|
 
 ```python
@@ -135,9 +129,7 @@ X, cells = dmsh.generate(geo, 0.15)
 
 #### Intersection
 
-![intersection](https://nschloe.github.io/dmsh/intersection.png) |
-![intersection-three-circles](https://nschloe.github.io/dmsh/intersection_three_circles.png) |
-![halfspace](https://nschloe.github.io/dmsh/halfspace.png)
+![intersection](https://nschloe.github.io/dmsh/intersection.png) | ![intersection-three-circles](https://nschloe.github.io/dmsh/intersection_three_circles.png) | ![halfspace](https://nschloe.github.io/dmsh/halfspace.png)
 :-------------------:|:------------------:|:----:|
 
 ```python
@@ -172,8 +164,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ### Rotation, translation, scaling
 
-![rotation](https://nschloe.github.io/dmsh/rotation.png) |
-![scaling](https://nschloe.github.io/dmsh/scaling.png)
+![rotation](https://nschloe.github.io/dmsh/rotation.png) | ![scaling](https://nschloe.github.io/dmsh/scaling.png)
 |:----:|:----:|
 
 ```python
@@ -208,8 +199,7 @@ X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)
 
 ### Comparison with Gmsh
 
-![speed](https://nschloe.github.io/dmsh/gmsh-speed.svg) |
-![avg-quality](https://nschloe.github.io/dmsh/gmsh-quality.svg)
+![speed](https://nschloe.github.io/dmsh/gmsh-speed.svg) | ![avg-quality](https://nschloe.github.io/dmsh/gmsh-quality.svg)
 :-------------------:|:------------------:|
 
 While dmsh can be slow at times, it can easily outperform other popular mesh generators
@@ -219,8 +209,7 @@ the of the mesh is also much better of course.
 
 ### Debugging
 
-![level-set-poly](https://nschloe.github.io/dmsh/levelset-polygon.png) |
-![level-set-rect-hole](https://nschloe.github.io/dmsh/levelset-rect-hole.png)
+![level-set-poly](https://nschloe.github.io/dmsh/levelset-polygon.png) | ![level-set-rect-hole](https://nschloe.github.io/dmsh/levelset-rect-hole.png)
 |:----:|:----:|
 
 dmsh is rather fragile, but sometimes the break-downs are due to an incorrectly defined
