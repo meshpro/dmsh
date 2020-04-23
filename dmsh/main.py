@@ -1,3 +1,4 @@
+import meshplex
 import numpy
 import scipy.spatial
 
@@ -13,6 +14,22 @@ def _recell(pts, geo):
     # kick out all cells whose barycenter is not in the geometry
     bc = numpy.sum(pts[cells], axis=1) / 3.0
     cells = cells[geo.dist(bc.T) < 0.0]
+
+    # # kick out all cells whose barycenter or edge midpoints are not in the geometry
+    # btol = 1.0e-3
+    # bc = numpy.sum(pts[cells], axis=1) / 3.0
+    # barycenter_inside = geo.dist(bc.T) < btol
+    # # Remove cells which are (partly) outside of the domain. Check at the midpoint of
+    # # all edges.
+    # mid0 = (pts[cells[:, 1]] + pts[cells[:, 2]]) / 2
+    # mid1 = (pts[cells[:, 2]] + pts[cells[:, 0]]) / 2
+    # mid2 = (pts[cells[:, 0]] + pts[cells[:, 1]]) / 2
+    # edge_midpoints_inside = (
+    #     (geo.dist(mid0.T) < btol)
+    #     & (geo.dist(mid1.T) < btol)
+    #     & (geo.dist(mid2.T) < btol)
+    # )
+    # cells = cells[barycenter_inside & edge_midpoints_inside]
 
     # Determine edges
     edges = numpy.concatenate([cells[:, [0, 1]], cells[:, [1, 2]], cells[:, [2, 0]]])
@@ -42,12 +59,10 @@ def create_staggered_grid(h, bounding_box):
     # Make sure that the midpoint is one point in the grid.
     x2 = num_x_steps // 2
     y2 = num_y_steps // 2
-
     x, y = numpy.meshgrid(
         midpoint[0] + x_step * numpy.arange(-x2, x2 + 1),
         midpoint[1] + y_step * numpy.arange(-y2, y2 + 1),
     )
-
     # Staggered, such that the midpoint is not moved.
     # Unconditionally move to the right, then add more points to the left.
     offset = (y2 + 1) % 2
@@ -65,11 +80,25 @@ def create_staggered_grid(h, bounding_box):
     return out
 
 
+# def get_max_step(mesh):
+#     # Some methods are stable (CPT), others can break down if the mesh isn't very
+#     # smooth. A break-down manifests, for example, in a step size that lets triangles
+#     # become fully flat or even "overshoot". After that, anything can happen. To prevent
+#     # this, restrict the maximum step size to half of the minimum the incircle radius of
+#     # all adjacent cells. This makes sure that triangles cannot "flip".
+#     # <https://stackoverflow.com/a/57261082/353337>
+#     max_step = numpy.full(mesh.node_coords.shape[0], numpy.inf)
+#     numpy.minimum.at(
+#         max_step, mesh.cells["nodes"].reshape(-1), numpy.repeat(mesh.cell_inradius, 3),
+#     )
+#     max_step *= 0.5
+#     return max_step
+
+
 def generate(
     geo,
     edge_size,
-    f_scale=1.2,
-    delta_t=0.2,
+    # smoothing_method="distmesh",
     tol=1.0e-5,
     random_seed=0,
     show=False,
@@ -117,9 +146,70 @@ def generate(
         pts = numpy.concatenate([geo.feature_points, pts])
 
     cells, edges = _recell(pts, geo)
+
+    mesh = meshplex.MeshTri(pts, cells)
+
+    # # move boundary points to the boundary exactly
+    # is_boundary_node = mesh.is_boundary_node.copy()
+    # mesh.node_coords[is_boundary_node] = geo.boundary_step(
+    #     mesh.node_coords[is_boundary_node].T
+    # ).T
+    # mesh.update_values()
+
+    # print(sum(is_boundary_node))
+    # show_mesh(pts, cells, geo)
+    # exit(1)
+
+    # if smoothing_method == "odt":
+    #     points, cells = optimesh.odt.fixed_point_uniform(
+    #         mesh.node_coords,
+    #         mesh.cells["nodes"],
+    #         max_num_steps=max_steps,
+    #         verbose=verbose,
+    #         boundary_step=geo.boundary_step,
+    #     )
+    # else:
+    #     assert smoothing_method == "distmesh"
+    mesh = distmesh_smoothing(
+        mesh,
+        edges,
+        geo,
+        num_feature_points,
+        edge_size_function,
+        max_steps,
+        tol,
+        verbose,
+        show,
+        delta_t=0.2,
+        f_scale=1.2,
+    )
+    points = mesh.node_coords
+    cells = mesh.cells["nodes"]
+
+    return points, cells
+
+
+def distmesh_smoothing(
+    mesh,
+    edges,
+    geo,
+    num_feature_points,
+    edge_size_function,
+    max_steps,
+    tol,
+    verbose,
+    show,
+    delta_t=0.2,
+    f_scale=1.2,
+):
+    pts = mesh.node_coords
+    cells = mesh.cells["nodes"]
+
     pts_old = pts.copy()
 
     k = 0
+    # is_boundary_node = mesh.is_boundary_node.copy()
+    # pts_old_last_recell = mesh.node_coords.copy()
     while True:
         if verbose:
             print(f"step {k}")
@@ -132,15 +222,35 @@ def generate(
             pts_old = pts.copy()
             cells, edges = _recell(pts, geo)
 
-        if show:
-            show_mesh(pts, cells, geo)
+        # diff = mesh.node_coords - pts_old_last_recell
+        # move2_last_recell = numpy.einsum("ij,ij->i", diff, diff)
+        # if numpy.any(move2_last_recell > 1.0e-2 ** 2):
+        #     pts_old_last_recell = mesh.node_coords.copy()
+        #     cells, edges = _recell(mesh.node_coords, geo)
 
+        #     mesh = meshplex.MeshTri(mesh.node_coords, cells)
+        #     is_boundary_node = mesh.is_boundary_node.copy()
+
+        #     # The recell process might have made some points boundary points. Move them
+        #     # back.
+        #     mesh.node_coords[is_boundary_node] = geo.boundary_step(
+        #         mesh.node_coords[is_boundary_node].T
+        #     ).T
+        #     # mesh.update_values()
+
+        if show:
+            show_mesh(mesh.node_coords, mesh.cells["nodes"], geo)
+
+        # edges_vec = mesh.node_coords[edges[:, 1]] - mesh.node_coords[edges[:, 0]]
         edges_vec = pts[edges[:, 1]] - pts[edges[:, 0]]
         edge_lengths = numpy.sqrt(numpy.einsum("ij,ij->i", edges_vec, edges_vec))
         edges_vec /= edge_lengths[..., None]
 
         # Evaluate element sizes at edge midpoints
         edge_midpoints = (pts[edges[:, 1]] + pts[edges[:, 0]]) / 2
+        # edge_midpoints = (
+        #     mesh.node_coords[edges[:, 1]] + mesh.node_coords[edges[:, 0]]
+        # ) / 2
         p = edge_size_function(edge_midpoints.T)
         desired_lengths = (
             f_scale
@@ -156,9 +266,10 @@ def generate(
         force = edges_vec * force_abs[..., None]
 
         # bincount replacement for the slow numpy.add.at
-        # more speed-up can be achieved if the weights where contiguous in memory, i.e.,
+        # more speed-up can be achieved if the weights were contiguous in memory, i.e.,
         # if force[k] was used
         n = pts.shape[0]
+        # n = mesh.node_coords.shape[0]
         force_per_node = numpy.array(
             [
                 numpy.bincount(edges[:, 0], weights=-force[:, k], minlength=n)
@@ -170,8 +281,21 @@ def generate(
         update = delta_t * force_per_node
 
         pts_old2 = pts.copy()
+        # # Limit the max step size to avoid overshoots
+        # TODO this doesn't work for distmesh smoothing. hm.
+        # mesh = meshplex.MeshTri(pts, cells)
+        # max_step = get_max_step(mesh)
+        # step_lengths = numpy.sqrt(numpy.einsum("ij,ij->i", update, update))
+        # idx = step_lengths > max_step
+        # update[idx] *= (max_step / step_lengths)[idx, None]
+        # # alpha = numpy.min(max_step / step_lengths)
+        # # update *= alpha
 
-        pts[num_feature_points:] += update[num_feature_points:]
+        # pts[num_feature_points:] += update[num_feature_points:]
+        # pts_old = mesh.node_coords.copy()
+
+        # leave feature points untouched
+        mesh.node_coords[num_feature_points:] += update[num_feature_points:]
 
         # Some boundary points may have been pushed outside; bring them back onto the
         # boundary.
@@ -179,6 +303,18 @@ def generate(
         pts[is_outside] = geo.boundary_step(pts[is_outside].T).T
 
         diff = pts - pts_old2
+
+        # is_outside = geo.dist(mesh.node_coords.T) > 0.0
+        # # idx = is_outside
+        # idx = is_outside | is_boundary_node
+        # # idx = is_boundary_node
+        # mesh.node_coords[idx] = geo.boundary_step(mesh.node_coords[idx].T).T
+        # mesh.update_values()
+        # # num_removed = mesh.remove_degenerate_cells(1.0e-3)
+        # # print("removed {} cells".format(num_removed))
+        # mesh.flip_until_delaunay()
+
+        # diff = mesh.node_coords - pts_old
         move2 = numpy.einsum("ij,ij->i", diff, diff)
 
         if verbose:
@@ -187,4 +323,4 @@ def generate(
         if numpy.all(move2 < tol ** 2):
             break
 
-    return pts, cells
+    return mesh
