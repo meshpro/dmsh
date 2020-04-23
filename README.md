@@ -203,8 +203,10 @@ X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)
 :-------------------:|:------------------:|
 
 While dmsh can be slow at times, it can easily outperform other popular mesh generators
-(e.g., [Gmsh](http://gmsh.info/)) if the domain is fairly regular.  The average quality
-the of the mesh is also much better of course.
+(e.g., [Gmsh](http://gmsh.info/)) if the domain is fairly regular. The above graphs show
+the results of mesh generation for a disk.
+
+The average quality of the mesh is also much better of course.
 
 
 ### Debugging
