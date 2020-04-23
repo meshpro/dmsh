@@ -199,8 +199,8 @@ def distmesh_smoothing(
     tol,
     verbose,
     show,
-    delta_t=0.2,
-    f_scale=1.2,
+    delta_t,
+    f_scale,
 ):
     pts = mesh.node_coords
     cells = mesh.cells["nodes"]
@@ -214,7 +214,10 @@ def distmesh_smoothing(
         if verbose:
             print(f"step {k}")
 
-        assert k <= max_steps, f"Exceeded max_steps ({max_steps})."
+        if k > max_steps:
+            print(f"Exceeded max_steps ({max_steps}).")
+            break
+
         k += 1
         diff = pts - pts_old
         move2 = numpy.einsum("ij,ij->i", diff, diff)
