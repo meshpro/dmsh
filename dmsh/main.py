@@ -1,6 +1,7 @@
-import meshplex
 import numpy
 import scipy.spatial
+
+import meshplex
 
 from .helpers import show as show_mesh
 from .helpers import unique_rows
@@ -202,58 +203,46 @@ def distmesh_smoothing(
     delta_t,
     f_scale,
 ):
-    pts = mesh.node_coords
-    cells = mesh.cells["nodes"]
-
-    pts_old = pts.copy()
-
     k = 0
     # is_boundary_node = mesh.is_boundary_node.copy()
-    # pts_old_last_recell = mesh.node_coords.copy()
+    pts_old_last_recell = mesh.node_coords.copy()
     while True:
         if verbose:
             print(f"step {k}")
 
         if k > max_steps:
-            print(f"Exceeded max_steps ({max_steps}).")
+            if verbose:
+                print(f"Exceeded max_steps ({max_steps}).")
             break
 
         k += 1
-        diff = pts - pts_old
-        move2 = numpy.einsum("ij,ij->i", diff, diff)
-        if numpy.any(move2 > 1.0e-2 ** 2):
-            pts_old = pts.copy()
-            cells, edges = _recell(pts, geo)
 
-        # diff = mesh.node_coords - pts_old_last_recell
-        # move2_last_recell = numpy.einsum("ij,ij->i", diff, diff)
-        # if numpy.any(move2_last_recell > 1.0e-2 ** 2):
-        #     pts_old_last_recell = mesh.node_coords.copy()
-        #     cells, edges = _recell(mesh.node_coords, geo)
-
-        #     mesh = meshplex.MeshTri(mesh.node_coords, cells)
-        #     is_boundary_node = mesh.is_boundary_node.copy()
-
-        #     # The recell process might have made some points boundary points. Move them
-        #     # back.
-        #     mesh.node_coords[is_boundary_node] = geo.boundary_step(
-        #         mesh.node_coords[is_boundary_node].T
-        #     ).T
-        #     # mesh.update_values()
+        diff = mesh.node_coords - pts_old_last_recell
+        move2_last_recell = numpy.einsum("ij,ij->i", diff, diff)
+        if numpy.any(move2_last_recell > 1.0e-2 ** 2):
+            pts_old_last_recell = mesh.node_coords.copy()
+            cells, edges = _recell(mesh.node_coords, geo)
+            #
+            mesh = meshplex.MeshTri(mesh.node_coords, cells)
+            # TODO The recell process might have made some points boundary points. Move
+            # them back.
+            # is_boundary_node = mesh.is_boundary_node.copy()
+            # mesh.node_coords[is_boundary_node] = geo.boundary_step(
+            #     mesh.node_coords[is_boundary_node].T
+            # ).T
+            # mesh.update_values()
 
         if show:
             show_mesh(mesh.node_coords, mesh.cells["nodes"], geo)
 
-        # edges_vec = mesh.node_coords[edges[:, 1]] - mesh.node_coords[edges[:, 0]]
-        edges_vec = pts[edges[:, 1]] - pts[edges[:, 0]]
+        edges_vec = mesh.node_coords[edges[:, 1]] - mesh.node_coords[edges[:, 0]]
         edge_lengths = numpy.sqrt(numpy.einsum("ij,ij->i", edges_vec, edges_vec))
         edges_vec /= edge_lengths[..., None]
 
         # Evaluate element sizes at edge midpoints
-        edge_midpoints = (pts[edges[:, 1]] + pts[edges[:, 0]]) / 2
-        # edge_midpoints = (
-        #     mesh.node_coords[edges[:, 1]] + mesh.node_coords[edges[:, 0]]
-        # ) / 2
+        edge_midpoints = (
+            mesh.node_coords[edges[:, 1]] + mesh.node_coords[edges[:, 0]]
+        ) / 2
         p = edge_size_function(edge_midpoints.T)
         desired_lengths = (
             f_scale
@@ -271,8 +260,7 @@ def distmesh_smoothing(
         # bincount replacement for the slow numpy.add.at
         # more speed-up can be achieved if the weights were contiguous in memory, i.e.,
         # if force[k] was used
-        n = pts.shape[0]
-        # n = mesh.node_coords.shape[0]
+        n = mesh.node_coords.shape[0]
         force_per_node = numpy.array(
             [
                 numpy.bincount(edges[:, 0], weights=-force[:, k], minlength=n)
@@ -283,7 +271,8 @@ def distmesh_smoothing(
 
         update = delta_t * force_per_node
 
-        pts_old2 = pts.copy()
+        pts_before_update = mesh.node_coords.copy()
+
         # # Limit the max step size to avoid overshoots
         # TODO this doesn't work for distmesh smoothing. hm.
         # mesh = meshplex.MeshTri(pts, cells)
@@ -294,18 +283,15 @@ def distmesh_smoothing(
         # # alpha = numpy.min(max_step / step_lengths)
         # # update *= alpha
 
-        # pts[num_feature_points:] += update[num_feature_points:]
-        # pts_old = mesh.node_coords.copy()
-
         # leave feature points untouched
         mesh.node_coords[num_feature_points:] += update[num_feature_points:]
 
         # Some boundary points may have been pushed outside; bring them back onto the
         # boundary.
-        is_outside = geo.dist(pts.T) > 0.0
-        pts[is_outside] = geo.boundary_step(pts[is_outside].T).T
-
-        diff = pts - pts_old2
+        is_outside = geo.dist(mesh.node_coords.T) > 0.0
+        mesh.node_coords[is_outside] = geo.boundary_step(
+            mesh.node_coords[is_outside].T
+        ).T
 
         # is_outside = geo.dist(mesh.node_coords.T) > 0.0
         # # idx = is_outside
@@ -317,7 +303,7 @@ def distmesh_smoothing(
         # # print("removed {} cells".format(num_removed))
         # mesh.flip_until_delaunay()
 
-        # diff = mesh.node_coords - pts_old
+        diff = mesh.node_coords - pts_before_update
         move2 = numpy.einsum("ij,ij->i", diff, diff)
 
         if verbose:
