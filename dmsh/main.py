@@ -226,6 +226,7 @@ def distmesh_smoothing(
             mesh = meshplex.MeshTri(mesh.node_coords, cells)
             # TODO The recell process might have made some points boundary points. Move
             # them back.
+            # TODO Doing this moves some concave corners in polygons. Hm.
             # is_boundary_node = mesh.is_boundary_node.copy()
             # mesh.node_coords[is_boundary_node] = geo.boundary_step(
             #     mesh.node_coords[is_boundary_node].T
@@ -289,18 +290,15 @@ def distmesh_smoothing(
         # Some boundary points may have been pushed outside; bring them back onto the
         # boundary.
         is_outside = geo.dist(mesh.node_coords.T) > 0.0
-        mesh.node_coords[is_outside] = geo.boundary_step(
-            mesh.node_coords[is_outside].T
-        ).T
-
-        # is_outside = geo.dist(mesh.node_coords.T) > 0.0
-        # # idx = is_outside
+        idx = is_outside
+        # Alternative: Also push boundary nodes (which have moved away from the boundary
+        # back to it.
         # idx = is_outside | is_boundary_node
-        # # idx = is_boundary_node
-        # mesh.node_coords[idx] = geo.boundary_step(mesh.node_coords[idx].T).T
+        # idx = is_boundary_node
+        mesh.node_coords[idx] = geo.boundary_step(mesh.node_coords[idx].T).T
         # mesh.update_values()
-        # # num_removed = mesh.remove_degenerate_cells(1.0e-3)
-        # # print("removed {} cells".format(num_removed))
+        # num_removed = mesh.remove_degenerate_cells(1.0e-3)
+        # print("removed {} cells".format(num_removed))
         # mesh.flip_until_delaunay()
 
         diff = mesh.node_coords - pts_before_update
