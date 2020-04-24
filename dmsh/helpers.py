@@ -31,7 +31,7 @@ def multi_newton(x0, is_inside, boundary_step, tol, max_num_steps=10):
     return x
 
 
-def show(pts, cells, geo, title=None):
+def show(pts, cells, geo, title=None, full_screen=True):
     import matplotlib.pyplot as plt
 
     eps = 1.0e-10
@@ -40,6 +40,14 @@ def show(pts, cells, geo, title=None):
     plt.plot(pts[~is_inside, 0], pts[~is_inside, 1], ".", color="r")
     plt.triplot(pts[:, 0], pts[:, 1], cells)
     plt.axis("square")
+
+    if full_screen:
+        figManager = plt.get_current_fig_manager()
+        try:
+            figManager.window.showMaximized()
+        except AttributeError:
+            # Some backends have no window (e.g., Agg)
+            pass
 
     if title is not None:
         plt.title(title)
