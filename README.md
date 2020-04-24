@@ -14,7 +14,7 @@
 
 Inspired by [distmesh](http://persson.berkeley.edu/distmesh/), dmsh
 
- * [can be slow](#comparison-with-gmsh),
+ * can be slow,
  * requires a lot of memory, and
  * isn't terribly robust either.
 
@@ -197,17 +197,6 @@ def edge_size(x):
 X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)
 ```
 
-### Comparison with Gmsh
-
-![speed](https://nschloe.github.io/dmsh/gmsh-speed.svg) | ![avg-quality](https://nschloe.github.io/dmsh/gmsh-quality.svg)
-:-------------------:|:------------------:|
-
-While dmsh can be slow at times, it can easily outperform other popular mesh generators
-(e.g., [Gmsh](http://gmsh.info/)) if the domain is fairly regular. The above graphs show
-the results of mesh generation for a disk.
-
-The average quality of the mesh is also much better of course.
-
 
 ### Debugging
 
@@ -221,7 +210,6 @@ geo.show()
 ```
 to inspect the level set function of your domain. (It must be negative inside the
 domain and positive outside. The 0-level set forms the domain boundary.)
-
 
 
 ### Installation
