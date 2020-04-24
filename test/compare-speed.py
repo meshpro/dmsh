@@ -58,8 +58,8 @@ def gmsh_circle(num_points):
 
 
 data = {
-    "dmsh": {"n": [], "time": [], "q": []},
-    "gmsh": {"n": [], "time": [], "q": []},
+    "dmsh": {"n": [], "time": [], "q": [], "version": dmsh.__version__},
+    "gmsh": {"n": [], "time": [], "q": [], "version": pygmsh.get_gmsh_version()},
 }
 for num_points in range(1000, 10000, 1000):
     print(num_points)
@@ -86,22 +86,22 @@ for num_points in range(1000, 10000, 1000):
 
 # plot condition number
 for key, value in data.items():
-    plt.plot(value["n"], value["time"], "-x", label=key)
+    plt.plot(value["n"], value["time"], "-x", label=key + " " + value["version"])
 plt.xlabel("num points")
 plt.title("generation time [s]")
 plt.grid()
 plt.legend()
-# plt.show()
-plt.savefig("time.svg", transparent=True, bbox_inches="tight")
+plt.show()
+# plt.savefig("time.svg", transparent=True, bbox_inches="tight")
 plt.close()
 
 # plot CG iterations number
 for key, value in data.items():
-    plt.plot(value["n"], value["q"], "-x", label=key)
+    plt.plot(value["n"], value["q"], "-x", label=key + " " + value["version"])
 plt.xlabel("num points")
 plt.title("average cell quality")
 plt.grid()
 plt.legend()
-# plt.show()
-plt.savefig("average-cell-quality.svg", transparent=True, bbox_inches="tight")
+plt.show()
+# plt.savefig("average-cell-quality.svg", transparent=True, bbox_inches="tight")
 plt.close()
