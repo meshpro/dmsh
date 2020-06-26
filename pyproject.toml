@@ -1,3 +1,15 @@
 [build-system]
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tox]
+envlist = py3
+isolated_build = True
+
+[testenv]
+deps =
+    perfplot
+    pytest
+    pytest-cov
+commands =
+    pytest --cov {envsitepackagesdir}/dmsh --cov-report xml --cov-report term
