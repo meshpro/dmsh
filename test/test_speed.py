@@ -1,6 +1,6 @@
 import numpy
-from matplotlib import path
 import pytest
+from matplotlib import path
 
 import perfplot
 from dmsh.geometry import pypathlib
