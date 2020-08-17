@@ -1,7 +1,7 @@
 import numpy
+from helpers import assert_norm_equality, save
 
 import dmsh
-from helpers import assert_norm_equality, save
 
 
 def test(show=False):

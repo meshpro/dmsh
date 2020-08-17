@@ -1,11 +1,11 @@
 import time
 
 import matplotlib.pyplot as plt
+import meshplex
 import numpy as np
+import pygmsh
 
 import dmsh
-import meshplex
-import pygmsh
 
 
 def _compute_num_boundary_points(total_num_points):

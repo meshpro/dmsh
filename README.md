@@ -42,13 +42,15 @@ X, cells = dmsh.generate(geo, 0.1)
 
 # optionally optimize the mesh
 import optimesh
+
 X, cells = optimesh.cvt.quasi_newton_uniform_full(X, cells, 1.0e-10, 100)
 
 # visualize the mesh
-dmsh.helpers.show(X ,cells, geo)
+dmsh.helpers.show(X, cells, geo)
 
 # and write it to a file
 import meshio
+
 meshio.write_points_cells("circle.vtk", X, {"triangle": cells})
 ```
 
@@ -93,8 +95,7 @@ X, cells = dmsh.generate(geo, 0.1)
 import dmsh
 
 geo = dmsh.Difference(
-    dmsh.Circle([0.0, 0.0], 1.0),
-    dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
+    dmsh.Circle([0.0, 0.0], 1.0), dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
 )
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
@@ -156,9 +157,7 @@ X, cells = dmsh.generate(geo, 0.15)
 ```python
 import dmsh
 
-geo = dmsh.Intersection(
-    [dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)]
-)
+geo = dmsh.Intersection([dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)])
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 
@@ -229,8 +228,10 @@ geo = dmsh.Rectangle(0.0, 1.0, 0.0, 1.0)
 
 p1 = dmsh.Path([[0.4, 0.6], [0.6, 0.4]])
 
+
 def edge_size(x):
     return 0.03 + 0.1 * p1.dist(x)
+
 
 X, cells = dmsh.generate(geo, edge_size, tol=1.0e-10)
 ```

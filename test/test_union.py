@@ -1,7 +1,7 @@
 import numpy
+from helpers import assert_equality, assert_norm_equality, save
 
 import dmsh
-from helpers import assert_equality, assert_norm_equality, save
 
 
 def test_boundary_step():
