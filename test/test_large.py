@@ -1,5 +1,6 @@
-import dmsh
 from helpers import assert_norm_equality
+
+import dmsh
 
 
 def test_large():

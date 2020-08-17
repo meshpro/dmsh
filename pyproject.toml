@@ -11,6 +11,8 @@ isolated_build = True
 
 [testenv]
 deps =
+  exdown
+  optimesh
   perfplot
   pytest
   pytest-cov

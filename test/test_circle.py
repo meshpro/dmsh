@@ -1,8 +1,8 @@
 import numpy
 import pytest
+from helpers import assert_norm_equality, save
 
 import dmsh
-from helpers import assert_norm_equality, save
 
 
 @pytest.mark.parametrize(

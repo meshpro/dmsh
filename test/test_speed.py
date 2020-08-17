@@ -1,8 +1,8 @@
 import numpy
+import perfplot
 import pytest
 from matplotlib import path
 
-import perfplot
 from dmsh.geometry import pypathlib
 
 

@@ -1,7 +1,6 @@
+import meshplex
 import numpy
 import scipy.spatial
-
-import meshplex
 
 from .helpers import show as show_mesh
 from .helpers import unique_rows

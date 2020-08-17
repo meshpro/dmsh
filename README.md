@@ -42,22 +42,28 @@ X, cells = dmsh.generate(geo, 0.1)
 
 # optionally optimize the mesh
 import optimesh
+
 X, cells = optimesh.cvt.quasi_newton_uniform_full(X, cells, 1.0e-10, 100)
 
 # visualize the mesh
-dmsh.helpers.show(X ,cells, geo)
+dmsh.helpers.show(X, cells, geo)
 
 # and write it to a file
 import meshio
+
 meshio.write_points_cells("circle.vtk", X, {"triangle": cells})
 ```
 
 ```python
+import dmsh
+
 geo = dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0)
 X, cells = dmsh.generate(geo, 0.1)
 ```
 
 ```python
+import dmsh
+
 geo = dmsh.Polygon(
     [
         [0.0, 0.0],
@@ -80,13 +86,16 @@ X, cells = dmsh.generate(geo, 0.1)
 :-------------------:|:------------------:|:----:|
 
 ```python
+import dmsh
+
 geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
 X, cells = dmsh.generate(geo, 0.1)
 ```
 ```python
+import dmsh
+
 geo = dmsh.Difference(
-    dmsh.Circle([0.0, 0.0], 1.0),
-    dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
+    dmsh.Circle([0.0, 0.0], 1.0), dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
 )
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
@@ -94,6 +103,9 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 The following example uses a nonconstant edge length; it depends on the distance to the
 circle `c`.
 ```python
+import dmsh
+import numpy
+
 r = dmsh.Rectangle(-1.0, +1.0, -1.0, +1.0)
 c = dmsh.Circle([0.0, 0.0], 0.3)
 geo = dmsh.Difference(r, c)
@@ -109,16 +121,23 @@ X, cells = dmsh.generate(
 :-------------------:|:------------------:|:----:|
 
 ```python
+import dmsh
+
 geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
 X, cells = dmsh.generate(geo, 0.15)
 ```
 ```python
+import dmsh
+
 geo = dmsh.Union(
     [dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5), dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)]
 )
 X, cells = dmsh.generate(geo, 0.15)
 ```
 ```python
+import dmsh
+import numpy
+
 angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
 geo = dmsh.Union(
     [
@@ -136,13 +155,16 @@ X, cells = dmsh.generate(geo, 0.15)
 :-------------------:|:------------------:|:----:|
 
 ```python
-geo = dmsh.Intersection(
-    [dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)]
-)
+import dmsh
+
+geo = dmsh.Intersection([dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)])
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 
 ```python
+import dmsh
+import numpy
+
 angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
 geo = dmsh.Intersection(
     [
@@ -156,6 +178,9 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 
 The following uses the `HalfSpace` primtive for cutting of a circle.
 ```python
+import dmsh
+import numpy
+
 geo = dmsh.Intersection(
     [
         dmsh.HalfSpace(numpy.sqrt(0.5) * numpy.array([1.0, 1.0]), 0.0),
@@ -171,14 +196,21 @@ X, cells = dmsh.generate(geo, 0.1)
 |:----:|:----:|
 
 ```python
+import dmsh
+import numpy
+
 geo = dmsh.Rotation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 0.1 * numpy.pi)
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 ```python
+import dmsh
+
 geo = dmsh.Translation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), [1.0, 1.0])
 X, cells = dmsh.generate(geo, 0.1)
 ```
 ```python
+import dmsh
+
 geo = dmsh.Scaling(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 2.0)
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-5)
 ```
@@ -190,12 +222,16 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-5)
 All objects can be used to refine the mesh according to the distance to the object;
 e.g. a `Path`:
 ```python
+import dmsh
+
 geo = dmsh.Rectangle(0.0, 1.0, 0.0, 1.0)
 
 p1 = dmsh.Path([[0.4, 0.6], [0.6, 0.4]])
 
+
 def edge_size(x):
     return 0.03 + 0.1 * p1.dist(x)
+
 
 X, cells = dmsh.generate(geo, edge_size, tol=1.0e-10)
 ```
