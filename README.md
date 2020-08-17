@@ -44,6 +44,9 @@ X, cells = dmsh.generate(geo, 0.1)
 import optimesh
 X, cells = optimesh.cvt.quasi_newton_uniform_full(X, cells, 1.0e-10, 100)
 
+# visualize the mesh
+dmsh.helpers.show(X ,cells, geo)
+
 # and write it to a file
 import meshio
 meshio.write_points_cells("circle.vtk", X, {"triangle": cells})
@@ -173,11 +176,11 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 ```python
 geo = dmsh.Translation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), [1.0, 1.0])
-X, cells = dmsh.generate(geo, 0.1, show=show)
+X, cells = dmsh.generate(geo, 0.1)
 ```
 ```python
 geo = dmsh.Scaling(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 2.0)
-X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-5)
+X, cells = dmsh.generate(geo, 0.1, tol=1.0e-5)
 ```
 
 ### Local refinement
@@ -194,7 +197,7 @@ p1 = dmsh.Path([[0.4, 0.6], [0.6, 0.4]])
 def edge_size(x):
     return 0.03 + 0.1 * p1.dist(x)
 
-X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)
+X, cells = dmsh.generate(geo, edge_size, tol=1.0e-10)
 ```
 
 
