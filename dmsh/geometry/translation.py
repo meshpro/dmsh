@@ -5,6 +5,7 @@ from .geometry import Geometry
 
 class Translation(Geometry):
     def __init__(self, geometry, v):
+        super().__init__()
         self.geometry = geometry
         self.v = v
 

@@ -6,12 +6,12 @@ from .geometry import Geometry
 
 class Ellipse(Geometry):
     def __init__(self, x0, a, b):
+        super().__init__()
         self.x0 = x0
         self.a = a
         self.b = b
         self.bounding_box = [x0[0] - a, x0[0] + a, x0[1] - b, x0[1] + b]
         self.feature_points = numpy.array([])
-        return
 
     def dist(self, x):
         assert x.shape[0] == 2

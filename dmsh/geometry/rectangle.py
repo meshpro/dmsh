@@ -8,6 +8,7 @@ class Rectangle(Geometry):
     # One could simply make Rectangle a child class of Polygon. However, boundary steps
     # can be inaccurate for polygons (there is some computation involved).
     def __init__(self, x0, x1, y0, y1):
+        super().__init__()
         assert x0 < x1
         assert y0 < y1
         self.x0 = x0
