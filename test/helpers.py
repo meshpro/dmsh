@@ -30,5 +30,8 @@ def save(filename, X, cells):
 
     mesh = meshplex.MeshTri(X, cells)
     mesh.save(
-        filename, show_coedges=False, show_axes=False, nondelaunay_edge_color="k",
+        filename,
+        show_coedges=False,
+        show_axes=False,
+        nondelaunay_edge_color="k",
     )

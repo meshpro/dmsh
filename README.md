@@ -97,7 +97,8 @@ X, cells = dmsh.generate(geo, 0.1)
 import dmsh
 
 geo = dmsh.Difference(
-    dmsh.Circle([0.0, 0.0], 1.0), dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
+    dmsh.Circle([0.0, 0.0], 1.0),
+    dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
 )
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```

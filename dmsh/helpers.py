@@ -13,8 +13,7 @@ def unique_rows(a):
 
 
 def multi_newton(x0, is_inside, boundary_step, tol, max_num_steps=10):
-    """Newton's minimization method for multiple starting points.
-    """
+    """Newton's minimization method for multiple starting points."""
     x = x0.copy()
     fx = is_inside(x.T)
 
@@ -156,8 +155,7 @@ def _find_feature_points_between_two_paths(path0, path1, num_steps):
 
 
 def unique_float_cols(data, k=0, tol=1.0e-10):
-    """In a (k, n) array `data`, find the unique columns.
-    """
+    """In a (k, n) array `data`, find the unique columns."""
     if k == data.shape[0]:
         return data[:, 0]
 

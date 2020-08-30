@@ -77,21 +77,18 @@ class Path:
         return numpy.sqrt(numpy.max(dist2))
 
     def squared_distance(self, x):
-        """Get the squared distance of all points x to the polygon `poly`.
-        """
+        """Get the squared distance of all points x to the polygon `poly`."""
         x = numpy.asarray(x)
         assert x.shape[1] == 2
         _, dist2_sides, _ = self._all_distances(x)
         return dist2_sides
 
     def distance(self, x):
-        """Get the distance of all points x to the polygon `poly`.
-        """
+        """Get the distance of all points x to the polygon `poly`."""
         return numpy.sqrt(self.squared_distance(x))
 
     def closest_points(self, x):
-        """Get the closest points on the polygon.
-        """
+        """Get the closest points on the polygon."""
         x = numpy.asarray(x)
         assert x.shape[1] == 2
         t, _, idx = self._all_distances(x)
