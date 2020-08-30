@@ -6,6 +6,7 @@ from .geometry import Geometry
 
 class Intersection(Geometry):
     def __init__(self, geometries):
+        super().__init__()
         self.geometries = geometries
         self.bounding_box = [
             numpy.max([geo.bounding_box[0] for geo in geometries]),

@@ -6,6 +6,7 @@ from .geometry import Geometry
 
 class Difference(Geometry):
     def __init__(self, geo0, geo1):
+        super().__init__()
         self.geo0 = geo0
         self.geo1 = geo1
         self.bounding_box = geo0.bounding_box
@@ -19,7 +20,6 @@ class Difference(Geometry):
         tol = 1.0e-5
         is_on_boundary = (-tol < alpha) & (alpha < tol)
         self.feature_points = self.feature_points[is_on_boundary]
-        return
 
     def dist(self, x):
         return numpy.max([self.geo0.dist(x), -self.geo1.dist(x)], axis=0)

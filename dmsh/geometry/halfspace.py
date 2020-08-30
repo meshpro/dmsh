@@ -5,9 +5,9 @@ from .geometry import Geometry
 
 class LinePath:
     def __init__(self, v, tangent):
+        super().__init__()
         self.v = v
         self.tangent = tangent
-        return
 
     def p(self, t):
         """This parametrization of the line is (inf, inf) for t=0 and t=1.

@@ -6,6 +6,7 @@ from .geometry import Geometry
 
 class Union(Geometry):
     def __init__(self, geometries):
+        super().__init__()
         self.geometries = geometries
         self.bounding_box = [
             numpy.min([geo.bounding_box[0] for geo in geometries]),
@@ -25,7 +26,6 @@ class Union(Geometry):
         self.feature_points = self.feature_points[is_on_boundary]
 
         self.paths = [path for geo in self.geometries for path in geo.paths]
-        return
 
     def dist(self, x):
         return numpy.min([geo.dist(x) for geo in self.geometries], axis=0)

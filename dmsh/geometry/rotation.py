@@ -5,6 +5,7 @@ from .geometry import Geometry
 
 class Rotation(Geometry):
     def __init__(self, geometry, angle):
+        super().__init__()
         self.geometry = geometry
 
         self.R = numpy.array(

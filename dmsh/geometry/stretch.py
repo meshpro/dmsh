@@ -5,6 +5,7 @@ from .geometry import Geometry
 
 class Stretch(Geometry):
     def __init__(self, geometry, v):
+        super().__init__()
         self.geometry = geometry
         self.alpha = numpy.sqrt(numpy.dot(v, v))
         self.v = v / self.alpha

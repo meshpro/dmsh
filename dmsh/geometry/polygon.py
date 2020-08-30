@@ -8,7 +8,6 @@ class LineSegmentPath:
     def __init__(self, x0, x1):
         self.x0 = x0
         self.x1 = x1
-        return
 
     def p(self, t):
         return numpy.multiply.outer(self.x0, 1 - t) + numpy.multiply.outer(self.x1, t)
@@ -22,6 +21,7 @@ class LineSegmentPath:
 
 class Polygon(Geometry):
     def __init__(self, points):
+        super().__init__()
         points = numpy.array(points)
         self.bounding_box = [
             numpy.min(points[:, 0]),
