@@ -26,6 +26,7 @@ class LinePath:
 
 class HalfSpace(Geometry):
     def __init__(self, normal, alpha):
+        super().__init__()
         self.normal = normal
         self.alpha = alpha
 
@@ -37,7 +38,6 @@ class HalfSpace(Geometry):
         tangent = numpy.array([-self.normal[1], self.normal[0]])
 
         self.paths = [LinePath(v, tangent)]
-        return
 
     def dist(self, x):
         assert x.shape[0] == 2
