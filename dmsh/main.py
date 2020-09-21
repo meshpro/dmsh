@@ -134,7 +134,7 @@ def generate(
     alpha = 1.0 / edge_size_function(pts.T) ** 2
     pts = pts[numpy.random.rand(pts.shape[0]) < alpha / numpy.max(alpha)]
 
-    num_feature_points = geo.feature_points.shape[0]
+    num_feature_points = len(geo.feature_points)
     if num_feature_points > 0:
         # remove all points which are equal to a feature point
         diff = numpy.array([[pt - fp for fp in geo.feature_points] for pt in pts])

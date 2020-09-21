@@ -4,10 +4,9 @@ default:
 	@echo "\"make publish\"?"
 
 # https://packaging.python.org/distributing/#id72
-upload:
+upload: clean
 	# Make sure we're on the master branch
 	@if [ "$(shell git rev-parse --abbrev-ref HEAD)" != "master" ]; then exit 1; fi
-	rm -f dist/*
 	# https://stackoverflow.com/a/58756491/353337
 	python3 -m pep517.build --source --binary .
 	twine upload dist/*
