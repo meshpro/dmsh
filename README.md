@@ -237,6 +237,39 @@ X, cells = dmsh.generate(geo, edge_size, tol=1.0e-10)
 ```
 
 
+### Custom shapes
+It is also possible to define your own geometry. Simply create a class derived from
+`dmsh.Geometry` that contains a `dist` method and a method to project points onto the
+boundary.
+
+```python
+import dmsh
+import numpy
+
+
+class MyDisk(dmsh.Geometry):
+    def __init__(self):
+        super().__init__()
+        self.r = 1.0
+        self.x0 = [0.0, 0.0]
+        self.bounding_box = [-1.0, 1.0, -1.0, 1.0]
+        self.feature_points = numpy.array([[], []]).T
+
+    def dist(self, x):
+        assert x.shape[0] == 2
+        y = (x.T - self.x0).T
+        return numpy.sqrt(numpy.einsum("i...,i...->...", y, y)) - self.r
+
+    def boundary_step(self, x):
+        # project onto the circle
+        y = (x.T - self.x0).T
+        r = numpy.sqrt(numpy.einsum("ij,ij->j", y, y))
+        return ((y / r * self.r).T + self.x0).T
+
+geo = MyDisk()
+X, cells = dmsh.generate(geo, 0.1)
+```
+
 ### Debugging
 
 ![level-set-poly](https://nschloe.github.io/dmsh/levelset-polygon.png) | ![level-set-rect-hole](https://nschloe.github.io/dmsh/levelset-rect-hole.png)
