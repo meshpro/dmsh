@@ -266,6 +266,7 @@ class MyDisk(dmsh.Geometry):
         r = numpy.sqrt(numpy.einsum("ij,ij->j", y, y))
         return ((y / r * self.r).T + self.x0).T
 
+
 geo = MyDisk()
 X, cells = dmsh.generate(geo, 0.1)
 ```
