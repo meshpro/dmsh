@@ -1,6 +1,7 @@
 from .circle import Circle
 from .difference import Difference
 from .ellipse import Ellipse
+from .geometry import Geometry
 from .halfspace import HalfSpace
 from .intersection import Intersection
 from .path import Path
@@ -16,6 +17,7 @@ __all__ = [
     "Circle",
     "Difference",
     "Ellipse",
+    "Geometry",
     "HalfSpace",
     "Intersection",
     "Path",

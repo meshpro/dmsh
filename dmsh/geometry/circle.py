@@ -7,7 +7,6 @@ class CirclePath:
     def __init__(self, x0, r):
         self.x0 = x0
         self.r = r
-        return
 
     def p(self, t):
         v = numpy.array([numpy.cos(2 * numpy.pi * t), numpy.sin(2 * numpy.pi * t)])
