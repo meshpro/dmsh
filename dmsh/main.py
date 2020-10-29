@@ -33,6 +33,19 @@ def _recell(pts, geo):
     # )
     # cells = cells[barycenter_inside & edge_midpoints_inside]
 
+    # qhull may produce extremely flat cells near the boundary if the nodes are almost
+    # aligned. Remove those cells.
+    # Since finding out if a cell is near the boundary is a bit messy, simply remove all
+    # degenerate cells. They will (almost?) always be on the boundary anyway.
+    p = pts[cells].T
+    # <https://stackoverflow.com/q/50411583/353337>
+    signed_cell_areas = (
+        +p[0][2] * (p[1][0] - p[1][1])
+        + p[0][0] * (p[1][1] - p[1][2])
+        + p[0][1] * (p[1][2] - p[1][0])
+    ) / 2
+    cells = cells[signed_cell_areas > 1.0e-5]
+
     # Determine edges
     edges = numpy.concatenate([cells[:, [0, 1]], cells[:, [1, 2]], cells[:, [2, 0]]])
     edges = numpy.sort(edges, axis=1)
@@ -219,25 +232,26 @@ def distmesh_smoothing(
 
         k += 1
 
-        # cells, edges = _recell(mesh.node_coords, geo)
-        # mesh = meshplex.MeshTri(mesh.node_coords, cells)
+        # print("cells with smallest volume:")
+        # for cell_id in numpy.argsort(mesh.signed_cell_areas)[:3]:
+        #     print(mesh.cells["nodes"][cell_id], mesh.signed_cell_areas[cell_id])
 
         if show:
-            print(f"Step {k}")
             print(f"max move: {math.sqrt(max(move2)):.3e}")
             show_mesh(mesh.node_coords, mesh.cells["nodes"], geo)
 
-        print(numpy.min(mesh.signed_cell_areas), numpy.any(mesh.signed_cell_areas < 0))
-
         diff = mesh.node_coords - pts_old_last_recell
         move2_last_recell = numpy.einsum("ij,ij->i", diff, diff)
-        if numpy.any(move2_last_recell > 1.0e-2 ** 2):
+        needs_recell = numpy.any(move2_last_recell > 1.0e-2 ** 2) or numpy.any(
+            mesh.signed_cell_areas < 0.0
+        )
+        if needs_recell:
             pts_old_last_recell = mesh.node_coords.copy()
             cells, edges = _recell(mesh.node_coords, geo)
             #
             mesh = meshplex.MeshTri(mesh.node_coords, cells)
-            # TODO The recell process might have made some points boundary points. Move
-            # them back.
+            # TODO The recell process might have made some interior points boundary
+            # points. Move them back.
             # TODO Doing this moves some concave corners in polygons. Hm.
             # is_boundary_node = mesh.is_boundary_node.copy()
             # mesh.node_coords[is_boundary_node] = geo.boundary_step(
@@ -300,7 +314,8 @@ def distmesh_smoothing(
         # boundary.
         is_outside = geo.dist(mesh.node_coords.T) > 0.0
         idx = is_outside
-        # Alternative: Also push boundary nodes (which have moved away from the boundary
+        # Alternative: Also push boundary nodes (which have moved away from the
+        # boundary, into the interior)
         # back to it.
         # idx = is_outside | is_boundary_node
         # idx = is_boundary_node

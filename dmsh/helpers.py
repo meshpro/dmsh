@@ -40,6 +40,20 @@ def show(pts, cells, geo, title=None, full_screen=True):
     plt.triplot(pts[:, 0], pts[:, 1], cells)
     plt.axis("square")
 
+    # show cells indices
+    # for idx, barycenter in enumerate(numpy.sum(pts[cells], axis=1) / 3):
+    #     plt.plot(*barycenter, "xk")
+    #     plt.text(
+    #         *barycenter, idx, horizontalalignment="center", verticalalignment="center"
+    #     )
+
+    # show node indices
+    # for idx, pt in enumerate(pts):
+    #     plt.plot(*pt, "xk")
+    #     plt.text(
+    #         *pt, idx, horizontalalignment="center", verticalalignment="center"
+    #     )
+
     if full_screen:
         figManager = plt.get_current_fig_manager()
         try:
