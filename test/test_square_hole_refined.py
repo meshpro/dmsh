@@ -14,7 +14,7 @@ def test(show=False):
     )
 
     ref_norms = [2.48e02, 1.200e01, 1.0]
-    assert_norm_equality(X.flatten(), ref_norms, 1.0e-3)
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-2)
     return X, cells
 
 
