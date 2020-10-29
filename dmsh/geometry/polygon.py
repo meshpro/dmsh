@@ -22,7 +22,7 @@ class LineSegmentPath:
 class Polygon(Geometry):
     def __init__(self, points):
         super().__init__()
-        points = numpy.array(points)
+        points = numpy.asarray(points)
         self.bounding_box = [
             numpy.min(points[:, 0]),
             numpy.max(points[:, 0]),
@@ -45,3 +45,14 @@ class Polygon(Geometry):
 
     def boundary_step(self, x):
         return self.polygon.closest_points(x.T).T
+
+    def plot(self, level_set=True):
+        import matplotlib.pyplot as plt
+
+        if level_set:
+            self._plot_level_set()
+
+        obj = plt.Polygon(self.feature_points, color="k", fill=False)
+        plt.gca().add_artist(obj)
+
+        plt.gca().set_aspect("equal")
