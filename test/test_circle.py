@@ -1,3 +1,4 @@
+import meshplex
 import numpy
 import pytest
 from helpers import assert_norm_equality, save
@@ -18,6 +19,17 @@ def test_circle(radius, ref_norms, show=False):
 
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-5)
     return X, cells
+
+
+def test_degenerate_circle():
+    # with this target edge length, dmsh once produced weird results near the boundary
+    target_edge_length = 0.07273
+    geo = dmsh.Circle([0.0, 0.0], 1.0)
+    X, cells = dmsh.generate(geo, target_edge_length, show=True)
+
+    mesh = meshplex.MeshTri(X, cells)
+    min_q = numpy.min(mesh.q_radius_ratio)
+    assert min_q > 0.5, f"min cell quality: {min_q:.3f}"
 
 
 if __name__ == "__main__":
