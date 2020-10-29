@@ -40,3 +40,19 @@ class Circle(Geometry):
         y = (x.T - self.x0).T
         r = numpy.sqrt(numpy.einsum("ij,ij->j", y, y))
         return ((y / r * self.r).T + self.x0).T
+
+    def plot(self, level_set=True):
+        import matplotlib.pyplot as plt
+
+        if level_set:
+            X, Y, Z = self._get_xyz()
+            alpha = numpy.max(numpy.abs(Z))
+            cf = plt.contourf(
+                X, Y, Z, levels=20, cmap=plt.cm.coolwarm, vmin=-alpha, vmax=alpha
+            )
+            plt.colorbar(cf)
+
+        circle1 = plt.Circle(self.x0, self.r, color="k", fill=False)
+        plt.gca().add_artist(circle1)
+
+        plt.gca().set_aspect("equal")

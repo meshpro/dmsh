@@ -1,3 +1,5 @@
+import math
+
 import meshplex
 import numpy
 import scipy.spatial
@@ -203,6 +205,7 @@ def distmesh_smoothing(
     f_scale,
 ):
     k = 0
+    move2 = [0.0]
     # is_boundary_node = mesh.is_boundary_node.copy()
     pts_old_last_recell = mesh.node_coords.copy()
     while True:
@@ -215,6 +218,16 @@ def distmesh_smoothing(
             break
 
         k += 1
+
+        # cells, edges = _recell(mesh.node_coords, geo)
+        # mesh = meshplex.MeshTri(mesh.node_coords, cells)
+
+        if show:
+            print(f"Step {k}")
+            print(f"max move: {math.sqrt(max(move2)):.3e}")
+            show_mesh(mesh.node_coords, mesh.cells["nodes"], geo)
+
+        print(numpy.min(mesh.signed_cell_areas), numpy.any(mesh.signed_cell_areas < 0))
 
         diff = mesh.node_coords - pts_old_last_recell
         move2_last_recell = numpy.einsum("ij,ij->i", diff, diff)
@@ -231,9 +244,6 @@ def distmesh_smoothing(
             #     mesh.node_coords[is_boundary_node].T
             # ).T
             # mesh.update_values()
-
-        if show:
-            show_mesh(mesh.node_coords, mesh.cells["nodes"], geo)
 
         edges_vec = mesh.node_coords[edges[:, 1]] - mesh.node_coords[edges[:, 0]]
         edge_lengths = numpy.sqrt(numpy.einsum("ij,ij->i", edges_vec, edges_vec))
@@ -283,7 +293,7 @@ def distmesh_smoothing(
         # # alpha = numpy.min(max_step / step_lengths)
         # # update *= alpha
 
-        # leave feature points untouched
+        # update coordinates, but leave feature points untouched
         mesh.node_coords[num_feature_points:] += update[num_feature_points:]
 
         # Some boundary points may have been pushed outside; bring them back onto the
@@ -295,6 +305,7 @@ def distmesh_smoothing(
         # idx = is_outside | is_boundary_node
         # idx = is_boundary_node
         mesh.node_coords[idx] = geo.boundary_step(mesh.node_coords[idx].T).T
+
         # mesh.update_values()
         # num_removed = mesh.remove_degenerate_cells(1.0e-3)
         # print("removed {} cells".format(num_removed))
