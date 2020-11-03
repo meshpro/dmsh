@@ -5,7 +5,8 @@ import numpy
 import scipy.spatial
 
 from .helpers import show as show_mesh
-from .helpers import unique_rows
+
+# from .helpers import unique_rows
 
 
 def _recell(pts, geo):
@@ -32,25 +33,7 @@ def _recell(pts, geo):
     #     & (geo.dist(mid2.T) < btol)
     # )
     # cells = cells[barycenter_inside & edge_midpoints_inside]
-
-    # qhull may produce extremely flat cells near the boundary if the nodes are almost
-    # aligned. Remove those cells.
-    # Since finding out if a cell is near the boundary is a bit messy, simply remove all
-    # degenerate cells. They will (almost?) always be on the boundary anyway.
-    p = pts[cells].T
-    # <https://stackoverflow.com/q/50411583/353337>
-    signed_cell_areas = (
-        +p[0][2] * (p[1][0] - p[1][1])
-        + p[0][0] * (p[1][1] - p[1][2])
-        + p[0][1] * (p[1][2] - p[1][0])
-    ) / 2
-    cells = cells[signed_cell_areas > 1.0e-5]
-
-    # Determine edges
-    edges = numpy.concatenate([cells[:, [0, 1]], cells[:, [1, 2]], cells[:, [2, 0]]])
-    edges = numpy.sort(edges, axis=1)
-    edges, _, _ = unique_rows(edges)
-    return cells, edges
+    return cells
 
 
 def create_staggered_grid(h, bounding_box):
@@ -160,8 +143,7 @@ def generate(
         # Add feature points
         pts = numpy.concatenate([geo.feature_points, pts])
 
-    cells, edges = _recell(pts, geo)
-
+    cells = _recell(pts, geo)
     mesh = meshplex.MeshTri(pts, cells)
 
     # # move boundary points to the boundary exactly
@@ -187,7 +169,6 @@ def generate(
     #     assert smoothing_method == "distmesh"
     mesh = distmesh_smoothing(
         mesh,
-        edges,
         geo,
         num_feature_points,
         edge_size_function,
@@ -206,7 +187,6 @@ def generate(
 
 def distmesh_smoothing(
     mesh,
-    edges,
     geo,
     num_feature_points,
     edge_size_function,
@@ -216,12 +196,17 @@ def distmesh_smoothing(
     show,
     delta_t,
     f_scale,
+    bad_cell_threshold=0.05,
 ):
+    mesh.create_edges()
+
     k = 0
     move2 = [0.0]
     # is_boundary_node = mesh.is_boundary_node.copy()
     pts_old_last_recell = mesh.node_coords.copy()
     while True:
+        # print()
+        # print(f"step {k}")
         if verbose:
             print(f"step {k}")
 
@@ -232,9 +217,13 @@ def distmesh_smoothing(
 
         k += 1
 
-        # print("cells with smallest volume:")
-        # for cell_id in numpy.argsort(mesh.signed_cell_areas)[:3]:
-        #     print(mesh.cells["nodes"][cell_id], mesh.signed_cell_areas[cell_id])
+        # print("cells with lowest quality:")
+        # for cell_id in numpy.argsort(mesh.q_radius_ratio)[:3]:
+        #     print(
+        #         mesh.cells["nodes"][cell_id],
+        #         mesh.q_radius_ratio[cell_id],
+        #         mesh.signed_cell_areas[cell_id],
+        #     )
 
         if show:
             print(f"max move: {math.sqrt(max(move2)):.3e}")
@@ -247,17 +236,31 @@ def distmesh_smoothing(
         )
         if needs_recell:
             pts_old_last_recell = mesh.node_coords.copy()
-            cells, edges = _recell(mesh.node_coords, geo)
+            cells = _recell(mesh.node_coords, geo)
             #
             mesh = meshplex.MeshTri(mesh.node_coords, cells)
-            # TODO The recell process might have made some interior points boundary
-            # points. Move them back.
+            mesh.create_edges()
+            # The recell process might have made some interior points boundary
+            # points. Snap them onto the domain boundary.
             # TODO Doing this moves some concave corners in polygons. Hm.
             # is_boundary_node = mesh.is_boundary_node.copy()
             # mesh.node_coords[is_boundary_node] = geo.boundary_step(
             #     mesh.node_coords[is_boundary_node].T
             # ).T
             # mesh.update_values()
+
+        # Remove nearly degenerate cells. They are usually produced in two ways:
+        #
+        #    * by qhull, when recelling a point cloud with points nearly (but not quite)
+        #      sitting on a straight line
+        #    * by the distmesh algo when pushing points out
+        #
+        # Those degenerate cell then sit on near the boundary, so removing them does not
+        # create holes. Not sure if there are reasonable examples where degenerate cells
+        # occur on the interior.
+        mesh.remove_cells(mesh.q_radius_ratio < bad_cell_threshold)
+
+        edges = mesh.edges["nodes"]
 
         edges_vec = mesh.node_coords[edges[:, 1]] - mesh.node_coords[edges[:, 0]]
         edge_lengths = numpy.sqrt(numpy.einsum("ij,ij->i", edges_vec, edges_vec))

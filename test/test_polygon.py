@@ -15,11 +15,10 @@ def test(show=False):
             [0.5, 1.5],
         ]
     )
+    # geo.show()
     X, cells = dmsh.generate(geo, 0.1, show=show)
 
-    geo.plot()
-
-    ref_norms = [4.1468030858462305e02, 2.1861920662017866e01, 2.0]
+    ref_norms = [4.1508810592758732e02, 2.1869865713300289e01, 2.0]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-5)
     return X, cells
 
