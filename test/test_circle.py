@@ -1,7 +1,7 @@
 import meshplex
 import numpy
 import pytest
-from helpers import assert_norm_equality, save
+from helpers import assert_norm_equality
 
 import dmsh
 
