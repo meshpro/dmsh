@@ -9,7 +9,7 @@ def test_ellipse(show=False):
 
     geo.plot()
 
-    ref_norms = [2.5650105095535446e+02, 1.5846052384362940e+01, 1.9907124752646606e+00]
+    ref_norms = [2.5650105095535446e02, 1.5846052384362940e01, 1.9907124752646606e00]
     assert_norm_equality(X.flatten(), ref_norms, 2.0e-2)
     return X, cells
 
