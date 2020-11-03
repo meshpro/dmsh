@@ -40,7 +40,7 @@ def test_rectangle(show=False):
     geo = dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0)
     X, cells = dmsh.generate(geo, 0.1, show=show)
 
-    ref_norms = [9.7542898028694776e02, 3.1710503119308623e01, 2.0]
+    ref_norms = [9.7543260517019439e02, 3.1710610220896264e01, 2.0]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 

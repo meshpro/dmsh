@@ -5,6 +5,7 @@ import numpy
 import scipy.spatial
 
 from .helpers import show as show_mesh
+
 # from .helpers import unique_rows
 
 
@@ -195,6 +196,7 @@ def distmesh_smoothing(
     show,
     delta_t,
     f_scale,
+    bad_cell_threshold=0.05,
 ):
     mesh.create_edges()
 
@@ -237,14 +239,15 @@ def distmesh_smoothing(
             cells = _recell(mesh.node_coords, geo)
             #
             mesh = meshplex.MeshTri(mesh.node_coords, cells)
+            mesh.create_edges()
             # The recell process might have made some interior points boundary
             # points. Snap them onto the domain boundary.
             # TODO Doing this moves some concave corners in polygons. Hm.
-            is_boundary_node = mesh.is_boundary_node.copy()
-            mesh.node_coords[is_boundary_node] = geo.boundary_step(
-                mesh.node_coords[is_boundary_node].T
-            ).T
-            mesh.update_values()
+            # is_boundary_node = mesh.is_boundary_node.copy()
+            # mesh.node_coords[is_boundary_node] = geo.boundary_step(
+            #     mesh.node_coords[is_boundary_node].T
+            # ).T
+            # mesh.update_values()
 
         # Remove nearly degenerate cells. They are usually produced in two ways:
         #
@@ -255,7 +258,7 @@ def distmesh_smoothing(
         # Those degenerate cell then sit on near the boundary, so removing them does not
         # create holes. Not sure if there are reasonable examples where degenerate cells
         # occur on the interior.
-        mesh.remove_cells(mesh.q_radius_ratio < 0.05)
+        mesh.remove_cells(mesh.q_radius_ratio < bad_cell_threshold)
 
         edges = mesh.edges["nodes"]
 
