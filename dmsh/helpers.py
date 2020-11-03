@@ -49,7 +49,6 @@ def show(pts, cells, geo, title=None, full_screen=True):
 
     # show node indices
     # for idx, pt in enumerate(pts):
-    #     plt.plot(*pt, "xk")
     #     plt.text(
     #         *pt, idx, horizontalalignment="center", verticalalignment="center"
     #     )

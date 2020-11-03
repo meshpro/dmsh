@@ -15,5 +15,5 @@ def test_ellipse(show=False):
 
 
 if __name__ == "__main__":
-    X, cells = test_ellipse(show=False)
+    X, cells = test_ellipse(show=True)
     save("ellipse.png", X, cells)
