@@ -10,7 +10,7 @@ def test(show=False):
     )
     X, cells = dmsh.generate(geo, 1.0, show=show, tol=1.0e-3)
 
-    ref_norms = [1.4000000000000000e02, 2.3176875611827931e01, 5.0000000000000000e00]
+    ref_norms = [1.4000000000000000e02, 2.3176757306973560e01, 5.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
 
 

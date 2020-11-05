@@ -18,11 +18,11 @@ def test(show=False):
     # geo.show()
     X, cells = dmsh.generate(geo, 0.1, show=show)
 
-    ref_norms = [4.1508810592758732e02, 2.1869865713300289e01, 2.0]
+    ref_norms = [4.1468070976548972e02, 2.1861936852638550e01, 2.0]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-5)
     return X, cells
 
 
 if __name__ == "__main__":
     X, cells = test(show=False)
-    save("polygon.png", X, cells)
+    save("polygon.svg", X, cells)
