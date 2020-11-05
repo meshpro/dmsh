@@ -8,6 +8,16 @@ class Rectangle(Geometry):
     # One could simply make Rectangle a child class of Polygon. However, boundary steps
     # can be inaccurate for polygons (there is some computation involved).
     def __init__(self, x0, x1, y0, y1):
+        """
+        Initialize the box
+
+        Args:
+            self: (todo): write your description
+            x0: (float): write your description
+            x1: (int): write your description
+            y0: (array): write your description
+            y1: (int): write your description
+        """
         super().__init__()
         assert x0 < x1
         assert y0 < y1
@@ -29,6 +39,13 @@ class Rectangle(Geometry):
         ]
 
     def dist(self, x):
+        """
+        Calculate distance between two points.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+        """
         # outside dist
         # https://gamedev.stackexchange.com/a/44496
         x = numpy.asarray(x)
@@ -55,6 +72,13 @@ class Rectangle(Geometry):
         return dist
 
     def boundary_step(self, x):
+        """
+        Boundaryary of the 2d.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+        """
         x = numpy.asarray(x)
         assert x.shape[0] == 2
 

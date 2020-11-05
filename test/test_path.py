@@ -4,6 +4,11 @@ from dmsh.geometry import pypathlib
 
 
 def test_squared_distance():
+    """
+    Calculate distance between two sources.
+
+    Args:
+    """
     path = pypathlib.Path([[0.0, 0.0], [1.0, 0.0], [0.9, 0.5], [1.0, 1.0], [0.0, 1.0]])
 
     dist = path.squared_distance(
@@ -15,6 +20,11 @@ def test_squared_distance():
 
 
 def test_one_point():
+    """
+    Finds the point is in - point.
+
+    Args:
+    """
     path = pypathlib.Path([[0.0, 0.0]])
 
     dist = path.squared_distance(

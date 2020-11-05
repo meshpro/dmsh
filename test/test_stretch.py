@@ -4,6 +4,12 @@ import dmsh
 
 
 def test(show=True):
+    """
+    Generate x and y and dms.
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Stretch(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), [1.0, 1.0])
     X, cells = dmsh.generate(geo, 0.3, show=show, tol=1.0e-3)
 

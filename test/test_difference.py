@@ -4,6 +4,12 @@ import dmsh
 
 
 def test_difference(show=False):
+    """
+    Test the difference between two datasets.
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
     X, cells = dmsh.generate(geo, 0.1, show=show)
 

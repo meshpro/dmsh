@@ -5,6 +5,14 @@ from .geometry import Geometry
 
 class Rotation(Geometry):
     def __init__(self, geometry, angle):
+        """
+        Initializes the bounding box.
+
+        Args:
+            self: (todo): write your description
+            geometry: (todo): write your description
+            angle: (float): write your description
+        """
         super().__init__()
         self.geometry = geometry
 
@@ -37,9 +45,23 @@ class Rotation(Geometry):
         return
 
     def dist(self, x):
+        """
+        Compute the distance between x and x.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+        """
         return self.geometry.dist(numpy.dot(self.R_inv, x))
 
     def boundary_step(self, x):
+        """
+        Boundary step of the boundary of x.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         y = numpy.dot(self.R_inv, x)
         y2 = self.geometry.boundary_step(y)
         return numpy.dot(self.R, y2)

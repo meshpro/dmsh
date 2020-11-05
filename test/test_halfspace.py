@@ -5,6 +5,12 @@ import dmsh
 
 
 def test_halfspace(show=False):
+    """
+    Generate x y - axis.
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Intersection(
         [
             dmsh.HalfSpace(numpy.sqrt(0.5) * numpy.array([1.0, 1.0]), 0.0),

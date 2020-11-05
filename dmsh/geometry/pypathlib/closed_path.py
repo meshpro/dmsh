@@ -6,6 +6,13 @@ from .path import Path
 
 class ClosedPath(Path):
     def __init__(self, points):
+        """
+        Initialize the area.
+
+        Args:
+            self: (todo): write your description
+            points: (todo): write your description
+        """
         closed_points = numpy.concatenate([points, [points[0]]])
         super().__init__(closed_points)
 
@@ -40,6 +47,15 @@ class ClosedPath(Path):
         return dist
 
     def _contains_points(self, t, x, idx):
+        """
+        Return true if the given point is on the polygon.
+
+        Args:
+            self: (todo): write your description
+            t: (str): write your description
+            x: (str): write your description
+            idx: (str): write your description
+        """
         r = numpy.arange(idx.shape[0])
 
         contains_points = numpy.zeros(x.shape[0], dtype=bool)
@@ -78,10 +94,24 @@ class ClosedPath(Path):
         return contains_points
 
     def contains_points(self, x, tol=1.0e-15):
+        """
+        Return true if the given point is inside the polygon.
+
+        Args:
+            self: (todo): write your description
+            x: (str): write your description
+            tol: (float): write your description
+        """
         return self.signed_distance(x) < tol
 
     @property
     def is_convex_node(self):
+        """
+        Determine if a convex convex hull.
+
+        Args:
+            self: (todo): write your description
+        """
         points = self.points[:-1]
         if self._is_convex_node is None:
             tri = numpy.array(

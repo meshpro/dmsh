@@ -4,6 +4,12 @@ import dmsh
 
 
 def test_ellipse(show=False):
+    """
+    Generate ellipse and return the ellipse
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Ellipse([0.0, 0.0], 2.0, 1.0)
     X, cells = dmsh.generate(geo, 0.2, show=show)
 

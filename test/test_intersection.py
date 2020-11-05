@@ -4,6 +4,12 @@ import dmsh
 
 
 def test_intersection(show=False):
+    """
+    Generate the intersection of the geometries.
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Intersection(
         [dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)]
     )

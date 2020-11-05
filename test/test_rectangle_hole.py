@@ -4,6 +4,11 @@ import dmsh
 
 
 def test_rectangle_hole():
+    """
+    Draw a rectangle ising rectangle.
+
+    Args:
+    """
     r = dmsh.Rectangle(60, 330, 380, 650)
     h = dmsh.Rectangle(143, 245, 440, 543)
     geo = dmsh.Difference(r, h)

@@ -5,6 +5,14 @@ from .geometry import Geometry
 
 class Stretch(Geometry):
     def __init__(self, geometry, v):
+        """
+        Initialize the geometry.
+
+        Args:
+            self: (todo): write your description
+            geometry: (todo): write your description
+            v: (int): write your description
+        """
         super().__init__()
         self.geometry = geometry
         self.alpha = numpy.sqrt(numpy.dot(v, v))
@@ -26,6 +34,13 @@ class Stretch(Geometry):
         self.feature_points = numpy.array([])
 
     def dist(self, x):
+        """
+        Compute the distance between two points.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+        """
         # scale the component of x in direction v by 1/alpha
         x_shape = x.shape
         assert x.shape[0] == 2
@@ -36,6 +51,13 @@ class Stretch(Geometry):
         return self.geometry.dist(y)
 
     def boundary_step(self, x):
+        """
+        Boundary step function.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         vx = numpy.multiply.outer(numpy.dot(self.v, x), self.v)
         y = vx / self.alpha + (x.T - vx)
         y2 = self.geometry.boundary_step(y.T)

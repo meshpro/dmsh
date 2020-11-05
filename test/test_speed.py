@@ -8,14 +8,32 @@ from dmsh.geometry import pypathlib
 
 @pytest.mark.skip(reason="fails on gh-actions for some reason")
 def test_speed(n=3):
+    """
+    Test if n times.
+
+    Args:
+        n: (str): write your description
+    """
     path_pts = [[0, 0], [0, 1], [1, 1], [1, 0]]
     path0 = path.Path(path_pts)
     path1 = pypathlib.ClosedPath(path_pts)
 
     def _mpl_path(pts):
+        """
+        Returns a list of a list of points.
+
+        Args:
+            pts: (todo): write your description
+        """
         return path0.contains_points(pts)
 
     def _pypathlib_contains_points(pts):
+        """
+        Return true if a list of points contains a list of the given points.
+
+        Args:
+            pts: (todo): write your description
+        """
         return path1.contains_points(pts)
 
     numpy.random.seed(0)
@@ -32,6 +50,11 @@ def test_speed(n=3):
 
 
 def benchmark():
+    """
+    Benchmark a set of the image.
+
+    Args:
+    """
     path_pts = [[0, 0], [0, 1], [1, 1], [1, 0]]
     path1 = pypathlib.ClosedPath(path_pts)
     pts = numpy.random.rand(5000000, 2)

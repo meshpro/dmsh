@@ -5,6 +5,11 @@ import dmsh
 
 
 def test_boundary_step():
+    """
+    Finds the boundary step.
+
+    Args:
+    """
     geo = dmsh.Rectangle(-2.0, +2.0, -1.0, +1.0)
 
     # Check boundary steps
@@ -37,6 +42,12 @@ def test_boundary_step():
 
 
 def test_rectangle(show=False):
+    """
+    Return the rectangle of the x y x and y coordinates.
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0)
     X, cells = dmsh.generate(geo, 0.1, show=show)
 

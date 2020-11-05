@@ -10,6 +10,13 @@ from .helpers import show as show_mesh
 
 
 def _recell(pts, geo):
+    """
+    Return a vector of a mesh.
+
+    Args:
+        pts: (todo): write your description
+        geo: (todo): write your description
+    """
     # compute Delaunay triangulation
     tri = scipy.spatial.Delaunay(pts)
     cells = tri.simplices.copy()
@@ -37,6 +44,13 @@ def _recell(pts, geo):
 
 
 def create_staggered_grid(h, bounding_box):
+    """
+    Create a grid with a grid.
+
+    Args:
+        h: (int): write your description
+        bounding_box: (int): write your description
+    """
     x_step = h
     y_step = h * numpy.sqrt(3) / 2
     bb_width = bounding_box[1] - bounding_box[0]
@@ -103,6 +117,18 @@ def generate(
     max_steps=10000,
     verbose=False,
 ):
+    """
+    Generate a random geometries.
+
+    Args:
+        geo: (str): write your description
+        edge_size: (int): write your description
+        tol: (float): write your description
+        random_seed: (int): write your description
+        show: (bool): write your description
+        max_steps: (int): write your description
+        verbose: (bool): write your description
+    """
     # Find h0 from edge_size (function)
     if callable(edge_size):
         edge_size_function = edge_size
@@ -116,6 +142,12 @@ def generate(
         h0 = edge_size
 
         def edge_size_function(pts):
+            """
+            Returns the size of the size in the image.
+
+            Args:
+                pts: (todo): write your description
+            """
             return numpy.full(pts.shape[1], edge_size)
 
     if random_seed is not None:
@@ -198,6 +230,22 @@ def distmesh_smoothing(
     f_scale,
     bad_cell_threshold=0.05,
 ):
+    """
+    Distmesh distance between two points.
+
+    Args:
+        mesh: (todo): write your description
+        geo: (todo): write your description
+        num_feature_points: (int): write your description
+        edge_size_function: (int): write your description
+        max_steps: (int): write your description
+        tol: (float): write your description
+        verbose: (bool): write your description
+        show: (bool): write your description
+        delta_t: (todo): write your description
+        f_scale: (float): write your description
+        bad_cell_threshold: (float): write your description
+    """
     mesh.create_edges()
 
     k = 0

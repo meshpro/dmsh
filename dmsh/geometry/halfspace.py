@@ -5,6 +5,14 @@ from .geometry import Geometry
 
 class LinePath:
     def __init__(self, v, tangent):
+        """
+        Initialize the tang variable.
+
+        Args:
+            self: (todo): write your description
+            v: (int): write your description
+            tangent: (todo): write your description
+        """
         super().__init__()
         self.v = v
         self.tangent = tangent
@@ -19,6 +27,13 @@ class LinePath:
         return out
 
     def dp_dt(self, t):
+        """
+        Return the time at t.
+
+        Args:
+            self: (todo): write your description
+            t: (todo): write your description
+        """
         with numpy.errstate(divide="ignore"):
             dt = 1 / t ** 2 + 1 / (1 - t) ** 2
         return numpy.multiply.outer(self.tangent, dt)
@@ -26,6 +41,14 @@ class LinePath:
 
 class HalfSpace(Geometry):
     def __init__(self, normal, alpha):
+        """
+        Initialize the bounding box.
+
+        Args:
+            self: (todo): write your description
+            normal: (todo): write your description
+            alpha: (float): write your description
+        """
         super().__init__()
         self.normal = normal
         self.alpha = alpha
@@ -40,10 +63,24 @@ class HalfSpace(Geometry):
         self.paths = [LinePath(v, tangent)]
 
     def dist(self, x):
+        """
+        Compute the distribution.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+        """
         assert x.shape[0] == 2
         return self.alpha - numpy.dot(self.normal, x)
 
     def boundary_step(self, x):
+        """
+        Evaluates the boundary function.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         beta = self.alpha - numpy.dot(self.normal, x) / numpy.dot(
             self.normal, self.normal
         )

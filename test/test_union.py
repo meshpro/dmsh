@@ -5,6 +5,11 @@ import dmsh
 
 
 def test_boundary_step():
+    """
+    Perform boundary boundary.
+
+    Args:
+    """
     geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
     geo.show()
     a = geo.boundary_step([-0.5, 0.9])
@@ -18,6 +23,12 @@ def test_boundary_step():
 
 
 def test_union(show=False):
+    """
+    Test for union of the union.
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
     X, cells = dmsh.generate(geo, 0.15, show=show, tol=1.0e-10)
 

@@ -4,11 +4,21 @@ from dmsh.geometry import pypathlib
 
 
 def test_show():
+    """
+    Show pypath.
+
+    Args:
+    """
     path = pypathlib.ClosedPath([[0.0, 0.0], [1.0, 0.0], [1.1, 1.1], [0.1, 1.0]])
     path.show()
 
 
 def test_convex():
+    """
+    Test if the given path on the given path.
+
+    Args:
+    """
     path = pypathlib.ClosedPath([[0.0, 0.0], [1.0, 0.0], [1.1, 1.1], [0.1, 1.0]])
 
     ref = 1.045
@@ -18,6 +28,11 @@ def test_convex():
 
 
 def test_orientation():
+    """
+    Computes the orientation of the current node.
+
+    Args:
+    """
     path = pypathlib.ClosedPath([[0.1, 1.0], [1.1, 1.1], [1.0, 0.0], [0.0, 0.0]])
 
     ref = 1.045
@@ -27,6 +42,11 @@ def test_orientation():
 
 
 def test_concave():
+    """
+    Concave isconcave.
+
+    Args:
+    """
     path = pypathlib.ClosedPath(
         [[0.0, 0.0], [1.0, 0.0], [0.9, 0.5], [1.1, 1.1], [0.1, 1.0]]
     )
@@ -38,6 +58,11 @@ def test_concave():
 
 
 def test_concave_counterclock():
+    """
+    Concave counter isconcave.
+
+    Args:
+    """
     path = pypathlib.ClosedPath(
         [[0.1, 1.0], [1.1, 1.1], [0.9, 0.5], [1.0, 0.0], [0.0, 0.0]]
     )
@@ -49,6 +74,11 @@ def test_concave_counterclock():
 
 
 def test_squared_distance():
+    """
+    Calculate distance between two pypath.
+
+    Args:
+    """
     path = pypathlib.ClosedPath(
         [[0.0, 0.0], [1.0, 0.0], [0.9, 0.5], [1.0, 1.0], [0.0, 1.0]]
     )
@@ -61,6 +91,11 @@ def test_squared_distance():
 
 
 def test_distance():
+    """
+    Calculate distance between two points.
+
+    Args:
+    """
     path = pypathlib.ClosedPath(
         [[0.0, 0.0], [1.0, 0.0], [0.9, 0.5], [1.0, 1.0], [0.0, 1.0]]
     )
@@ -73,6 +108,11 @@ def test_distance():
 
 
 def test_signed_distance():
+    """
+    Compute the distance between two points.
+
+    Args:
+    """
     path = pypathlib.ClosedPath(
         [[0.0, 0.0], [1.0, 0.0], [0.9, 0.5], [1.0, 1.0], [0.0, 1.0]]
     )
@@ -88,6 +128,11 @@ def test_signed_distance():
 
 
 def test_inside():
+    """
+    Test if the pypath is in - place.
+
+    Args:
+    """
     path = pypathlib.ClosedPath(
         [[0.0, 0.0], [1.0, 0.0], [0.9, 0.5], [1.0, 1.0], [0.0, 1.0]]
     )
@@ -99,6 +144,11 @@ def test_inside():
 
 
 def test_closest_points():
+    """
+    Test if the closest point on pypath.
+
+    Args:
+    """
     path = pypathlib.ClosedPath(
         [[0.0, 0.0], [1.0, 0.0], [0.9, 0.5], [1.0, 1.0], [0.0, 1.0]]
     )
@@ -121,6 +171,11 @@ def test_closest_points():
 
 
 def test_signed_squared_distance():
+    """
+    Calculate the distance between two distance between two files.
+
+    Args:
+    """
     path = pypathlib.ClosedPath(
         [[0.0, 0.0], [1.0, 0.0], [0.9, 0.5], [1.0, 1.0], [0.0, 1.0]]
     )
@@ -133,6 +188,11 @@ def test_signed_squared_distance():
 
 
 def test_sharp_angle():
+    """
+    Test if angle angle between two angle.
+
+    Args:
+    """
     path = pypathlib.ClosedPath(
         [
             [0.0, 0.0],

@@ -4,6 +4,12 @@ import dmsh
 
 
 def test(show=False):
+    """
+    Generate the covariance.
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Scaling(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 2.0)
     X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-5)
 

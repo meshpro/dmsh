@@ -9,6 +9,12 @@ import dmsh
 
 
 def _compute_num_boundary_points(total_num_points):
+    """
+    Compute the number of bounding points.
+
+    Args:
+        total_num_points: (int): write your description
+    """
     # The number of boundary points, the total number of points, and the number of cells
     # are connected by two equations (the second of which is approximate).
     #
@@ -41,6 +47,12 @@ def _compute_num_boundary_points(total_num_points):
 
 
 def dmsh_circle(num_points):
+    """
+    Calculate the dms for a circle
+
+    Args:
+        num_points: (int): write your description
+    """
     target_edge_length = 2 * np.pi / _compute_num_boundary_points(num_points)
     geo = dmsh.Circle([0.0, 0.0], 1.0)
     X, cells = dmsh.generate(geo, target_edge_length)
@@ -48,6 +60,12 @@ def dmsh_circle(num_points):
 
 
 def gmsh_circle(num_points):
+    """
+    Generate a circle for a circle.
+
+    Args:
+        num_points: (int): write your description
+    """
     geom = pygmsh.built_in.Geometry()
     target_edge_length = 2 * np.pi / _compute_num_boundary_points(num_points)
     geom.add_circle(

@@ -3,6 +3,13 @@ import numpy
 
 class Path:
     def __init__(self, points):
+        """
+        Initialize e_dot
+
+        Args:
+            self: (todo): write your description
+            points: (todo): write your description
+        """
         self.points = numpy.asarray(points)
         assert self.points.shape[1] == 2
 
@@ -16,6 +23,13 @@ class Path:
         )
 
     def _all_distances(self, x):
+        """
+        Calculate the distances between two vectors.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+        """
         x = numpy.asarray(x)
         assert x.shape[1] == 2
 
@@ -71,6 +85,12 @@ class Path:
 
     @property
     def diameter(self):
+        """
+        Diameter distance between two points.
+
+        Args:
+            self: (todo): write your description
+        """
         # compute distance from all points to each other
         diff = self.points[:, None] - self.points[None, :]
         dist2 = numpy.einsum("ijk,ijk->ij", diff, diff)
@@ -101,6 +121,13 @@ class Path:
         return closest_points
 
     def plot(self, color="#1f77b4"):
+        """
+        Plot the points.
+
+        Args:
+            self: (todo): write your description
+            color: (str): write your description
+        """
         import matplotlib.pyplot as plt
 
         x = numpy.concatenate([self.points[:, 0], [self.points[0, 0]]])
@@ -110,6 +137,12 @@ class Path:
         plt.axis("square")
 
     def show(self, *args, **kwargs):
+        """
+        Displays the plot.
+
+        Args:
+            self: (todo): write your description
+        """
         import matplotlib.pyplot as plt
 
         self.plot(*args, **kwargs)

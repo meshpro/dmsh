@@ -6,6 +6,15 @@ from .geometry import Geometry
 
 class Ellipse(Geometry):
     def __init__(self, x0, a, b):
+        """
+        Initialize the bounding box.
+
+        Args:
+            self: (todo): write your description
+            x0: (float): write your description
+            a: (int): write your description
+            b: (int): write your description
+        """
         super().__init__()
         self.x0 = x0
         self.a = a
@@ -14,6 +23,13 @@ class Ellipse(Geometry):
         self.feature_points = numpy.array([])
 
     def dist(self, x):
+        """
+        Compute distance between x and x.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+        """
         assert x.shape[0] == 2
         return (
             ((x[0] - self.x0[0]) / self.a) ** 2
@@ -22,6 +38,13 @@ class Ellipse(Geometry):
         )
 
     def _boundary_step(self, x):
+        """
+        Boundary step.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         ax = (x[0] - self.x0[0]) / self.a
         ay = (x[1] - self.x0[1]) / self.b
 
@@ -47,6 +70,13 @@ class Ellipse(Geometry):
         return x + p.T
 
     def boundary_step(self, x):
+        """
+        Boundary step step.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         return multi_newton(
             x.T, self.dist, self._boundary_step, 1.0e-10, max_num_steps=10
         ).T

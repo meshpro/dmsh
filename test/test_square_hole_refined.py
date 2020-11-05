@@ -5,6 +5,12 @@ import dmsh
 
 
 def test(show=False):
+    """
+    Generate a vector of a - axis.
+
+    Args:
+        show: (bool): write your description
+    """
     r = dmsh.Rectangle(-1.0, +1.0, -1.0, +1.0)
     c = dmsh.Circle([0.0, 0.0], 0.3)
     geo = dmsh.Difference(r, c)

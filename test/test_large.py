@@ -4,6 +4,11 @@ import dmsh
 
 
 def test_large():
+    """
+    Test for a vector of the geometry.
+
+    Args:
+    """
     # https://github.com/nschloe/dmsh/issues/11
     r = dmsh.Rectangle(-10.0, +20.0, -10.0, +20.0)
     c = dmsh.Circle([0.0, 0.0], 3)

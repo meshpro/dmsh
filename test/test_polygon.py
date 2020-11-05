@@ -4,6 +4,12 @@ import dmsh
 
 
 def test(show=False):
+    """
+    Generate the covariance matrix.
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Polygon(
         [
             [0.0, 0.0],

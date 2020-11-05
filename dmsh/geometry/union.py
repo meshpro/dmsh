@@ -6,6 +6,13 @@ from .geometry import Geometry
 
 class Union(Geometry):
     def __init__(self, geometries):
+        """
+        Initializes all the geometry.
+
+        Args:
+            self: (todo): write your description
+            geometries: (todo): write your description
+        """
         super().__init__()
         self.geometries = geometries
         self.bounding_box = [
@@ -28,9 +35,25 @@ class Union(Geometry):
         self.paths = [path for geo in self.geometries for path in geo.paths]
 
     def dist(self, x):
+        """
+        Compute the distance between the points.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+        """
         return numpy.min([geo.dist(x) for geo in self.geometries], axis=0)
 
     def boundary_step(self, x, tol=1.0e-5, max_steps=10):
+        """
+        Finds the boundary.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+            tol: (float): write your description
+            max_steps: (int): write your description
+        """
         # This stepper uses a heuristic that doesn't always land on the closet point in
         # the boundary. It's good enough for now though.
         x = numpy.asarray(x)

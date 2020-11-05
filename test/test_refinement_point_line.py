@@ -4,12 +4,24 @@ import dmsh
 
 
 def test(show=False):
+    """
+    Generate the x y x y coordinates
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Rectangle(0.0, 1.0, 0.0, 1.0)
 
     # p0 = dmsh.Path([[0.0, 0.0]])
     p1 = dmsh.Path([[0.4, 0.6], [0.6, 0.4]])
 
     def edge_size(x):
+        """
+        Returns the size of x.
+
+        Args:
+            x: (todo): write your description
+        """
         return 0.03 + 0.1 * p1.dist(x)
 
     X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)

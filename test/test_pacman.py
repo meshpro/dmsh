@@ -4,6 +4,12 @@ import dmsh
 
 
 def test_pacman(show=False):
+    """
+    Generate test isochman test.
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Difference(
         dmsh.Circle([0.0, 0.0], 1.0),
         dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),

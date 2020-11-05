@@ -4,6 +4,12 @@ import dmsh
 
 
 def test_union(show=False):
+    """
+    Returns union of union of union
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Union(
         [dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5), dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)]
     )

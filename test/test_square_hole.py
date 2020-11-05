@@ -4,6 +4,12 @@ import dmsh
 
 
 def test(show=False):
+    """
+    Generate the vector of geometries.
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Difference(
         dmsh.Rectangle(0.0, 5.0, 0.0, 5.0),
         dmsh.Polygon([[1, 1], [4, 1], [4, 4], [1, 4]]),

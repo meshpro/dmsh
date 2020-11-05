@@ -5,6 +5,12 @@ import dmsh
 
 
 def test(show=False):
+    """
+    Generate x and y and dms.
+
+    Args:
+        show: (bool): write your description
+    """
     geo = dmsh.Rotation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 0.1 * numpy.pi)
     X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-10)
 

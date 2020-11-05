@@ -5,6 +5,12 @@ import dmsh
 
 
 def test_union(show=False):
+    """
+    Test the union of the union
+
+    Args:
+        show: (bool): write your description
+    """
     angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
     geo = dmsh.Union(
         [

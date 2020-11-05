@@ -2,6 +2,12 @@ import numpy
 
 
 def unique_rows(a):
+    """
+    Return unique rows in the array a.
+
+    Args:
+        a: (array): write your description
+    """
     # The cleaner alternative `numpy.unique(a, axis=0)` is slow; cf.
     # <https://github.com/numpy/numpy/issues/11136>.
     b = numpy.ascontiguousarray(a).view(
@@ -31,6 +37,16 @@ def multi_newton(x0, is_inside, boundary_step, tol, max_num_steps=10):
 
 
 def show(pts, cells, geo, title=None, full_screen=True):
+    """
+    Show a matplot.
+
+    Args:
+        pts: (str): write your description
+        cells: (str): write your description
+        geo: (todo): write your description
+        title: (str): write your description
+        full_screen: (bool): write your description
+    """
     import matplotlib.pyplot as plt
 
     eps = 1.0e-10
@@ -71,6 +87,13 @@ def show(pts, cells, geo, title=None, full_screen=True):
 
 
 def find_feature_points(geometries, num_steps=10):
+    """
+    Finds the number of points in a list of shapely geometry.
+
+    Args:
+        geometries: (todo): write your description
+        num_steps: (int): write your description
+    """
     n = len(geometries)
 
     # collect path pairs

@@ -6,6 +6,13 @@ from .geometry import Geometry
 
 class Intersection(Geometry):
     def __init__(self, geometries):
+        """
+        Initializes the bounding box.
+
+        Args:
+            self: (todo): write your description
+            geometries: (todo): write your description
+        """
         super().__init__()
         self.geometries = geometries
         self.bounding_box = [
@@ -18,9 +25,24 @@ class Intersection(Geometry):
         self.feature_points = find_feature_points(geometries)
 
     def dist(self, x):
+        """
+        Compute the distribution.
+
+        Args:
+            self: (todo): write your description
+            x: (array): write your description
+        """
         return numpy.max([geo.dist(x) for geo in self.geometries], axis=0)
 
     def boundary_step(self, x, tol=1.0e-12):
+        """
+        Boundary step of x.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+            tol: (float): write your description
+        """
         # step for the is_inside with the smallest value
         alpha = numpy.array([geo.dist(x) for geo in self.geometries])
         while numpy.any(alpha > tol):
