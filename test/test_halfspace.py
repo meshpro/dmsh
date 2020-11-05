@@ -13,8 +13,8 @@ def test_halfspace(show=False):
     )
     X, cells = dmsh.generate(geo, 0.1, show=show)
 
-    ref_norms = [1.6445927927312613e02, 1.0032815150498680e01, 9.9962808330128095e-01]
-    assert_norm_equality(X.flatten(), ref_norms, 1.0e-7)
+    ref_norms = [1.6445961675494132e02, 1.0032818772503287e01, 9.9962198219292397e-01]
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-6)
     return X, cells
 
 

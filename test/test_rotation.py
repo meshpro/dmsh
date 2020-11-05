@@ -8,7 +8,7 @@ def test(show=False):
     geo = dmsh.Rotation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 0.1 * numpy.pi)
     X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-10)
 
-    ref_norms = [9.5352192763006087e02, 3.1344318120303605e01, 2.2111300269652543e00]
+    ref_norms = [9.5352273158030800e02, 3.1344342480141901e01, 2.2111300269652543e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 

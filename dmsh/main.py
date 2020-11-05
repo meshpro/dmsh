@@ -85,9 +85,9 @@ def create_staggered_grid(h, bounding_box):
 #     # this, restrict the maximum step size to half of the minimum the incircle radius of
 #     # all adjacent cells. This makes sure that triangles cannot "flip".
 #     # <https://stackoverflow.com/a/57261082/353337>
-#     max_step = numpy.full(mesh.node_coords.shape[0], numpy.inf)
+#     max_step = numpy.full(mesh.points.shape[0], numpy.inf)
 #     numpy.minimum.at(
-#         max_step, mesh.cells["nodes"].reshape(-1), numpy.repeat(mesh.cell_inradius, 3),
+#         max_step, mesh.cells["points"].reshape(-1), numpy.repeat(mesh.cell_inradius, 3),
 #     )
 #     max_step *= 0.5
 #     return max_step
@@ -147,20 +147,20 @@ def generate(
     mesh = meshplex.MeshTri(pts, cells)
 
     # # move boundary points to the boundary exactly
-    # is_boundary_node = mesh.is_boundary_node.copy()
-    # mesh.node_coords[is_boundary_node] = geo.boundary_step(
-    #     mesh.node_coords[is_boundary_node].T
+    # is_boundary_point = mesh.is_boundary_point.copy()
+    # mesh.points[is_boundary_point] = geo.boundary_step(
+    #     mesh.points[is_boundary_point].T
     # ).T
     # mesh.update_values()
 
-    # print(sum(is_boundary_node))
+    # print(sum(is_boundary_point))
     # show_mesh(pts, cells, geo)
     # exit(1)
 
     # if smoothing_method == "odt":
     #     points, cells = optimesh.odt.fixed_point_uniform(
-    #         mesh.node_coords,
-    #         mesh.cells["nodes"],
+    #         mesh.points,
+    #         mesh.cells["points"],
     #         max_num_steps=max_steps,
     #         verbose=verbose,
     #         boundary_step=geo.boundary_step,
@@ -179,8 +179,8 @@ def generate(
         delta_t=0.2,
         f_scale=1.2,
     )
-    points = mesh.node_coords
-    cells = mesh.cells["nodes"]
+    points = mesh.points
+    cells = mesh.cells["points"]
 
     return points, cells
 
@@ -202,8 +202,8 @@ def distmesh_smoothing(
 
     k = 0
     move2 = [0.0]
-    # is_boundary_node = mesh.is_boundary_node.copy()
-    pts_old_last_recell = mesh.node_coords.copy()
+    # is_boundary_point = mesh.is_boundary_point.copy()
+    pts_old_last_recell = mesh.points.copy()
     while True:
         # print()
         # print(f"step {k}")
@@ -220,32 +220,32 @@ def distmesh_smoothing(
         # print("cells with lowest quality:")
         # for cell_id in numpy.argsort(mesh.q_radius_ratio)[:3]:
         #     print(
-        #         mesh.cells["nodes"][cell_id],
+        #         mesh.cells["points"][cell_id],
         #         mesh.q_radius_ratio[cell_id],
         #         mesh.signed_cell_areas[cell_id],
         #     )
 
         if show:
             print(f"max move: {math.sqrt(max(move2)):.3e}")
-            show_mesh(mesh.node_coords, mesh.cells["nodes"], geo)
+            show_mesh(mesh.points, mesh.cells["points"], geo)
 
-        diff = mesh.node_coords - pts_old_last_recell
+        diff = mesh.points - pts_old_last_recell
         move2_last_recell = numpy.einsum("ij,ij->i", diff, diff)
         needs_recell = numpy.any(move2_last_recell > 1.0e-2 ** 2) or numpy.any(
             mesh.signed_cell_areas < 0.0
         )
         if needs_recell:
-            pts_old_last_recell = mesh.node_coords.copy()
-            cells = _recell(mesh.node_coords, geo)
+            pts_old_last_recell = mesh.points.copy()
+            cells = _recell(mesh.points, geo)
             #
-            mesh = meshplex.MeshTri(mesh.node_coords, cells)
+            mesh = meshplex.MeshTri(mesh.points, cells)
             mesh.create_edges()
             # The recell process might have made some interior points boundary
             # points. Snap them onto the domain boundary.
             # TODO Doing this moves some concave corners in polygons. Hm.
-            # is_boundary_node = mesh.is_boundary_node.copy()
-            # mesh.node_coords[is_boundary_node] = geo.boundary_step(
-            #     mesh.node_coords[is_boundary_node].T
+            # is_boundary_point = mesh.is_boundary_point.copy()
+            # mesh.points[is_boundary_point] = geo.boundary_step(
+            #     mesh.points[is_boundary_point].T
             # ).T
             # mesh.update_values()
 
@@ -258,18 +258,17 @@ def distmesh_smoothing(
         # Those degenerate cell then sit on near the boundary, so removing them does not
         # create holes. Not sure if there are reasonable examples where degenerate cells
         # occur on the interior.
-        mesh.remove_cells(mesh.q_radius_ratio < bad_cell_threshold)
+        # num_removed = mesh.remove_cells(mesh.q_radius_ratio < bad_cell_threshold)
+        # print(num_removed)
 
-        edges = mesh.edges["nodes"]
+        edges = mesh.edges["points"]
 
-        edges_vec = mesh.node_coords[edges[:, 1]] - mesh.node_coords[edges[:, 0]]
+        edges_vec = mesh.points[edges[:, 1]] - mesh.points[edges[:, 0]]
         edge_lengths = numpy.sqrt(numpy.einsum("ij,ij->i", edges_vec, edges_vec))
         edges_vec /= edge_lengths[..., None]
 
         # Evaluate element sizes at edge midpoints
-        edge_midpoints = (
-            mesh.node_coords[edges[:, 1]] + mesh.node_coords[edges[:, 0]]
-        ) / 2
+        edge_midpoints = (mesh.points[edges[:, 1]] + mesh.points[edges[:, 0]]) / 2
         p = edge_size_function(edge_midpoints.T)
         desired_lengths = (
             f_scale
@@ -287,8 +286,8 @@ def distmesh_smoothing(
         # bincount replacement for the slow numpy.add.at
         # more speed-up can be achieved if the weights were contiguous in memory, i.e.,
         # if force[k] was used
-        n = mesh.node_coords.shape[0]
-        force_per_node = numpy.array(
+        n = mesh.points.shape[0]
+        force_per_point = numpy.array(
             [
                 numpy.bincount(edges[:, 0], weights=-force[:, k], minlength=n)
                 + numpy.bincount(edges[:, 1], weights=+force[:, k], minlength=n)
@@ -296,9 +295,7 @@ def distmesh_smoothing(
             ]
         ).T
 
-        update = delta_t * force_per_node
-
-        pts_before_update = mesh.node_coords.copy()
+        update = delta_t * force_per_point
 
         # # Limit the max step size to avoid overshoots
         # TODO this doesn't work for distmesh smoothing. hm.
@@ -310,31 +307,32 @@ def distmesh_smoothing(
         # # alpha = numpy.min(max_step / step_lengths)
         # # update *= alpha
 
-        # update coordinates, but leave feature points untouched
-        mesh.node_coords[num_feature_points:] += update[num_feature_points:]
+        # update coordinates
+        points_new = mesh.points + update
+        # leave feature points untouched
+        points_new[:num_feature_points] = mesh.points[:num_feature_points]
 
         # Some boundary points may have been pushed outside; bring them back onto the
         # boundary.
-        is_outside = geo.dist(mesh.node_coords.T) > 0.0
+        is_outside = geo.dist(points_new.T) > 0.0
         idx = is_outside
-        # Alternative: Also push boundary nodes (which have moved away from the
+        # Alternative: Also push boundary points (which have moved away from the
         # boundary, into the interior)
         # back to it.
-        # idx = is_outside | is_boundary_node
-        # idx = is_boundary_node
-        mesh.node_coords[idx] = geo.boundary_step(mesh.node_coords[idx].T).T
+        # idx = is_outside | is_boundary_point
+        # idx = is_boundary_point
+        points_new[idx] = geo.boundary_step(points_new[idx].T).T
 
-        # mesh.update_values()
-        # num_removed = mesh.remove_degenerate_cells(1.0e-3)
+        diff = points_new - mesh.points
+
+        mesh.points = points_new
+        # num_removed = mesh.remove_cells(mesh.q_radius_ratio < bad_cell_threshold)
         # print("removed {} cells".format(num_removed))
         # mesh.flip_until_delaunay()
 
-        diff = mesh.node_coords - pts_before_update
         move2 = numpy.einsum("ij,ij->i", diff, diff)
-
         if verbose:
             print("max_move: {:.6e}".format(numpy.sqrt(numpy.max(move2))))
-
         if numpy.all(move2 < tol ** 2):
             break
 

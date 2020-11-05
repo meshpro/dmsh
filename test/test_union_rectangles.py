@@ -9,7 +9,7 @@ def test_union(show=False):
     )
     X, cells = dmsh.generate(geo, 0.15, show=show, tol=1.0e-5)
 
-    ref_norms = [1.8409662724682315e02, 1.1271016041905595e01, 1.0000000000000000e00]
+    ref_norms = [1.8432376349018622e02, 1.1278734993846784e01, 1.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
