@@ -23,7 +23,9 @@ def test_circle(radius, ref_norms, show=False):
 
 
 # with these target edge lengths, dmsh once produced weird results near the boundary
-@pytest.mark.parametrize("target_edge_length", [0.07273, 0.07272, 0.07271])
+@pytest.mark.parametrize(
+    "target_edge_length", [0.07273, 0.07272, 0.07271, 0.0711, 0.03591]
+)
 def test_degenerate_circle(target_edge_length):
     geo = dmsh.Circle([0.0, 0.0], 1.0)
     X, cells = dmsh.generate(geo, target_edge_length, show=False)
