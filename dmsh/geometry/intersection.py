@@ -17,6 +17,8 @@ class Intersection(Geometry):
 
         self.feature_points = find_feature_points(geometries)
 
+        self.paths = [path for geo in self.geometries for path in geo.paths]
+
     def dist(self, x):
         return numpy.max([geo.dist(x) for geo in self.geometries], axis=0)
 

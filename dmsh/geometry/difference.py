@@ -21,6 +21,8 @@ class Difference(Geometry):
         is_on_boundary = (-tol < alpha) & (alpha < tol)
         self.feature_points = self.feature_points[is_on_boundary]
 
+        self.paths = [path for geo in [geo0, geo1] for path in geo.paths]
+
     def dist(self, x):
         return numpy.max([self.geo0.dist(x), -self.geo1.dist(x)], axis=0)
 

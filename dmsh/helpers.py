@@ -95,14 +95,14 @@ def find_feature_points(geometries, num_steps=10):
     return points.T
 
 
-def _find_feature_points_between_two_paths(path0, path1, num_steps):
+def _find_feature_points_between_two_paths(path0, path1, num_steps, nx=11, ny=11):
     """Given two geometries with their parameterization, this methods finds feature
     points, i.e., points where the boundaries meet. This is done by casting a net over
     the parameter space and performing `num_steps` Newton steps. Found solutions are
     checked for uniqueness.
     """
     # Throw a net
-    t0, t1 = numpy.meshgrid(numpy.linspace(0.0, 1.0, 11), numpy.linspace(0.0, 1.0, 11))
+    t0, t1 = numpy.meshgrid(numpy.linspace(0.0, 1.0, nx), numpy.linspace(0.0, 1.0, ny))
     t = numpy.array([t0, t1]).reshape(2, -1)
     # t = numpy.random.rand(2, 100)
 
