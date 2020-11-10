@@ -145,13 +145,15 @@ def generate(
 
     cells = _recell(pts, geo)
     mesh = meshplex.MeshTri(pts, cells)
+    # When creating a mesh for the staggered grid, degenerate cells can very well occur
+    # at the boundary, where points sit in a straight line. Remove those cells.
+    mesh.remove_cells(mesh.q_radius_ratio < 1.0e-2)
 
     # # move boundary points to the boundary exactly
     # is_boundary_point = mesh.is_boundary_point.copy()
     # mesh.points[is_boundary_point] = geo.boundary_step(
     #     mesh.points[is_boundary_point].T
     # ).T
-    # mesh.update_values()
 
     # print(sum(is_boundary_point))
     # show_mesh(pts, cells, geo)
@@ -167,6 +169,7 @@ def generate(
     #     )
     # else:
     #     assert smoothing_method == "distmesh"
+    dim = 2
     mesh = distmesh_smoothing(
         mesh,
         geo,
@@ -177,7 +180,7 @@ def generate(
         verbose,
         show,
         delta_t=0.2,
-        f_scale=1.2,
+        f_scale=1 + 0.4 / 2 ** (dim - 1),  # from the original article
     )
     points = mesh.points
     cells = mesh.cells["points"]
@@ -196,12 +199,13 @@ def distmesh_smoothing(
     show,
     delta_t,
     f_scale,
-    bad_cell_threshold=0.05,
+    # bad_cell_threshold=0.05,
 ):
     mesh.create_edges()
 
     k = 0
     move2 = [0.0]
+    num_recells = 0
     # is_boundary_point = mesh.is_boundary_point.copy()
     pts_old_last_recell = mesh.points.copy()
     while True:
@@ -235,6 +239,7 @@ def distmesh_smoothing(
             mesh.signed_cell_areas < 0.0
         )
         if needs_recell:
+            num_recells += 1
             pts_old_last_recell = mesh.points.copy()
             cells = _recell(mesh.points, geo)
             #
@@ -247,7 +252,6 @@ def distmesh_smoothing(
             # mesh.points[is_boundary_point] = geo.boundary_step(
             #     mesh.points[is_boundary_point].T
             # ).T
-            # mesh.update_values()
 
         # Remove nearly degenerate cells. They are usually produced in two ways:
         #
@@ -326,7 +330,8 @@ def distmesh_smoothing(
         diff = points_new - mesh.points
 
         mesh.points = points_new
-        # num_removed = mesh.remove_cells(mesh.q_radius_ratio < bad_cell_threshold)
+        # num_removed = mesh.remove_cells(mesh.q_radius_ratio < 1.0e-3)
+        # mesh.show()
         # print("removed {} cells".format(num_removed))
         # mesh.flip_until_delaunay()
 
@@ -336,4 +341,5 @@ def distmesh_smoothing(
         if numpy.all(move2 < tol ** 2):
             break
 
+    # print("num recells:", num_recells)
     return mesh
