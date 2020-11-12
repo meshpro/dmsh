@@ -147,7 +147,7 @@ def generate(
     mesh = meshplex.MeshTri(pts, cells)
     # When creating a mesh for the staggered grid, degenerate cells can very well occur
     # at the boundary, where points sit in a straight line. Remove those cells.
-    mesh.remove_cells(mesh.q_radius_ratio < 1.0e-2)
+    mesh.remove_cells(mesh.q_radius_ratio < 1.0e-10)
 
     # # move boundary points to the boundary exactly
     # is_boundary_point = mesh.is_boundary_point.copy()
@@ -205,9 +205,6 @@ def distmesh_smoothing(
 
     k = 0
     move2 = [0.0]
-    num_recells = 0
-    # is_boundary_point = mesh.is_boundary_point.copy()
-    pts_old_last_recell = mesh.points.copy()
     while True:
         # print()
         # print(f"step {k}")
@@ -221,49 +218,9 @@ def distmesh_smoothing(
 
         k += 1
 
-        # print("cells with lowest quality:")
-        # for cell_id in numpy.argsort(mesh.q_radius_ratio)[:3]:
-        #     print(
-        #         mesh.cells["points"][cell_id],
-        #         mesh.q_radius_ratio[cell_id],
-        #         mesh.signed_cell_areas[cell_id],
-        #     )
-
         if show:
             print(f"max move: {math.sqrt(max(move2)):.3e}")
             show_mesh(mesh.points, mesh.cells["points"], geo)
-
-        diff = mesh.points - pts_old_last_recell
-        move2_last_recell = numpy.einsum("ij,ij->i", diff, diff)
-        needs_recell = numpy.any(move2_last_recell > 1.0e-2 ** 2) or numpy.any(
-            mesh.signed_cell_areas < 0.0
-        )
-        if needs_recell:
-            num_recells += 1
-            pts_old_last_recell = mesh.points.copy()
-            cells = _recell(mesh.points, geo)
-            #
-            mesh = meshplex.MeshTri(mesh.points, cells)
-            mesh.create_edges()
-            # The recell process might have made some interior points boundary
-            # points. Snap them onto the domain boundary.
-            # TODO Doing this moves some concave corners in polygons. Hm.
-            # is_boundary_point = mesh.is_boundary_point.copy()
-            # mesh.points[is_boundary_point] = geo.boundary_step(
-            #     mesh.points[is_boundary_point].T
-            # ).T
-
-        # Remove nearly degenerate cells. They are usually produced in two ways:
-        #
-        #    * by qhull, when recelling a point cloud with points nearly (but not quite)
-        #      sitting on a straight line
-        #    * by the distmesh algo when pushing points out
-        #
-        # Those degenerate cell then sit on near the boundary, so removing them does not
-        # create holes. Not sure if there are reasonable examples where degenerate cells
-        # occur on the interior.
-        # num_removed = mesh.remove_cells(mesh.q_radius_ratio < bad_cell_threshold)
-        # print(num_removed)
 
         edges = mesh.edges["points"]
 
@@ -315,7 +272,6 @@ def distmesh_smoothing(
         points_new = mesh.points + update
         # leave feature points untouched
         points_new[:num_feature_points] = mesh.points[:num_feature_points]
-
         # Some boundary points may have been pushed outside; bring them back onto the
         # boundary.
         is_outside = geo.dist(points_new.T) > 0.0
@@ -330,10 +286,16 @@ def distmesh_smoothing(
         diff = points_new - mesh.points
 
         mesh.points = points_new
-        # num_removed = mesh.remove_cells(mesh.q_radius_ratio < 1.0e-3)
+
+        # We could do a _recell() here, but inverted boundary cell removal plus Lawson
+        # flips produce the same result and are much cheaper. This is because, most of
+        # the time, there are no cells to be removed and no edges to be flipped.
+        # Because the rest of the algorithm is so cheap. The flip is still a fairly
+        # expensive operation.
+        mesh.remove_inverted_boundary_cells()
+        mesh.flip_until_delaunay()
+
         # mesh.show()
-        # print("removed {} cells".format(num_removed))
-        # mesh.flip_until_delaunay()
 
         move2 = numpy.einsum("ij,ij->i", diff, diff)
         if verbose:
@@ -341,5 +303,5 @@ def distmesh_smoothing(
         if numpy.all(move2 < tol ** 2):
             break
 
-    # print("num recells:", num_recells)
+    # print("num steps:  ", k)
     return mesh
