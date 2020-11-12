@@ -16,6 +16,13 @@ class Intersection(Geometry):
         ]
 
         self.feature_points = find_feature_points(geometries)
+        # filter out the feature points outside the intersection
+        self.feature_points = self.feature_points[
+            numpy.all(
+                [geo.dist(self.feature_points.T) < 1.0e-10 for geo in geometries],
+                axis=0,
+            )
+        ]
 
         self.paths = [path for geo in self.geometries for path in geo.paths]
 
