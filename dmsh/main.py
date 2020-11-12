@@ -294,6 +294,8 @@ def distmesh_smoothing(
         # expensive operation.
         mesh.remove_inverted_boundary_cells()
         mesh.flip_until_delaunay()
+        # kick out all cells whose barycenter is not in the geometry
+        mesh.remove_cells(geo.dist(mesh.cell_barycenters.T) > 0.0)
 
         # mesh.show()
 
