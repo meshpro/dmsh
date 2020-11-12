@@ -19,5 +19,5 @@ def test_halfspace(show=False):
 
 
 if __name__ == "__main__":
-    X, cells = test_halfspace(show=False)
+    X, cells = test_halfspace(show=True)
     save("halfspace.png", X, cells)
