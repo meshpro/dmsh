@@ -276,15 +276,13 @@ def distmesh_smoothing(
         # boundary.
         is_outside = geo.dist(points_new.T) > 0.0
         idx = is_outside
-        # Alternative: Also push boundary points (which have moved away from the
-        # boundary, into the interior)
-        # back to it.
+        # Alternative: Push all boundary points (the ones _inside_ the geometry as well)
+        # back to the boundary.
         # idx = is_outside | is_boundary_point
-        # idx = is_boundary_point
+        # idx = mesh.is_boundary_point
         points_new[idx] = geo.boundary_step(points_new[idx].T).T
 
         diff = points_new - mesh.points
-
         mesh.points = points_new
 
         # We could do a _recell() here, but inverted boundary cell removal plus Lawson
@@ -292,12 +290,18 @@ def distmesh_smoothing(
         # the time, there are no cells to be removed and no edges to be flipped.
         # Because the rest of the algorithm is so cheap. The flip is still a fairly
         # expensive operation.
-        mesh.remove_inverted_boundary_cells()
+        # First kick out all boundary cells whose barycenters are not in the geometry.
+        mesh.remove_boundary_cells(
+            lambda is_boundary_cell: geo.dist(
+                mesh.compute_centroids(is_boundary_cell).T
+            )
+            > 0.0
+        )
+        mesh.remove_boundary_cells(
+            lambda is_boundary_cell: mesh.compute_signed_cell_areas(is_boundary_cell)
+            < 1.0e-10
+        )
         mesh.flip_until_delaunay()
-        # kick out all cells whose barycenter is not in the geometry
-        mesh.remove_cells(geo.dist(mesh.cell_barycenters.T) > 0.0)
-
-        # mesh.show()
 
         move2 = numpy.einsum("ij,ij->i", diff, diff)
         if verbose:
