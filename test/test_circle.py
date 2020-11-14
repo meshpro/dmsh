@@ -35,7 +35,14 @@ def test_degenerate_circle(target_edge_length):
     assert min_q > 0.5, f"min cell quality: {min_q:.3f}"
 
 
+def test_boundary_step():
+    geo = dmsh.Circle([0.1, 0.2], 1.0)
+    numpy.random.seed(0)
+    pts = numpy.random.uniform(-1.0, 1.0, (2, 100))
+    pts = geo.boundary_step(pts)
+    tol = 1.0e-12
+    assert numpy.all(numpy.abs(geo.dist(pts)) < tol)
+
+
 if __name__ == "__main__":
-    # test_degenerate_circle(0.07271)
-    X, cells = test_circle(0.1, [327.95194, 14.263721, 1.0], show=False)
-    # save("circle.png", X, c0.0727ells)
+    test_boundary_step()
