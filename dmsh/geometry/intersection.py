@@ -29,21 +29,29 @@ class Intersection(Geometry):
     def dist(self, x):
         return numpy.max([geo.dist(x) for geo in self.geometries], axis=0)
 
-    def boundary_step(self, x, tol=1.0e-12):
+    def boundary_step(self, x, tol=1.0e-12, max_steps=100):
         # step for the is_inside with the smallest value
+        x = numpy.asarray(x)
         alpha = numpy.array([geo.dist(x) for geo in self.geometries])
-        while numpy.any(alpha > tol):
-            # Only consider the nodes which are truly outside of the domain
-            has_pos = numpy.any(alpha > tol, axis=0)
-            x_pos = x[:, has_pos]
-            alpha_pos = alpha[:, has_pos]
+        k = 0
+        while numpy.any(numpy.abs(numpy.max(alpha, axis=0)) > tol):
+            assert k <= max_steps, "Exceeded maximum number of boundary steps."
+            k += 1
 
-            alpha_pos[alpha_pos < tol] = numpy.inf
-            idx = numpy.argmin(alpha_pos, axis=0)
+            # If the point has a positive geo distance, it is outside of the domain. In
+            # this case, move it to the geo boundary with the largest distance.
+            # If the point is strictly inside all geometries, move it to the closest
+            # geometry boundary.
+            # Both of these cases correspond to finding the domain with the max dist
+            # value.
+            mask = numpy.any(alpha > tol, axis=0) | numpy.all(alpha < -tol, axis=0)
+            x_tmp = x[:, mask]
+            alpha_pos = alpha[:, mask]
+            idx = numpy.argmax(alpha_pos, axis=0)
             for k, geo in enumerate(self.geometries):
                 if numpy.any(idx == k):
-                    x_pos[:, idx == k] = geo.boundary_step(x_pos[:, idx == k])
+                    x_tmp[:, idx == k] = geo.boundary_step(x_tmp[:, idx == k])
+            x[:, mask] = x_tmp
 
-            x[:, has_pos] = x_pos
             alpha = numpy.array([geo.dist(x) for geo in self.geometries])
         return x

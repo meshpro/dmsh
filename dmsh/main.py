@@ -301,18 +301,16 @@ def distmesh_smoothing(
         # Because the rest of the algorithm is so cheap. The flip is still a fairly
         # expensive operation.
         # First kick out all boundary cells whose barycenters are not in the geometry.
-        print("a", numpy.sum(mesh.is_boundary_point))
         mesh.remove_boundary_cells(
             lambda is_boundary_cell: geo.dist(
                 mesh.compute_centroids(is_boundary_cell).T
             )
             > 0.0
         )
-        print("b", numpy.sum(mesh.is_boundary_point))
-        # mesh.remove_boundary_cells(
-        #     lambda is_boundary_cell: mesh.compute_signed_cell_areas(is_boundary_cell)
-        #     < 1.0e-10
-        # )
+        mesh.remove_boundary_cells(
+            lambda is_boundary_cell: mesh.compute_signed_cell_areas(is_boundary_cell)
+            < 1.0e-10
+        )
         mesh.flip_until_delaunay()
 
         move2 = numpy.einsum("ij,ij->i", diff, diff)
