@@ -13,3 +13,7 @@ def test_large():
 
     ref_norms = [4.6422985179724637e03, 2.4202897690682192e02, 2.0000000000000000e01]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-4)
+
+
+if __name__ == "__main__":
+    test_large()

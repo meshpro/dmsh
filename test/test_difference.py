@@ -1,4 +1,5 @@
-from helpers import assert_norm_equality, save
+import numpy
+from helpers import assert_norm_equality
 
 import dmsh
 
@@ -14,6 +15,21 @@ def test_difference(show=False):
     return X, cells
 
 
+def test_boundary_step():
+    geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
+    numpy.random.seed(0)
+    pts = numpy.random.uniform(-1.0, 1.0, (2, 100))
+    pts = geo.boundary_step(pts)
+    # geo.plot()
+    # import matplotlib.pyplot as plt
+    # plt.plot(pts[0], pts[1], "xk")
+    # plt.show()
+    tol = 1.0e-7
+    assert numpy.all(numpy.abs(geo.dist(pts)) < tol)
+
+
 if __name__ == "__main__":
-    X, cells = test_difference(show=True)
-    save("difference.png", X, cells)
+    # from helpers import save
+    # X, cells = test_difference(show=True)
+    # save("difference.png", X, cells)
+    test_boundary_step()

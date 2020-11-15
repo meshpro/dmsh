@@ -272,18 +272,28 @@ def distmesh_smoothing(
         points_new = mesh.points + update
         # leave feature points untouched
         points_new[:num_feature_points] = mesh.points[:num_feature_points]
-        # Some boundary points may have been pushed outside; bring them back onto the
-        # boundary.
-        is_outside = geo.dist(points_new.T) > 0.0
-        idx = is_outside
+        # Some mesh boundary points may have been moved off of the domain boundary,
+        # either because they were pushed outside or because they just became boundary
+        # points by way of cell removal. Move them all (back) onto the domain boundary.
+        # is_outside = geo.dist(points_new.T) > 0.0
+        # idx = is_outside
         # Alternative: Push all boundary points (the ones _inside_ the geometry as well)
         # back to the boundary.
         # idx = is_outside | is_boundary_point
-        # idx = mesh.is_boundary_point
+        idx = mesh.is_boundary_point
         points_new[idx] = geo.boundary_step(points_new[idx].T).T
+
+        # Make sure that the boundary step was performed correctly.
+        print(geo.dist(points_new[idx].T))
+        assert numpy.all(numpy.abs(geo.dist(points_new[idx].T)) < 1.0e-12)
 
         diff = points_new - mesh.points
         mesh.points = points_new
+
+        print(geo.dist(mesh.points[mesh.is_boundary_point].T))
+
+        # show_mesh(mesh.points, mesh.cells["points"], geo)
+        mesh.show(mark_points=mesh.is_boundary_point)
 
         # We could do a _recell() here, but inverted boundary cell removal plus Lawson
         # flips produce the same result and are much cheaper. This is because, most of
@@ -291,16 +301,18 @@ def distmesh_smoothing(
         # Because the rest of the algorithm is so cheap. The flip is still a fairly
         # expensive operation.
         # First kick out all boundary cells whose barycenters are not in the geometry.
+        print("a", numpy.sum(mesh.is_boundary_point))
         mesh.remove_boundary_cells(
             lambda is_boundary_cell: geo.dist(
                 mesh.compute_centroids(is_boundary_cell).T
             )
             > 0.0
         )
-        mesh.remove_boundary_cells(
-            lambda is_boundary_cell: mesh.compute_signed_cell_areas(is_boundary_cell)
-            < 1.0e-10
-        )
+        print("b", numpy.sum(mesh.is_boundary_point))
+        # mesh.remove_boundary_cells(
+        #     lambda is_boundary_cell: mesh.compute_signed_cell_areas(is_boundary_cell)
+        #     < 1.0e-10
+        # )
         mesh.flip_until_delaunay()
 
         move2 = numpy.einsum("ij,ij->i", diff, diff)

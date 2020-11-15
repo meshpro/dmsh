@@ -38,18 +38,38 @@ class Difference(Geometry):
             pass
 
         # step for the is_inside with the smallest value
-        idx0 = self.geo0.dist(x) > tol
-        idx1 = self.geo1.dist(x) < -tol
+        gd0 = self.geo0.dist(x)
+        gd1 = self.geo1.dist(x)
+        geo0_out = gd0 > tol
+        geo0_on = (gd0 < tol) & (gd0 > -tol)
+        geo0_in = gd0 < -tol
+        geo1_out = gd1 > tol
+        geo1_in = gd1 < -tol
 
         k = 0
-        while numpy.any(idx0) or numpy.any(idx1):
+        while numpy.any(numpy.abs(numpy.max([gd0, -gd1], axis=0)) > tol):
             assert k <= max_steps, "Exceeded maximum number of boundary steps."
             k += 1
-            if numpy.any(idx0):
-                x[:, idx0] = self.geo0.boundary_step(x[:, idx0])
-            if numpy.any(idx1):
-                x[:, idx1] = self.geo1.boundary_step(x[:, idx1])
 
-            idx0 = self.geo0.dist(x) > tol
-            idx1 = self.geo1.dist(x) < -tol
+            idx = geo0_out
+            if numpy.any(geo0_out):
+                x[:, idx] = self.geo0.boundary_step(x[:, idx])
+
+            idx = (geo0_on | geo0_in) & geo1_in
+            if numpy.any(idx):
+                x[:, idx] = self.geo1.boundary_step(x[:, idx])
+
+            idx = geo0_in & geo1_out
+            if numpy.any(idx):
+                closer0 = numpy.abs(gd0) < numpy.abs(gd1)
+                x[:, idx & closer0] = self.geo0.boundary_step(x[:, idx & closer0])
+                x[:, idx & ~closer0] = self.geo1.boundary_step(x[:, idx & ~closer0])
+
+            gd0 = self.geo0.dist(x)
+            gd1 = self.geo1.dist(x)
+            geo0_out = gd0 > tol
+            geo0_on = (gd0 < tol) & (gd0 > -tol)
+            geo0_in = gd0 < -tol
+            geo1_out = gd1 > tol
+            geo1_in = gd1 < -tol
         return x
