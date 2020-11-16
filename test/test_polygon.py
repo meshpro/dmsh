@@ -19,7 +19,7 @@ def test(show=False):
     # geo.show()
     X, cells = dmsh.generate(geo, 0.1, show=show)
 
-    ref_norms = [4.1454432512302594e02, 2.1854133564894923e01, 2.0000000000000000e00]
+    ref_norms = [4.1453626885304385e02, 2.1858069585354144e01, 2.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-5)
     return X, cells
 
@@ -45,7 +45,6 @@ def test_boundary_step2():
     # plt.show()
     # print(geo.dist(pts).shape)
     dist = geo.dist(pts)
-    print(numpy.max(numpy.abs(dist)))
     assert numpy.all(numpy.abs(dist) < 1.0e-12)
 
 
