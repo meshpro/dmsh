@@ -37,39 +37,22 @@ class Difference(Geometry):
         except AttributeError:
             pass
 
-        # step for the is_inside with the smallest value
-        gd0 = self.geo0.dist(x)
-        gd1 = self.geo1.dist(x)
-        geo0_out = gd0 > tol
-        geo0_on = (gd0 < tol) & (gd0 > -tol)
-        geo0_in = gd0 < -tol
-        geo1_out = gd1 > tol
-        geo1_in = gd1 < -tol
+        alpha = numpy.array([self.geo0.dist(x), -self.geo1.dist(x)])
+        mask = numpy.any(alpha > tol, axis=0) | numpy.all(alpha < -tol, axis=0)
 
-        k = 0
-        while numpy.any(numpy.abs(numpy.max([gd0, -gd1], axis=0)) > tol):
-            assert k <= max_steps, "Exceeded maximum number of boundary steps."
-            k += 1
+        step = 0
+        while numpy.any(mask):
+            assert step <= max_steps, "Exceeded maximum number of boundary steps."
+            step += 1
 
-            idx = geo0_out
-            if numpy.any(geo0_out):
-                x[:, idx] = self.geo0.boundary_step(x[:, idx])
+            x_tmp = x[:, mask]
+            idx = numpy.argmax(alpha[:, mask], axis=0)
+            if numpy.any(idx == 0):
+                x_tmp[:, idx == 0] = self.geo0.boundary_step(x_tmp[:, idx == 0])
+            if numpy.any(idx == 1):
+                x_tmp[:, idx == 1] = self.geo1.boundary_step(x_tmp[:, idx == 1])
+            x[:, mask] = x_tmp
 
-            idx = (geo0_on | geo0_in) & geo1_in
-            if numpy.any(idx):
-                x[:, idx] = self.geo1.boundary_step(x[:, idx])
-
-            idx = geo0_in & geo1_out
-            if numpy.any(idx):
-                closer0 = numpy.abs(gd0) < numpy.abs(gd1)
-                x[:, idx & closer0] = self.geo0.boundary_step(x[:, idx & closer0])
-                x[:, idx & ~closer0] = self.geo1.boundary_step(x[:, idx & ~closer0])
-
-            gd0 = self.geo0.dist(x)
-            gd1 = self.geo1.dist(x)
-            geo0_out = gd0 > tol
-            geo0_on = (gd0 < tol) & (gd0 > -tol)
-            geo0_in = gd0 < -tol
-            geo1_out = gd1 > tol
-            geo1_in = gd1 < -tol
+            alpha = numpy.array([self.geo0.dist(x), -self.geo1.dist(x)])
+            mask = numpy.any(alpha > tol, axis=0) | numpy.all(alpha < -tol, axis=0)
         return x
