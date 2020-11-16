@@ -6,11 +6,11 @@ import dmsh
 
 def test_union_circles(show=False):
     geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
-    X, cells = dmsh.generate(geo, 0.15, show=show, tol=1.0e-10)
+    X, cells = dmsh.generate(geo, 0.15, show=show, tol=1.0e-5)
 
     geo.plot()
 
-    ref_norms = [3.0088043884612756e02, 1.5785099320497183e01, 1.5]
+    ref_norms = [3.0087320808275558e02, 1.5784709390397147e01, 1.5000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
@@ -35,9 +35,9 @@ def test_union_three_circles(show=False):
             dmsh.Circle([numpy.cos(angles[2]), numpy.sin(angles[2])], 1.0),
         ]
     )
-    X, cells = dmsh.generate(geo, 0.2, show=show, tol=1.0e-10)
+    X, cells = dmsh.generate(geo, 0.2, show=show, tol=1.0e-5)
 
-    ref_norms = [4.0372522103280664e02, 2.1155465970826519e01, 1.9999337650688618e00]
+    ref_norms = [4.0370458355600903e02, 2.1155724692606825e01, 2.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
@@ -78,6 +78,6 @@ def test_boundary_step2():
 
 if __name__ == "__main__":
     # from helpers import save
-    # X, cells = test_union(show=False)
+    X, cells = test_union_circles(show=True)
     # save("union.png", X, cells)
-    test_boundary_step2()
+    # test_boundary_step2()
