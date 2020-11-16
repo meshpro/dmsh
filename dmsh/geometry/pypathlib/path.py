@@ -22,8 +22,7 @@ class Path:
         # Find closest point for each side segment
         # <https://stackoverflow.com/q/51397389/353337>
         diff = x[:, None] - self.points[None, :]
-        diff_dot_edge = numpy.einsum("ijk,jk->ij", diff[:, :-1], self.edges)
-        t = diff_dot_edge / self.e_dot_e
+        t = numpy.einsum("ijk,jk->ij", diff[:, :-1], self.edges) / self.e_dot_e
 
         dist2_points = numpy.einsum("ijk,ijk->ij", diff, diff)
 
@@ -33,23 +32,11 @@ class Path:
         #
         #    (<e, e> <x-x0, x-x0> - <x-x0, e>**2) / <e, e>
         #
-        # but this expression is numerically disadvantageous. Simply compute the
+        # but this expression is numerically disadvantageous. (For example, the
+        # expresison can become negative due to round-off.) Simply compute the
         # projection and the dot product.
-        proj_min_x = diff[:, :-1] - (t[:, :, None] * self.edges[None, :, :])
+        proj_min_x = diff[:, :-1] - t[:, :, None] * self.edges[None, :, :]
         dist2_sides = numpy.einsum("ijk,ijk->ij", proj_min_x, proj_min_x)
-
-        # The numerator can be written as
-        #
-        #   (<x1-x0, x1-x0> <x-x0, x-x0> - <x-x0, x1-x0>**2)
-        #   = 1/2 * sum ((x1-x0) (x-x0).T - (x-x0) (x1-x0).T)**2,
-        #
-        # (Lagrange' identity, <https://en.wikipedia.org/wiki/Lagrange%27s_identity>)
-        # which is numerically guaranteed to be positive.
-        #
-        # <https://math.stackexchange.com/q/2856409/36678>
-        # a = numpy.einsum("jk,ijl->ijkl", self.edges, diff)
-        # b = a - numpy.moveaxis(a, 2, 3)
-        # dist2_sides2 = 0.5 * numpy.einsum("ijkl,ijkl->ij", b, b)
 
         # Get the squared distance to the polygon. By default equals the distance to the
         # line, unless t < 0 (then the squared distance to x0), unless t > 1 (then the
