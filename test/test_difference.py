@@ -39,7 +39,7 @@ def test_boundary_step2():
     # import matplotlib.pyplot as plt
     # plt.plot(pts[0], pts[1], "xk")
     # plt.show()
-    assert numpy.all(numpy.abs(geo.dist(pts)) < 1.0e-7)
+    assert numpy.all(numpy.abs(geo.dist(pts)) < 1.0e-12)
 
 
 if __name__ == "__main__":

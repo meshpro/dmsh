@@ -28,7 +28,7 @@ class Difference(Geometry):
 
     # Choose tolerance above sqrt(machine_eps). This is necessary as the polygon
     # dist() is only accurate to that precision.
-    def boundary_step(self, x, tol=1.0e-7, max_steps=100):
+    def boundary_step(self, x, tol=1.0e-12, max_steps=100):
         # Scale the tolerance with the domain diameter. This is necessary at least for
         # polygons where the distance calculation is flawed with round-off proportional
         # to the edge lengths.
