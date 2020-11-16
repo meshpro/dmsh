@@ -39,13 +39,11 @@ def test_boundary_step2():
     numpy.random.seed(0)
     pts = numpy.random.uniform(-1.0, 1.0, (2, 100))
     pts = geo.boundary_step(pts)
-    geo.plot()
-    import matplotlib.pyplot as plt
-
-    plt.plot(pts[0], pts[1], "xk")
-    plt.show()
-    tol = 1.0e-7
-    assert numpy.all(numpy.abs(geo.dist(pts)) < tol)
+    # geo.plot()
+    # import matplotlib.pyplot as plt
+    # plt.plot(pts[0], pts[1], "xk")
+    # plt.show()
+    assert numpy.all(numpy.abs(geo.dist(pts)) < 1.0e-7)
 
 
 if __name__ == "__main__":

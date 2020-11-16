@@ -33,10 +33,10 @@ class Intersection(Geometry):
         # step for the is_inside with the smallest value
         x = numpy.asarray(x)
         alpha = numpy.array([geo.dist(x) for geo in self.geometries])
-        k = 0
+        step = 0
         while numpy.any(numpy.abs(numpy.max(alpha, axis=0)) > tol):
-            assert k <= max_steps, "Exceeded maximum number of boundary steps."
-            k += 1
+            assert step <= max_steps, "Exceeded maximum number of boundary steps."
+            step += 1
 
             # If the point has a positive geo distance, it is outside of the domain. In
             # this case, move it to the geo boundary with the largest distance.

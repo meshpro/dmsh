@@ -284,16 +284,14 @@ def distmesh_smoothing(
         points_new[idx] = geo.boundary_step(points_new[idx].T).T
 
         # Make sure that the boundary step was performed correctly.
-        print(geo.dist(points_new[idx].T))
+        # TODO remove this once tests are in place
         assert numpy.all(numpy.abs(geo.dist(points_new[idx].T)) < 1.0e-12)
 
         diff = points_new - mesh.points
         mesh.points = points_new
 
-        print(geo.dist(mesh.points[mesh.is_boundary_point].T))
-
         # show_mesh(mesh.points, mesh.cells["points"], geo)
-        mesh.show(mark_points=mesh.is_boundary_point)
+        # mesh.show(mark_points=mesh.is_boundary_point)
 
         # We could do a _recell() here, but inverted boundary cell removal plus Lawson
         # flips produce the same result and are much cheaper. This is because, most of
