@@ -1,4 +1,5 @@
-from helpers import assert_norm_equality, save
+import numpy
+from helpers import assert_norm_equality
 
 import dmsh
 
@@ -23,6 +24,33 @@ def test(show=False):
     return X, cells
 
 
+def test_boundary_step2():
+    geo = dmsh.Polygon(
+        [
+            [0.0, 0.0],
+            [1.1, 0.0],
+            [1.2, 0.5],
+            [0.7, 0.6],
+            [2.0, 1.0],
+            [1.0, 2.0],
+            [0.5, 1.5],
+        ]
+    )
+    numpy.random.seed(0)
+    pts = numpy.random.uniform(-2.0, 2.0, (2, 100))
+    pts = geo.boundary_step(pts)
+    # geo.plot()
+    # import matplotlib.pyplot as plt
+    # plt.plot(pts[0], pts[1], "xk")
+    # plt.show()
+    # print(geo.dist(pts).shape)
+    dist = geo.dist(pts)
+    print(numpy.max(numpy.abs(dist)))
+    assert numpy.all(numpy.abs(dist) < 1.0e-12)
+
+
 if __name__ == "__main__":
-    X, cells = test(show=False)
-    save("polygon.svg", X, cells)
+    # from helpers import save
+    # X, cells = test(show=False)
+    # save("polygon.svg", X, cells)
+    test_boundary_step2()

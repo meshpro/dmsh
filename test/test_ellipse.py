@@ -1,8 +1,10 @@
+import pytest
 from helpers import assert_norm_equality, save
 
 import dmsh
 
 
+@pytest.mark.skip
 def test_ellipse(show=False):
     geo = dmsh.Ellipse([0.0, 0.0], 2.0, 1.0)
     X, cells = dmsh.generate(geo, 0.2, show=show)

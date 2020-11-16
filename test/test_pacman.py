@@ -16,5 +16,5 @@ def test_pacman(show=False):
 
 
 if __name__ == "__main__":
-    X, cells = test_pacman(show=False)
-    save("pacman.png", X, cells)
+    X, cells = test_pacman(show=True)
+    # save("pacman.png", X, cells)

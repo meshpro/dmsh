@@ -21,21 +21,22 @@ class Path:
 
         # Find closest point for each side segment
         # <https://stackoverflow.com/q/51397389/353337>
-        diff = x[:, None, :] - self.points[None, :, :]
+        diff = x[:, None] - self.points[None, :]
         diff_dot_edge = numpy.einsum("ijk,jk->ij", diff[:, :-1], self.edges)
         t = diff_dot_edge / self.e_dot_e
 
-        # The squared distance from the point x to the line defined by the points x0, x1
-        # is
-        #
-        # (<x1-x0, x1-x0> <x-x0, x-x0> - <x-x0, x1-x0>**2) / <x1-x0, x1-x0>
-        #
         dist2_points = numpy.einsum("ijk,ijk->ij", diff, diff)
-        dist2_sides = (
-            self.e_dot_e * dist2_points[:, :-1] - diff_dot_edge ** 2
-        ) / self.e_dot_e
-        # Wipe out small negative values
-        dist2_sides = numpy.maximum(dist2_sides, numpy.zeros(dist2_sides.shape))
+
+        # The squared distance from the point x to the infinite line defined by the
+        # points x0, x1 (e = x1 - x0) is <proj - x, proj - x>, where proj is the
+        # projection of x onto the line. The expression can be simplified to
+        #
+        #    (<e, e> <x-x0, x-x0> - <x-x0, e>**2) / <e, e>
+        #
+        # but this expression is numerically disadvantageous. Simply compute the
+        # projection and the dot product.
+        proj_min_x = diff[:, :-1] - (t[:, :, None] * self.edges[None, :, :])
+        dist2_sides = numpy.einsum("ijk,ijk->ij", proj_min_x, proj_min_x)
 
         # The numerator can be written as
         #
@@ -67,6 +68,8 @@ class Path:
             idx = numpy.zeros(dist2_points.shape[0], dtype=int)
             dist2_sides = dist2_points[:, 0]
 
+        # t-parameter for each side, the squared min distance, and the index of the
+        # closest side
         return t, dist2_sides, idx
 
     @property

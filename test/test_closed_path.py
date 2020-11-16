@@ -100,7 +100,14 @@ def test_closest_points():
     )
 
     closest_points = path.closest_points(
-        [[0.2, 0.1], [0.5, 0.5], [1.0, 0.5], [0.0, 1.1], [-0.1, 1.1], [1.0, 1.0]]
+        [
+            [0.2, 0.1],
+            [0.5, 0.5],
+            [1.0, 0.5 + 1.0e-12],
+            [0.0, 1.1],
+            [-0.1, 1.1],
+            [1.0, 1.0],
+        ]
     )
 
     ref = numpy.array(
@@ -158,8 +165,17 @@ def test_project_distance():
         ]
     )
     closest_points = path.closest_points(
-        [[0.5, 0.1]]
+        [
+            [0.5, 0.1],
+            [0.5, 0.2],
+            [0.5, 0.3],
+            [0.5, 0.4],
+            [0.5, 0.5],
+        ]
     )
+    # closest_points = numpy.array([4.9170124481327798e-01, 1.3112033195020747e-01])
+    # closest_points = numpy.array([4.9170124481327804e-01, 1.3112033195020747e-01])
+    # the projected point should be _on_ the polygon
     dist = path.distance(closest_points)
     assert numpy.all(dist < 1.0e-12)
 
@@ -171,4 +187,4 @@ def test_project_distance():
 
 
 if __name__ == "__main__":
-    test_sharp_angle()
+    test_closest_points()
