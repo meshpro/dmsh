@@ -10,7 +10,6 @@ def test_show():
 
 def test_convex():
     path = pypathlib.ClosedPath([[0.0, 0.0], [1.0, 0.0], [1.1, 1.1], [0.1, 1.0]])
-
     ref = 1.045
     assert abs(path.area - ref) < 1.0e-12 * ref
     assert path.positive_orientation
@@ -19,7 +18,6 @@ def test_convex():
 
 def test_orientation():
     path = pypathlib.ClosedPath([[0.1, 1.0], [1.1, 1.1], [1.0, 0.0], [0.0, 0.0]])
-
     ref = 1.045
     assert abs(path.area - ref) < 1.0e-12 * ref
     assert not path.positive_orientation
@@ -30,7 +28,6 @@ def test_concave():
     path = pypathlib.ClosedPath(
         [[0.0, 0.0], [1.0, 0.0], [0.9, 0.5], [1.1, 1.1], [0.1, 1.0]]
     )
-
     ref = 0.965
     assert abs(path.area - ref) < 1.0e-12 * ref
     assert path.positive_orientation
@@ -41,7 +38,6 @@ def test_concave_counterclock():
     path = pypathlib.ClosedPath(
         [[0.1, 1.0], [1.1, 1.1], [0.9, 0.5], [1.0, 0.0], [0.0, 0.0]]
     )
-
     ref = 0.965
     assert abs(path.area - ref) < 1.0e-12 * ref
     assert not path.positive_orientation
@@ -151,6 +147,21 @@ def test_sharp_angle():
     dist = path.signed_squared_distance([[0.5, 0.4], [0.5, 0.6]])
     ref = numpy.array([-0.02, -0.02])
     assert numpy.all(numpy.abs(dist - ref) < 1.0e-12)
+
+
+def test_project_distance():
+    path = pypathlib.ClosedPath(
+        [
+            [0.0, 0.0],
+            [1.5, 0.4],
+            [1.0, 1.0],
+        ]
+    )
+    closest_points = path.closest_points(
+        [[0.5, 0.1]]
+    )
+    dist = path.distance(closest_points)
+    assert numpy.all(dist < 1.0e-12)
 
 
 # def test_two_points():
