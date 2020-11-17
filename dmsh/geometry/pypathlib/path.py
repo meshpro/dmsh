@@ -17,10 +17,18 @@ class Path:
         x = numpy.asarray(x)
         assert x.shape[1] == 2
 
+        if self.points.shape[0] == 1:
+            # In case there is only one point, i.e., no sides.
+            diff = x[:, None] - self.points[None, :]
+            dist2_points = numpy.einsum("ijk,ijk->ij", diff, diff)
+            idx = numpy.zeros(dist2_points.shape[0], dtype=int)
+            t = 0.0
+            return t, dist2_points.T, idx
+
         # Find closest point for each side segment
         # <https://stackoverflow.com/q/51397389/353337>
-        diff = x[:, None] - self.points[None, :]
-        t = numpy.einsum("ijk,jk->ij", diff[:, :-1], self.edges) / self.e_dot_e
+        diff = x[:, None] - self.points[None, :-1]
+        t = numpy.einsum("ijk,jk->ij", diff, self.edges) / self.e_dot_e
         t[t < 0.0] = 0.0
         t[t > 1.0] = 1.0
 
@@ -33,16 +41,11 @@ class Path:
         # but this expression is numerically disadvantageous. (For example, the
         # expresison can become negative due to round-off.) Simply compute the
         # projection and the dot product.
-        proj_min_x = diff[:, :-1] - t[:, :, None] * self.edges[None, :, :]
-        dist2_sides = numpy.einsum("ijk,ijk->ij", proj_min_x, proj_min_x)
+        x_min_proj = diff - t[:, :, None] * self.edges[None, :, :]
+        dist2_sides = numpy.einsum("ijk,ijk->ij", x_min_proj, x_min_proj)
 
-        if dist2_sides.shape[1] > 0:
-            idx = numpy.argmin(dist2_sides, axis=1)
-            dist2_sides = dist2_sides[numpy.arange(idx.shape[0]), idx]
-        else:
-            dist2_points = numpy.einsum("ijk,ijk->ij", diff, diff)
-            idx = numpy.zeros(dist2_points.shape[0], dtype=int)
-            dist2_sides = dist2_points[:, 0]
+        idx = numpy.argmin(dist2_sides, axis=1)
+        dist2_sides = dist2_sides[numpy.arange(idx.shape[0]), idx]
 
         # t-parameter for each side, the squared min distance, and the index of the
         # closest side
@@ -56,14 +59,14 @@ class Path:
         return numpy.sqrt(numpy.max(dist2))
 
     def squared_distance(self, x):
-        """Get the squared distance of all points x to the polygon `poly`."""
+        """Get the squared distance of all points x to the polygon."""
         x = numpy.asarray(x)
         assert x.shape[1] == 2
         _, dist2_sides, _ = self._all_distances(x)
         return dist2_sides
 
     def distance(self, x):
-        """Get the distance of all points x to the polygon `poly`."""
+        """Get the distance of all points x to the polygon."""
         return numpy.sqrt(self.squared_distance(x))
 
     def closest_points(self, x):
