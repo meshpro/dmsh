@@ -23,8 +23,10 @@ class Path:
         # <https://stackoverflow.com/q/51397389/353337>
         diff = x[:, None] - self.points[None, :]
         t = numpy.einsum("ijk,jk->ij", diff[:, :-1], self.edges) / self.e_dot_e
-
-        dist2_points = numpy.einsum("ijk,ijk->ij", diff, diff)
+        t0 = t < 0.0
+        t1 = t > 1.0
+        t[t0] = 0.0
+        t[t1] = 1.0
 
         # The squared distance from the point x to the infinite line defined by the
         # points x0, x1 (e = x1 - x0) is <proj - x, proj - x>, where proj is the
@@ -38,20 +40,11 @@ class Path:
         proj_min_x = diff[:, :-1] - t[:, :, None] * self.edges[None, :, :]
         dist2_sides = numpy.einsum("ijk,ijk->ij", proj_min_x, proj_min_x)
 
-        # Get the squared distance to the polygon. By default equals the distance to the
-        # line, unless t < 0 (then the squared distance to x0), unless t > 1 (then the
-        # squared distance to x1).
-        t0 = t < 0.0
-        t1 = t > 1.0
-        t[t0] = 0.0
-        t[t1] = 1.0
-        dist2_sides[t0] = dist2_points[:, :-1][t0]
-        dist2_sides[t1] = dist2_points[:, 1:][t1]
-
         if dist2_sides.shape[1] > 0:
             idx = numpy.argmin(dist2_sides, axis=1)
             dist2_sides = dist2_sides[numpy.arange(idx.shape[0]), idx]
         else:
+            dist2_points = numpy.einsum("ijk,ijk->ij", diff, diff)
             idx = numpy.zeros(dist2_points.shape[0], dtype=int)
             dist2_sides = dist2_points[:, 0]
 
