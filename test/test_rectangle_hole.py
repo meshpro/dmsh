@@ -21,8 +21,8 @@ def test_rectangle_hole2(show=False):
     )
     X, cells = dmsh.generate(geo, 1.0, show=show, tol=1.0e-3)
 
-    ref_norms = [1.4367314502085827e02, 2.3325977831484149e01, 5.0000000000000000e00]
-    assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
+    ref_norms = [1.4346826773382367e02, 2.3308127585352914e01, 5.0000000000000000e00]
+    assert_norm_equality(X.flatten(), ref_norms, 1.0e-2)
 
 
 if __name__ == "__main__":
