@@ -28,7 +28,7 @@ class Difference(Geometry):
 
     # Choose tolerance above sqrt(machine_eps). This is necessary as the polygon
     # dist() is only accurate to that precision.
-    def boundary_step(self, x, tol=1.0e-7, max_steps=100):
+    def boundary_step(self, x, tol=1.0e-12, max_steps=100):
         # Scale the tolerance with the domain diameter. This is necessary at least for
         # polygons where the distance calculation is flawed with round-off proportional
         # to the edge lengths.
@@ -37,19 +37,22 @@ class Difference(Geometry):
         except AttributeError:
             pass
 
-        # step for the is_inside with the smallest value
-        idx0 = self.geo0.dist(x) > tol
-        idx1 = self.geo1.dist(x) < -tol
+        alpha = numpy.array([self.geo0.dist(x), -self.geo1.dist(x)])
+        mask = numpy.any(alpha > tol, axis=0) | numpy.all(alpha < -tol, axis=0)
 
-        k = 0
-        while numpy.any(idx0) or numpy.any(idx1):
-            assert k <= max_steps, "Exceeded maximum number of boundary steps."
-            k += 1
-            if numpy.any(idx0):
-                x[:, idx0] = self.geo0.boundary_step(x[:, idx0])
-            if numpy.any(idx1):
-                x[:, idx1] = self.geo1.boundary_step(x[:, idx1])
+        step = 0
+        while numpy.any(mask):
+            assert step <= max_steps, "Exceeded maximum number of boundary steps."
+            step += 1
 
-            idx0 = self.geo0.dist(x) > tol
-            idx1 = self.geo1.dist(x) < -tol
+            x_tmp = x[:, mask]
+            idx = numpy.argmax(alpha[:, mask], axis=0)
+            if numpy.any(idx == 0):
+                x_tmp[:, idx == 0] = self.geo0.boundary_step(x_tmp[:, idx == 0])
+            if numpy.any(idx == 1):
+                x_tmp[:, idx == 1] = self.geo1.boundary_step(x_tmp[:, idx == 1])
+            x[:, mask] = x_tmp
+
+            alpha = numpy.array([self.geo0.dist(x), -self.geo1.dist(x)])
+            mask = numpy.any(alpha > tol, axis=0) | numpy.all(alpha < -tol, axis=0)
         return x

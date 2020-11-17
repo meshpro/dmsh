@@ -13,11 +13,11 @@ def test_halfspace(show=False):
     )
     X, cells = dmsh.generate(geo, 0.1, show=show)
 
-    ref_norms = [1.6445961675494132e02, 1.0032818772503287e01, 9.9962198219292397e-01]
+    ref_norms = [1.6445956676826719e02, 1.0032819728269299e01, 9.9962353342404042e-01]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-6)
     return X, cells
 
 
 if __name__ == "__main__":
-    X, cells = test_halfspace(show=False)
+    X, cells = test_halfspace(show=True)
     save("halfspace.png", X, cells)

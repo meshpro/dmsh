@@ -41,7 +41,8 @@ class HalfSpace(Geometry):
 
     def dist(self, x):
         assert x.shape[0] == 2
-        return self.alpha - numpy.dot(self.normal, x)
+        out = self.alpha - numpy.dot(self.normal, x.reshape(x.shape[0], -1))
+        return out.reshape(x.shape[1:])
 
     def boundary_step(self, x):
         beta = self.alpha - numpy.dot(self.normal, x) / numpy.dot(

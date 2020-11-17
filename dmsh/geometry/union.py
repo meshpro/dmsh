@@ -30,43 +30,26 @@ class Union(Geometry):
     def dist(self, x):
         return numpy.min([geo.dist(x) for geo in self.geometries], axis=0)
 
-    def boundary_step(self, x, tol=1.0e-5, max_steps=10):
-        # This stepper uses a heuristic that doesn't always land on the closet point in
-        # the boundary. It's good enough for now though.
+    def boundary_step(self, x, tol=1.0e-12, max_steps=100):
+        # step for the is_inside with the smallest value
         x = numpy.asarray(x)
-        assert x.shape[0] == 2
+        alpha = numpy.array([geo.dist(x) for geo in self.geometries])
+        step = 0
+        while numpy.any(numpy.abs(numpy.min(alpha, axis=0)) > tol):
+            assert step <= max_steps, "Exceeded maximum number of boundary steps."
+            step += 1
 
-        is_one_dimensional = False
-        if len(x.shape) == 1:
-            is_one_dimensional = True
-            x = x.reshape(-1, 1)
+            # If the point has a positive geo distance, it is outside of the domain. In
+            # this case, move it to the geo boundary with the smallest distance.
+            # If the point is strictly inside all geometries, move it to the furthest
+            # geometry boundary.
+            mask = numpy.all(alpha > tol, axis=0) | numpy.any(alpha < -tol, axis=0)
+            x_tmp = x[:, mask]
+            idx = numpy.argmin(alpha[:, mask], axis=0)
+            for k, geo in enumerate(self.geometries):
+                if numpy.any(idx == k):
+                    x_tmp[:, idx == k] = geo.boundary_step(x_tmp[:, idx == k])
+            x[:, mask] = x_tmp
 
-        out = x.copy()
-
-        # At the end of this, min(dist(domains)) must be 0 for all x, so each x either
-        # sits outside or on the boundary of each domain. Idea: Use the domain with the
-        # min value for stepping, and do that until all x are on the boundary.
-        dists = numpy.array([geo.dist(out) for geo in self.geometries])
-        dist = numpy.min(dists, axis=0)
-        needs_stepping = (dist < -tol) | (tol < dist)
-
-        k = 0
-        while numpy.any(needs_stepping):
-            assert k <= max_steps, "Too many union boundary steps"
-            # Step to the boundary of the domain with the smallest value. (Either it's
-            # far inside or domain or, if outside of the union, the closest to a
-            # boundary.)
-            idx = numpy.argmin(dists[:, needs_stepping], axis=0)
-            for i, geo in enumerate(self.geometries):
-                j = idx == i
-                if numpy.any(j):
-                    out[:, j] = geo.boundary_step(out[:, j])
-
-            dists = numpy.array([geo.dist(out) for geo in self.geometries])
-            dist = numpy.min(dists, axis=0)
-            needs_stepping = (dist < -tol) | (tol < dist)
-            k += 1
-
-        if is_one_dimensional:
-            out = out.reshape(-1)
-        return out
+            alpha = numpy.array([geo.dist(x) for geo in self.geometries])
+        return x

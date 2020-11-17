@@ -11,62 +11,44 @@ class Path:
 
         assert numpy.all(
             self.e_dot_e > 1.0e-12
-        ), "Edges of 0 length are not permitted (edge lengths: {})".format(
-            numpy.sqrt(self.e_dot_e)
-        )
+        ), f"Edges of 0 length are not permitted (squared edge lengths: {self.e_dot_e})"
 
     def _all_distances(self, x):
         x = numpy.asarray(x)
         assert x.shape[1] == 2
 
+        if self.points.shape[0] == 1:
+            # In case there is only one point, i.e., no sides.
+            diff = x[:, None] - self.points[None, :]
+            dist2_points = numpy.einsum("ijk,ijk->ij", diff, diff)
+            idx = numpy.zeros(dist2_points.shape[0], dtype=int)
+            t = 0.0
+            return t, dist2_points.T, idx
+
         # Find closest point for each side segment
         # <https://stackoverflow.com/q/51397389/353337>
-        diff = x[:, None, :] - self.points[None, :, :]
-        diff_dot_edge = numpy.einsum("ijk,jk->ij", diff[:, :-1], self.edges)
-        t = diff_dot_edge / self.e_dot_e
+        diff = x[:, None] - self.points[None, :-1]
+        t = numpy.einsum("ijk,jk->ij", diff, self.edges) / self.e_dot_e
+        t[t < 0.0] = 0.0
+        t[t > 1.0] = 1.0
 
-        # The squared distance from the point x to the line defined by the points x0, x1
-        # is
+        # The squared distance from the point x to the infinite line defined by the
+        # points x0, x1 (e = x1 - x0) is <proj - x, proj - x>, where proj is the
+        # projection of x onto the line. The expression can be simplified to
         #
-        # (<x1-x0, x1-x0> <x-x0, x-x0> - <x-x0, x1-x0>**2) / <x1-x0, x1-x0>
+        #    (<e, e> <x-x0, x-x0> - <x-x0, e>**2) / <e, e>
         #
-        dist2_points = numpy.einsum("ijk,ijk->ij", diff, diff)
-        dist2_sides = (
-            self.e_dot_e * dist2_points[:, :-1] - diff_dot_edge ** 2
-        ) / self.e_dot_e
-        # Wipe out small negative values
-        dist2_sides = numpy.maximum(dist2_sides, numpy.zeros(dist2_sides.shape))
+        # but this expression is numerically disadvantageous. (For example, the
+        # expresison can become negative due to round-off.) Simply compute the
+        # projection and the dot product.
+        x_min_proj = diff - t[:, :, None] * self.edges[None, :, :]
+        dist2_sides = numpy.einsum("ijk,ijk->ij", x_min_proj, x_min_proj)
 
-        # The numerator can be written as
-        #
-        #   (<x1-x0, x1-x0> <x-x0, x-x0> - <x-x0, x1-x0>**2)
-        #   = 1/2 * sum ((x1-x0) (x-x0).T - (x-x0) (x1-x0).T)**2,
-        #
-        # (Lagrange' identity, <https://en.wikipedia.org/wiki/Lagrange%27s_identity>)
-        # which is numerically guaranteed to be positive.
-        #
-        # <https://math.stackexchange.com/q/2856409/36678>
-        # a = numpy.einsum("jk,ijl->ijkl", self.edges, diff)
-        # b = a - numpy.moveaxis(a, 2, 3)
-        # dist2_sides2 = 0.5 * numpy.einsum("ijkl,ijkl->ij", b, b)
+        idx = numpy.argmin(dist2_sides, axis=1)
+        dist2_sides = dist2_sides[numpy.arange(idx.shape[0]), idx]
 
-        # Get the squared distance to the polygon. By default equals the distance to the
-        # line, unless t < 0 (then the squared distance to x0), unless t > 1 (then the
-        # squared distance to x1).
-        t0 = t < 0.0
-        t1 = t > 1.0
-        t[t0] = 0.0
-        t[t1] = 1.0
-        dist2_sides[t0] = dist2_points[:, :-1][t0]
-        dist2_sides[t1] = dist2_points[:, 1:][t1]
-
-        if dist2_sides.shape[1] > 0:
-            idx = numpy.argmin(dist2_sides, axis=1)
-            dist2_sides = dist2_sides[numpy.arange(idx.shape[0]), idx]
-        else:
-            idx = numpy.zeros(dist2_points.shape[0], dtype=int)
-            dist2_sides = dist2_points[:, 0]
-
+        # t-parameter for each side, the squared min distance, and the index of the
+        # closest side
         return t, dist2_sides, idx
 
     @property
@@ -77,14 +59,14 @@ class Path:
         return numpy.sqrt(numpy.max(dist2))
 
     def squared_distance(self, x):
-        """Get the squared distance of all points x to the polygon `poly`."""
+        """Get the squared distance of all points x to the polygon."""
         x = numpy.asarray(x)
         assert x.shape[1] == 2
         _, dist2_sides, _ = self._all_distances(x)
         return dist2_sides
 
     def distance(self, x):
-        """Get the distance of all points x to the polygon `poly`."""
+        """Get the distance of all points x to the polygon."""
         return numpy.sqrt(self.squared_distance(x))
 
     def closest_points(self, x):

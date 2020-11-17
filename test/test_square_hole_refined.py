@@ -19,5 +19,5 @@ def test(show=False):
 
 
 if __name__ == "__main__":
-    X, cells = test(show=False)
+    X, cells = test(show=True)
     save("square_hole_refined.png", X, cells)

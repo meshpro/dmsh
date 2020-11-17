@@ -10,7 +10,6 @@ def test_show():
 
 def test_convex():
     path = pypathlib.ClosedPath([[0.0, 0.0], [1.0, 0.0], [1.1, 1.1], [0.1, 1.0]])
-
     ref = 1.045
     assert abs(path.area - ref) < 1.0e-12 * ref
     assert path.positive_orientation
@@ -19,7 +18,6 @@ def test_convex():
 
 def test_orientation():
     path = pypathlib.ClosedPath([[0.1, 1.0], [1.1, 1.1], [1.0, 0.0], [0.0, 0.0]])
-
     ref = 1.045
     assert abs(path.area - ref) < 1.0e-12 * ref
     assert not path.positive_orientation
@@ -30,7 +28,6 @@ def test_concave():
     path = pypathlib.ClosedPath(
         [[0.0, 0.0], [1.0, 0.0], [0.9, 0.5], [1.1, 1.1], [0.1, 1.0]]
     )
-
     ref = 0.965
     assert abs(path.area - ref) < 1.0e-12 * ref
     assert path.positive_orientation
@@ -41,7 +38,6 @@ def test_concave_counterclock():
     path = pypathlib.ClosedPath(
         [[0.1, 1.0], [1.1, 1.1], [0.9, 0.5], [1.0, 0.0], [0.0, 0.0]]
     )
-
     ref = 0.965
     assert abs(path.area - ref) < 1.0e-12 * ref
     assert not path.positive_orientation
@@ -104,7 +100,14 @@ def test_closest_points():
     )
 
     closest_points = path.closest_points(
-        [[0.2, 0.1], [0.5, 0.5], [1.0, 0.5], [0.0, 1.1], [-0.1, 1.1], [1.0, 1.0]]
+        [
+            [0.2, 0.1],
+            [0.5, 0.5],
+            [1.0, 0.5 + 1.0e-12],
+            [0.0, 1.1],
+            [-0.1, 1.1],
+            [1.0, 1.0],
+        ]
     )
 
     ref = numpy.array(
@@ -153,6 +156,30 @@ def test_sharp_angle():
     assert numpy.all(numpy.abs(dist - ref) < 1.0e-12)
 
 
+def test_project_distance():
+    path = pypathlib.ClosedPath(
+        [
+            [0.0, 0.0],
+            [1.5, 0.4],
+            [1.0, 1.0],
+        ]
+    )
+    closest_points = path.closest_points(
+        [
+            [0.5, 0.1],
+            [0.5, 0.2],
+            [0.5, 0.3],
+            [0.5, 0.4],
+            [0.5, 0.5],
+        ]
+    )
+    # closest_points = numpy.array([4.9170124481327798e-01, 1.3112033195020747e-01])
+    # closest_points = numpy.array([4.9170124481327804e-01, 1.3112033195020747e-01])
+    # the projected point should be _on_ the polygon
+    dist = path.distance(closest_points)
+    assert numpy.all(dist < 1.0e-12)
+
+
 # def test_two_points():
 #     path = pypathlib.ClosedPath([[-0.5, 1.0], [+0.5, 1.0]])
 #     contains_points = path.contains_points([[0.0, 0.0], [0.0, 2.0]])
@@ -160,4 +187,4 @@ def test_sharp_angle():
 
 
 if __name__ == "__main__":
-    test_sharp_angle()
+    test_closest_points()
