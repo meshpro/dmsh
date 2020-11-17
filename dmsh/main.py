@@ -285,10 +285,6 @@ def distmesh_smoothing(
         idx = mesh.is_boundary_point
         points_new[idx] = geo.boundary_step(points_new[idx].T).T
 
-        # Make sure that the boundary step was performed correctly.
-        # TODO remove this once tests are in place
-        assert numpy.all(numpy.abs(geo.dist(points_new[idx].T)) < 1.0e-12)
-
         diff = points_new - mesh.points
         mesh.points = points_new
 
