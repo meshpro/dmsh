@@ -14,7 +14,7 @@ def test(show=False):
 
     X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)
 
-    ref_norms = [3.8844963377954718e02, 1.5689926870601147e01, 1.0000000000000000e00]
+    ref_norms = [3.8768005962507056e02, 1.5684756178925376e01, 1.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-3)
     return X, cells
 

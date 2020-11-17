@@ -102,6 +102,7 @@ def generate(
     show=False,
     max_steps=10000,
     verbose=False,
+    flip_tol=0.0,
 ):
     # Find h0 from edge_size (function)
     if callable(edge_size):
@@ -181,6 +182,7 @@ def generate(
         show,
         delta_t=0.2,
         f_scale=1 + 0.4 / 2 ** (dim - 1),  # from the original article
+        flip_tol=flip_tol,
     )
     points = mesh.points
     cells = mesh.cells["points"]
@@ -199,7 +201,7 @@ def distmesh_smoothing(
     show,
     delta_t,
     f_scale,
-    # bad_cell_threshold=0.05,
+    flip_tol=0.0,
 ):
     mesh.create_edges()
 
@@ -309,7 +311,7 @@ def distmesh_smoothing(
             lambda is_boundary_cell: mesh.compute_signed_cell_areas(is_boundary_cell)
             < 1.0e-10
         )
-        mesh.flip_until_delaunay()
+        mesh.flip_until_delaunay(tol=flip_tol)
 
         move2 = numpy.einsum("ij,ij->i", diff, diff)
         if verbose:
