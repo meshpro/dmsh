@@ -11,9 +11,7 @@ class Path:
 
         assert numpy.all(
             self.e_dot_e > 1.0e-12
-        ), "Edges of 0 length are not permitted (edge lengths: {})".format(
-            numpy.sqrt(self.e_dot_e)
-        )
+        ), f"Edges of 0 length are not permitted (squared edge lengths: {self.e_dot_e})"
 
     def _all_distances(self, x):
         x = numpy.asarray(x)
@@ -23,10 +21,8 @@ class Path:
         # <https://stackoverflow.com/q/51397389/353337>
         diff = x[:, None] - self.points[None, :]
         t = numpy.einsum("ijk,jk->ij", diff[:, :-1], self.edges) / self.e_dot_e
-        t0 = t < 0.0
-        t1 = t > 1.0
-        t[t0] = 0.0
-        t[t1] = 1.0
+        t[t < 0.0] = 0.0
+        t[t > 1.0] = 1.0
 
         # The squared distance from the point x to the infinite line defined by the
         # points x0, x1 (e = x1 - x0) is <proj - x, proj - x>, where proj is the
