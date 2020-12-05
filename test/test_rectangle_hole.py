@@ -10,7 +10,7 @@ def test_rectangle_hole(show=False):
 
     X, cells = dmsh.generate(geo, 20, tol=1.0e-5, show=show, flip_tol=1.0e-10)
 
-    ref_norms = [1.2895976881893826e05, 7.6183307832433229e03, 6.5000000000000000e02]
+    ref_norms = [1.2896591094347954e+05, 7.6176173667501434e+03, 6.5000000000000000e+02]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
 
 

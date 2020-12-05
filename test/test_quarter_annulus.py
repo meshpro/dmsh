@@ -17,7 +17,7 @@ def test_quarter_annulus():
         quarter, edge_size=lambda x: h + 0.1 * numpy.abs(disk0.dist(x)), tol=1.0e-10
     )
 
-    ref_norms = [8.0420341247274109e01, 6.7183669347644024e00, 1.0000000000000000e00]
+    ref_norms = [7.9657737919736860e+01, 6.6697965480177475e+00, 1.0000000000000000e+00]
     assert_norm_equality(points.flatten(), ref_norms, 1.0e-10)
     return points, cells
 
