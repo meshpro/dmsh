@@ -176,7 +176,7 @@ geo = dmsh.Intersection(
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 
-The following uses the `HalfSpace` primtive for cutting of a circle.
+The following uses the `HalfSpace` primtive for cutting off a circle.
 ```python
 import dmsh
 import numpy
