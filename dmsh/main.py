@@ -9,7 +9,7 @@ from .helpers import show as show_mesh
 # from .helpers import unique_rows
 
 
-def _recell(pts, geo):
+def _create_cells(pts, geo):
     # compute Delaunay triangulation
     tri = scipy.spatial.Delaunay(pts)
     cells = tri.simplices.copy()
@@ -34,6 +34,23 @@ def _recell(pts, geo):
     # )
     # cells = cells[barycenter_inside & edge_midpoints_inside]
     return cells
+
+
+def _recell(mesh, geo, flip_tol):
+    # We could do a _create_cells() here, but inverted boundary cell removal plus Lawson
+    # flips produce the same result and are much cheaper. This is because, most of the
+    # time, there are no cells to be removed and no edges to be flipped.  Because the
+    # rest of the algorithm is so cheap. The flip is still a fairly expensive operation.
+    # First kick out all boundary cells whose barycenters are not in the geometry.
+    mesh.remove_boundary_cells(
+        lambda is_boundary_cell: geo.dist(mesh.compute_centroids(is_boundary_cell).T)
+        > 0.0
+    )
+    mesh.remove_boundary_cells(
+        lambda is_boundary_cell: mesh.compute_signed_cell_areas(is_boundary_cell)
+        < 1.0e-10
+    )
+    mesh.flip_until_delaunay(tol=flip_tol)
 
 
 def create_staggered_grid(h, bounding_box):
@@ -144,7 +161,7 @@ def generate(
         # Add feature points
         pts = numpy.concatenate([geo.feature_points, pts])
 
-    cells = _recell(pts, geo)
+    cells = _create_cells(pts, geo)
     mesh = meshplex.MeshTri(pts, cells)
     # When creating a mesh for the staggered grid, degenerate cells can very well occur
     # at the boundary, where points sit in a straight line. Remove those cells.
@@ -288,26 +305,7 @@ def distmesh_smoothing(
         diff = points_new - mesh.points
         mesh.points = points_new
 
-        # show_mesh(mesh.points, mesh.cells["points"], geo)
-        # mesh.show(mark_points=mesh.is_boundary_point)
-
-        # We could do a _recell() here, but inverted boundary cell removal plus Lawson
-        # flips produce the same result and are much cheaper. This is because, most of
-        # the time, there are no cells to be removed and no edges to be flipped.
-        # Because the rest of the algorithm is so cheap. The flip is still a fairly
-        # expensive operation.
-        # First kick out all boundary cells whose barycenters are not in the geometry.
-        mesh.remove_boundary_cells(
-            lambda is_boundary_cell: geo.dist(
-                mesh.compute_centroids(is_boundary_cell).T
-            )
-            > 0.0
-        )
-        mesh.remove_boundary_cells(
-            lambda is_boundary_cell: mesh.compute_signed_cell_areas(is_boundary_cell)
-            < 1.0e-10
-        )
-        mesh.flip_until_delaunay(tol=flip_tol)
+        _recell(mesh, geo, flip_tol)
 
         move2 = numpy.einsum("ij,ij->i", diff, diff)
         if verbose:
