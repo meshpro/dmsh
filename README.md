@@ -81,7 +81,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ##### Difference
 
-![difference](https://nschloe.github.io/dmsh/moon.svg) | ![pacman](https://nschloe.github.io/dmsh/pacman.svg) | ![square_hole_refined](https://nschloe.github.io/dmsh/square-hole-refinement.svg)
+![difference](https://nschloe.github.io/dmsh/moon.svg) | ![pacman](https://nschloe.github.io/dmsh/pacman.svg) | ![square_hole_refined](https://nschloe.github.io/dmsh/rectangle-hole-refinement.svg)
 :-------------------:|:------------------:|:----:|
 
 ```python
