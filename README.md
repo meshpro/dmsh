@@ -30,7 +30,7 @@ highest-quality 2D meshes in the west.
 
 #### Primitives
 
-<img alt="circle" src="https://nschloe.github.io/dmsh/circle.svg" width="150%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/rectangle.svg" width="110%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/polygon.svg" width="110%">
+<img alt="circle" src="https://nschloe.github.io/dmsh/circle.svg" width="100%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/rectangle.svg" width="100%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/polygon.svg" width="100%">
 |:---:|:---:|:---:|
 
 ```python
@@ -81,7 +81,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ##### Difference
 
-![difference](https://nschloe.github.io/dmsh/moon.svg) | ![pacman](https://nschloe.github.io/dmsh/pacman.svg) | ![square_hole_refined](https://nschloe.github.io/dmsh/rectangle-hole-refinement.svg)
+<img src="https://nschloe.github.io/dmsh/moon.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/pacman.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/rectangle-hole-refinment.svg" width="100%">
 :-------------------:|:------------------:|:----:|
 
 ```python
@@ -117,7 +117,7 @@ X, cells = dmsh.generate(
 
 ##### Union
 
-![union](https://nschloe.github.io/dmsh/union-circles.svg) | ![union-rect](https://nschloe.github.io/dmsh/union-rectangles.svg) | ![union-three-circles](https://nschloe.github.io/dmsh/union-three-circles.svg) |
+<img src="https://nschloe.github.io/dmsh/union-circle.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-rectangles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-three-circles.svg" width="100%">
 :-------------------:|:------------------:|:----:|
 
 ```python
@@ -142,7 +142,7 @@ angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
 geo = dmsh.Union(
     [
         dmsh.Circle([numpy.cos(angles[0]), numpy.sin(angles[0])], 1.0),
-        dmsh.Circle([numpy.cos(angles[1]), numpy.sin(angles[1])], 1.0),
+        msh.Circle([numpy.cos(angles[1]), numpy.sin(angles[1])], 1.0),
         dmsh.Circle([numpy.cos(angles[2]), numpy.sin(angles[2])], 1.0),
     ]
 )
@@ -151,7 +151,7 @@ X, cells = dmsh.generate(geo, 0.15)
 
 #### Intersection
 
-![intersection](https://nschloe.github.io/dmsh/intersection-circles.svg) | ![intersection-three-circles](https://nschloe.github.io/dmsh/intersection-three-circles.svg) | ![halfspace](https://nschloe.github.io/dmsh/intersection-circle-halfspace.svg)
+<img src="https://nschloe.github.io/dmsh/intersection-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/intersection-three-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/intersection-circle-halfspace.svg" width="100%">
 :-------------------:|:------------------:|:----:|
 
 ```python
@@ -192,7 +192,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ### Rotation, translation, scaling
 
-![rotation](https://nschloe.github.io/dmsh/rotation.svg) | ![scaling](https://nschloe.github.io/dmsh/scaling.svg)
+<img src="https://nschloe.github.io/dmsh/rotation.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/scaling.svg" width="100%">
 |:----:|:----:|
 
 ```python
