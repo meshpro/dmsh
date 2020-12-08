@@ -10,7 +10,7 @@ def test_pacman(show=False):
     )
     X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-5)
 
-    ref_norms = [3.0307531341596325e+02, 1.3612316633640821e+01, 9.9999999953623819e-01]
+    ref_norms = [3.0307531341596325e02, 1.3612316633640821e01, 9.9999999953623819e-01]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 

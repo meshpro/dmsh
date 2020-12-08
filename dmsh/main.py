@@ -43,9 +43,7 @@ def _recell(mesh, geo, flip_tol):
     # rest of the algorithm is so cheap. The flip is still a fairly expensive operation.
     # First kick out all boundary cells whose barycenters are not in the geometry.
     mesh.remove_boundary_cells(
-        lambda is_boundary_cell: geo.dist(
-            mesh.compute_centroids(is_boundary_cell).T
-        )
+        lambda is_boundary_cell: geo.dist(mesh.compute_centroids(is_boundary_cell).T)
         > 0.0
     )
     mesh.remove_boundary_cells(
