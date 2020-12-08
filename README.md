@@ -30,7 +30,7 @@ highest-quality 2D meshes in the west.
 
 #### Primitives
 
-![circle](https://nschloe.github.io/dmsh/circle.png) | ![rectangle](https://nschloe.github.io/dmsh/rectangle.png) | ![polygon](https://nschloe.github.io/dmsh/polygon.png)
+![circle](https://nschloe.github.io/dmsh/circle.svg) | ![rectangle](https://nschloe.github.io/dmsh/rectangle.svg) | ![polygon](https://nschloe.github.io/dmsh/polygon.svg)
 |:---:|:---:|:---:|
 
 ```python
@@ -81,7 +81,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ##### Difference
 
-![difference](https://nschloe.github.io/dmsh/difference.png) | ![pacman](https://nschloe.github.io/dmsh/pacman.png) | ![square_hole_refined](https://nschloe.github.io/dmsh/square_hole_refined.png)
+![difference](https://nschloe.github.io/dmsh/moon.svg) | ![pacman](https://nschloe.github.io/dmsh/pacman.svg) | ![square_hole_refined](https://nschloe.github.io/dmsh/square-hole-refinement.svg)
 :-------------------:|:------------------:|:----:|
 
 ```python
@@ -117,7 +117,7 @@ X, cells = dmsh.generate(
 
 ##### Union
 
-![union](https://nschloe.github.io/dmsh/union.png) | ![union-rect](https://nschloe.github.io/dmsh/union_rectangles.png) | ![union-three-circles](https://nschloe.github.io/dmsh/union_three_circles.png) |
+![union](https://nschloe.github.io/dmsh/union-circles.svg) | ![union-rect](https://nschloe.github.io/dmsh/union-rectangles.svg) | ![union-three-circles](https://nschloe.github.io/dmsh/union-three-circles.svg) |
 :-------------------:|:------------------:|:----:|
 
 ```python
@@ -151,7 +151,7 @@ X, cells = dmsh.generate(geo, 0.15)
 
 #### Intersection
 
-![intersection](https://nschloe.github.io/dmsh/intersection.png) | ![intersection-three-circles](https://nschloe.github.io/dmsh/intersection_three_circles.png) | ![halfspace](https://nschloe.github.io/dmsh/halfspace.png)
+![intersection](https://nschloe.github.io/dmsh/intersection-circles.svg) | ![intersection-three-circles](https://nschloe.github.io/dmsh/intersection-three-circles.svg) | ![halfspace](https://nschloe.github.io/dmsh/intersection-circle-halfspace.svg)
 :-------------------:|:------------------:|:----:|
 
 ```python
@@ -192,7 +192,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ### Rotation, translation, scaling
 
-![rotation](https://nschloe.github.io/dmsh/rotation.png) | ![scaling](https://nschloe.github.io/dmsh/scaling.png)
+![rotation](https://nschloe.github.io/dmsh/rotation.svg) | ![scaling](https://nschloe.github.io/dmsh/scaling.svg)
 |:----:|:----:|
 
 ```python
@@ -217,7 +217,7 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-5)
 
 ### Local refinement
 
-![refinement-line](https://nschloe.github.io/dmsh/refinement_line.png)
+![refinement-line](https://nschloe.github.io/dmsh/local-refinement.svg)
 
 All objects can be used to refine the mesh according to the distance to the object;
 e.g. a `Path`:
