@@ -30,7 +30,7 @@ highest-quality 2D meshes in the west.
 
 #### Primitives
 
-<img alt="circle" src="https://nschloe.github.io/dmsh/circle.svg" width="110%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/rectangle.svg" width="110%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/polygon.svg" width="110%">
+<img alt="circle" src="https://nschloe.github.io/dmsh/circle.svg" width="150%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/rectangle.svg" width="110%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/polygon.svg" width="110%">
 |:---:|:---:|:---:|
 
 ```python
