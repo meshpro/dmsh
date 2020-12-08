@@ -217,7 +217,7 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-5)
 
 ### Local refinement
 
-![refinement-line](https://nschloe.github.io/dmsh/local-refinement.svg)
+<img alt="local-refinement" src="https://nschloe.github.io/dmsh/local-refinement.svg" width="30%">
 
 All objects can be used to refine the mesh according to the distance to the object;
 e.g. a `Path`:
