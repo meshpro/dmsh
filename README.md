@@ -81,7 +81,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ##### Difference
 
-<img src="https://nschloe.github.io/dmsh/moon.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/pacman.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/rectangle-hole-refinment.svg" width="100%">
+<img src="https://nschloe.github.io/dmsh/moon.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/pacman.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/rectangle-hole-refinement.svg" width="100%">
 :-------------------:|:------------------:|:----:|
 
 ```python
@@ -117,7 +117,7 @@ X, cells = dmsh.generate(
 
 ##### Union
 
-<img src="https://nschloe.github.io/dmsh/union-circle.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-rectangles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-three-circles.svg" width="100%">
+<img src="https://nschloe.github.io/dmsh/union-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-rectangles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-three-circles.svg" width="100%">
 :-------------------:|:------------------:|:----:|
 
 ```python
