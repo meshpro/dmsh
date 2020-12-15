@@ -42,7 +42,7 @@ X, cells = dmsh.generate(geo, 0.1)
 # optionally optimize the mesh
 import optimesh
 
-X, cells = optimesh.cvt.quasi_newton_uniform_full(X, cells, 1.0e-10, 100)
+X, cells = optimesh.optimize_points_cells(X, cells, "CVT (full)", 1.0e-10, 100)
 
 # visualize the mesh
 dmsh.helpers.show(X, cells, geo)
