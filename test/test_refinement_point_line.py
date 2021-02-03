@@ -12,9 +12,9 @@ def test(show=False):
     def edge_size(x):
         return 0.03 + 0.1 * p1.dist(x)
 
-    X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10)
+    X, cells = dmsh.generate(geo, edge_size, show=show, tol=1.0e-10, max_steps=100)
 
-    ref_norms = [3.8768005962507056e02, 1.5684756178925376e01, 1.0000000000000000e00]
+    ref_norms = [3.8828407463996700e02, 1.5681640918183025e01, 1.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-3)
     return X, cells
 

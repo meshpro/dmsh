@@ -123,7 +123,7 @@ def create_staggered_grid(h, bounding_box):
 
 def generate(
     geo,
-    edge_size: float,
+    edge_size,  # float or function that returns float
     # smoothing_method="distmesh",
     tol: float = 1.0e-5,
     random_seed: int = 0,

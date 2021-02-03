@@ -9,13 +9,13 @@ import dmsh
 @pytest.mark.parametrize(
     "radius,ref_norms",
     [
-        (0.1, [3.2800929264678297e02, 1.4265571000201202e01, 1.0000000000000000e00]),
+        (0.1, [3.2592107070061820e02, 1.4190745248684369e01, 1.0000000000000000e00]),
         (0.4, [18.899253166, 3.70111746, 1.0]),
     ],
 )
 def test_circle(radius, ref_norms, show=False):
     geo = dmsh.Circle([0.0, 0.0], 1.0)
-    X, cells = dmsh.generate(geo, radius, show=show)
+    X, cells = dmsh.generate(geo, radius, show=show, max_steps=100)
     meshplex.MeshTri(X, cells).show()
 
     # make sure the origin is part of the mesh
@@ -31,7 +31,7 @@ def test_circle(radius, ref_norms, show=False):
 )
 def test_degenerate_circle(target_edge_length):
     geo = dmsh.Circle([0.0, 0.0], 1.0)
-    X, cells = dmsh.generate(geo, target_edge_length, show=False)
+    X, cells = dmsh.generate(geo, target_edge_length, show=False, max_steps=200)
 
     mesh = meshplex.MeshTri(X, cells)
     min_q = np.min(mesh.q_radius_ratio)

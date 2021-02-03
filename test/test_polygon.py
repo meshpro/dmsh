@@ -17,9 +17,9 @@ def test(show=False):
         ]
     )
     # geo.show()
-    X, cells = dmsh.generate(geo, 0.1, show=show)
+    X, cells = dmsh.generate(geo, 0.1, show=show, max_steps=100)
 
-    ref_norms = [4.1392826820380321e02, 2.1829895116405257e01, 2.0000000000000000e00]
+    ref_norms = [4.1426056822140765e02, 2.1830112296142847e01, 2.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-5)
     return X, cells
 

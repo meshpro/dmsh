@@ -6,11 +6,11 @@ import dmsh
 
 def test_difference(show=False):
     geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
-    X, cells = dmsh.generate(geo, 0.1, show=show)
+    X, cells = dmsh.generate(geo, 0.1, show=show, max_steps=100)
 
     geo.plot()
 
-    ref_norms = [2.9443960859620938e02, 1.5854935031397437e01, 1.4999994013831843e00]
+    ref_norms = [2.9409044729708609e02, 1.5855488859739937e01, 1.5000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-6)
     return X, cells
 
