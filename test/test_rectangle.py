@@ -63,6 +63,6 @@ def test_duplicate_points(show=False):
 
 
 if __name__ == "__main__":
-    test_duplicate_points(show=True)
-    # X, cells = test_rectangle(show=False)
-    # save("rectangle.png", X, cells)
+    # test_duplicate_points(show=True)
+    X, cells = test_rectangle(show=False)
+    save("rectangle.png", X, cells)
