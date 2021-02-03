@@ -36,7 +36,7 @@ def _create_cells(pts, geo):
     return cells
 
 
-def _recell_boundary_step(mesh, geo, flip_tol):
+def _recell_and_boundary_step(mesh, geo, flip_tol):
     # We could do a _create_cells() here, but inverted boundary cell removal plus Lawson
     # flips produce the same result and are much cheaper. This is because, most of the
     # time, there are no cells to be removed and no edges to be flipped. (The flip is
@@ -312,7 +312,7 @@ def distmesh_smoothing(
         # Alternative: Push all boundary points (the ones _inside_ the geometry as well)
         # back to the boundary.
         # idx = is_outside | is_boundary_point
-        _recell_boundary_step(mesh, geo, flip_tol)
+        _recell_and_boundary_step(mesh, geo, flip_tol)
 
         diff = points_new - points_old
         move2 = np.einsum("ij,ij->i", diff, diff)
@@ -322,4 +322,8 @@ def distmesh_smoothing(
             break
 
     # print("num steps:  ", k)
+
+    # The cell removal steps in _recell_and_boundary_step() might create points which
+    # aren't part of any cell (dangling points). Remove them now.
+    mesh.remove_dangling_points()
     return mesh
