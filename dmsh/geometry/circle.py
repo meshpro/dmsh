@@ -1,10 +1,11 @@
+from typing import Tuple
 import numpy
 
 from .geometry import Geometry
 
 
 class CirclePath:
-    def __init__(self, x0, r):
+    def __init__(self, x0: Tuple[float, float], r: float):
         self.x0 = x0
         self.r = r
 
@@ -53,6 +54,6 @@ class Circle(Geometry):
             plt.colorbar(cf)
 
         circle1 = plt.Circle(self.x0, self.r, color="k", fill=False)
-        plt.gca().add_artist(circle1)
+        plt.gca().add_patch(circle1)
 
         plt.gca().set_aspect("equal")

@@ -53,6 +53,6 @@ class Polygon(Geometry):
             self._plot_level_set()
 
         obj = plt.Polygon(self.feature_points, color="k", fill=False)
-        plt.gca().add_artist(obj)
+        plt.gca().add_patch(obj)
 
         plt.gca().set_aspect("equal")

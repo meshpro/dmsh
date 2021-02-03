@@ -112,14 +112,14 @@ def create_staggered_grid(h, bounding_box):
 
 def generate(
     geo,
-    edge_size,
+    edge_size: float,
     # smoothing_method="distmesh",
-    tol=1.0e-5,
-    random_seed=0,
-    show=False,
-    max_steps=10000,
-    verbose=False,
-    flip_tol=0.0,
+    tol: float=1.0e-5,
+    random_seed: int=0,
+    show: bool=False,
+    max_steps: int=10000,
+    verbose: bool=False,
+    flip_tol: float=0.0,
 ):
     # Find h0 from edge_size (function)
     if callable(edge_size):
