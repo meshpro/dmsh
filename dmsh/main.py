@@ -48,8 +48,7 @@ def _recell_and_boundary_step(mesh, geo, flip_tol):
         mesh.points = points_new
         #
         num_removed_cells = mesh.remove_boundary_cells(
-            lambda is_bdry_cell: mesh.compute_signed_cell_areas(is_bdry_cell)
-            < 1.0e-10
+            lambda is_bdry_cell: mesh.compute_signed_cell_areas(is_bdry_cell) < 1.0e-10
         )
         #
         # The flip has to come right after the boundary cell removal to prevent

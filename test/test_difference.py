@@ -10,7 +10,7 @@ def test_difference(show=False):
 
     geo.plot()
 
-    ref_norms = [2.9445582949135735e02, 1.5856370081862632e01, 1.4999999025187867e00]
+    ref_norms = [2.9443960859620938e02, 1.5854935031397437e01, 1.4999994013831843e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-6)
     return X, cells
 

@@ -40,7 +40,7 @@ def test_rectangle(show=False):
     geo = dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0)
     X, cells = dmsh.generate(geo, 0.1, show=show)
 
-    ref_norms = [9.7564177709400246e+02, 3.1717062132947820e+01, 2.0000000000000000e+00]
+    ref_norms = [9.7564177709400246e02, 3.1717062132947820e01, 2.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
@@ -56,11 +56,7 @@ def test_duplicate_points(show=False):
     # assert np.all(is_part_of_cell)
 
     geo = dmsh.Rectangle(0.0, 1.4, 0.0, 0.41)
-    points, cells = dmsh.generate(
-            geo, 0.025, tol=1e-5,
-            show=show,
-            max_steps=1
-            )
+    points, cells = dmsh.generate(geo, 0.025, tol=1e-5, show=show, max_steps=1)
     is_part_of_cell = np.zeros(len(points), dtype=bool)
     is_part_of_cell[cells.flat] = True
     assert np.all(is_part_of_cell)

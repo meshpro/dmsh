@@ -10,7 +10,7 @@ def test_union_circles(show=False):
 
     geo.plot()
 
-    ref_norms = [3.0087320808275558e02, 1.5784709390397147e01, 1.5000000000000000e00]
+    ref_norms = [3.0105416446116442e02, 1.5786173854333649e01, 1.4999872117838802e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
@@ -21,7 +21,7 @@ def test_union_rectangles(show=False):
     )
     X, cells = dmsh.generate(geo, 0.15, show=show, tol=1.0e-5)
 
-    ref_norms = [1.8420561245539048e02, 1.1269215671323987e01, 1.0000000000000000e00]
+    ref_norms = [1.8421254507685381e02, 1.1269178209564656e01, 1.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
@@ -37,7 +37,7 @@ def test_union_three_circles(show=False):
     )
     X, cells = dmsh.generate(geo, 0.2, show=show, tol=1.0e-5)
 
-    ref_norms = [4.0370458355600903e02, 2.1155724692606825e01, 2.0000000000000000e00]
+    ref_norms = [4.0372521913158243e02, 2.1155466134111943e01, 1.9999337602721630e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
