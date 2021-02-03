@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 from dmsh.geometry import pypathlib
 
@@ -31,7 +31,7 @@ def test_concave():
     ref = 0.965
     assert abs(path.area - ref) < 1.0e-12 * ref
     assert path.positive_orientation
-    assert numpy.array_equal(path.is_convex_node, [True, True, False, True, True])
+    assert np.array_equal(path.is_convex_node, [True, True, False, True, True])
 
 
 def test_concave_counterclock():
@@ -41,7 +41,7 @@ def test_concave_counterclock():
     ref = 0.965
     assert abs(path.area - ref) < 1.0e-12 * ref
     assert not path.positive_orientation
-    assert numpy.array_equal(path.is_convex_node, [True, True, False, True, True])
+    assert np.array_equal(path.is_convex_node, [True, True, False, True, True])
 
 
 def test_squared_distance():
@@ -52,8 +52,8 @@ def test_squared_distance():
     dist = path.squared_distance(
         [[0.2, 0.1], [0.5, 0.5], [1.0, 0.5], [0.0, 1.1], [-0.1, 1.1], [1.0, 1.0]]
     )
-    ref = numpy.array([0.01, 0.16, 1.0 / 104.0, 0.01, 0.02, 0.0])
-    assert numpy.all(numpy.abs(dist - ref) < 1.0e-12)
+    ref = np.array([0.01, 0.16, 1.0 / 104.0, 0.01, 0.02, 0.0])
+    assert np.all(np.abs(dist - ref) < 1.0e-12)
 
 
 def test_distance():
@@ -64,8 +64,8 @@ def test_distance():
     dist = path.distance(
         [[0.2, 0.1], [0.5, 0.5], [1.0, 0.5], [0.0, 1.1], [-0.1, 1.1], [1.0, 1.0]]
     )
-    ref = numpy.array([0.1, 0.4, numpy.sqrt(1.0 / 104.0), 0.1, numpy.sqrt(2) / 10, 0.0])
-    assert numpy.all(numpy.abs(dist - ref) < 1.0e-12)
+    ref = np.array([0.1, 0.4, np.sqrt(1.0 / 104.0), 0.1, np.sqrt(2) / 10, 0.0])
+    assert np.all(np.abs(dist - ref) < 1.0e-12)
 
 
 def test_signed_distance():
@@ -77,10 +77,8 @@ def test_signed_distance():
         [[0.2, 0.1], [0.5, 0.5], [1.0, 0.5], [0.0, 1.1], [-0.1, 1.1], [1.0, 1.0]]
     )
     print(dist)
-    ref = numpy.array(
-        [-0.1, -0.4, numpy.sqrt(1.0 / 104.0), 0.1, numpy.sqrt(2) / 10, 0.0]
-    )
-    assert numpy.all(numpy.abs(dist - ref) < 1.0e-12)
+    ref = np.array([-0.1, -0.4, np.sqrt(1.0 / 104.0), 0.1, np.sqrt(2) / 10, 0.0])
+    assert np.all(np.abs(dist - ref) < 1.0e-12)
 
 
 def test_inside():
@@ -91,7 +89,7 @@ def test_inside():
     contains_points = path.contains_points(
         [[0.2, 0.1], [0.5, 0.5], [1.0, 0.5], [0.0, 1.1], [-0.1, 1.1], [1.0, 1.0]]
     )
-    assert numpy.array_equal(contains_points, [True, True, False, False, False, True])
+    assert np.array_equal(contains_points, [True, True, False, False, False, True])
 
 
 def test_closest_points():
@@ -110,7 +108,7 @@ def test_closest_points():
         ]
     )
 
-    ref = numpy.array(
+    ref = np.array(
         [
             [0.2, 0.0],
             [0.9, 0.5],
@@ -120,7 +118,7 @@ def test_closest_points():
             [1.0, 1.0],
         ]
     )
-    assert numpy.all(numpy.abs(closest_points - ref) < 1.0e-12)
+    assert np.all(np.abs(closest_points - ref) < 1.0e-12)
 
 
 def test_signed_squared_distance():
@@ -131,8 +129,8 @@ def test_signed_squared_distance():
     dist = path.signed_squared_distance(
         [[0.2, 0.1], [0.5, 0.5], [1.0, 0.5], [0.0, 1.1], [-0.1, 1.1], [1.0, 1.0]]
     )
-    ref = numpy.array([-0.01, -0.16, 1.0 / 104.0, 0.01, 0.02, 0.0])
-    assert numpy.all(numpy.abs(dist - ref) < 1.0e-12)
+    ref = np.array([-0.01, -0.16, 1.0 / 104.0, 0.01, 0.02, 0.0])
+    assert np.all(np.abs(dist - ref) < 1.0e-12)
 
 
 def test_sharp_angle():
@@ -149,11 +147,11 @@ def test_sharp_angle():
     )
 
     contains_points = path.contains_points([[0.5, 0.4], [0.5, 0.6]])
-    assert numpy.all(contains_points)
+    assert np.all(contains_points)
 
     dist = path.signed_squared_distance([[0.5, 0.4], [0.5, 0.6]])
-    ref = numpy.array([-0.02, -0.02])
-    assert numpy.all(numpy.abs(dist - ref) < 1.0e-12)
+    ref = np.array([-0.02, -0.02])
+    assert np.all(np.abs(dist - ref) < 1.0e-12)
 
 
 def test_project_distance():
@@ -173,17 +171,17 @@ def test_project_distance():
             [0.5, 0.5],
         ]
     )
-    # closest_points = numpy.array([4.9170124481327798e-01, 1.3112033195020747e-01])
-    # closest_points = numpy.array([4.9170124481327804e-01, 1.3112033195020747e-01])
+    # closest_points = np.array([4.9170124481327798e-01, 1.3112033195020747e-01])
+    # closest_points = np.array([4.9170124481327804e-01, 1.3112033195020747e-01])
     # the projected point should be _on_ the polygon
     dist = path.distance(closest_points)
-    assert numpy.all(dist < 1.0e-12)
+    assert np.all(dist < 1.0e-12)
 
 
 # def test_two_points():
 #     path = pypathlib.ClosedPath([[-0.5, 1.0], [+0.5, 1.0]])
 #     contains_points = path.contains_points([[0.0, 0.0], [0.0, 2.0]])
-#     assert numpy.array_equal(contains_points, [False, False])
+#     assert np.array_equal(contains_points, [False, False])
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 from helpers import assert_norm_equality, save
 
 import dmsh
@@ -10,7 +10,7 @@ def test(show=False):
     geo = dmsh.Difference(r, c)
 
     X, cells = dmsh.generate(
-        geo, lambda pts: numpy.abs(c.dist(pts)) / 5 + 0.05, show=show, tol=1.0e-10
+        geo, lambda pts: np.abs(c.dist(pts)) / 5 + 0.05, show=show, tol=1.0e-10
     )
 
     ref_norms = [2.48e02, 1.200e01, 1.0]

@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 from helpers import assert_norm_equality
 
 import dmsh
@@ -14,7 +14,7 @@ def test_quarter_annulus():
     quarter = dmsh.Intersection([diff0, rect])
 
     points, cells = dmsh.generate(
-        quarter, edge_size=lambda x: h + 0.1 * numpy.abs(disk0.dist(x)), tol=1.0e-10
+        quarter, edge_size=lambda x: h + 0.1 * np.abs(disk0.dist(x)), tol=1.0e-10
     )
 
     ref_norms = [8.0420341247274109e01, 6.7183669347644024e00, 1.0000000000000000e00]

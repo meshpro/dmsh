@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 from helpers import assert_norm_equality
 
 import dmsh
@@ -17,7 +17,7 @@ def test_difference(show=False):
 
 def test_boundary_step():
     geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
-    pts = numpy.array(
+    pts = np.array(
         [
             [-2.1, 0.0],
             [0.1, 0.0],
@@ -26,20 +26,20 @@ def test_boundary_step():
         ]
     )
     pts = geo.boundary_step(pts.T).T
-    ref = numpy.array([[-1.5, 0.0], [-0.5, 0.0], [-1.5, 0.0], [-0.5, 0.0]])
-    assert numpy.all(numpy.abs(pts - ref) < 1.0e-10)
+    ref = np.array([[-1.5, 0.0], [-0.5, 0.0], [-1.5, 0.0], [-0.5, 0.0]])
+    assert np.all(np.abs(pts - ref) < 1.0e-10)
 
 
 def test_boundary_step2():
     geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
-    numpy.random.seed(0)
-    pts = numpy.random.uniform(-2.0, 2.0, (2, 100))
+    np.random.seed(0)
+    pts = np.random.uniform(-2.0, 2.0, (2, 100))
     pts = geo.boundary_step(pts)
     # geo.plot()
     # import matplotlib.pyplot as plt
     # plt.plot(pts[0], pts[1], "xk")
     # plt.show()
-    assert numpy.all(numpy.abs(geo.dist(pts)) < 1.0e-12)
+    assert np.all(np.abs(geo.dist(pts)) < 1.0e-12)
 
 
 def test_boundary_step_pacman():
@@ -47,16 +47,16 @@ def test_boundary_step_pacman():
         dmsh.Circle([0.0, 0.0], 1.0),
         dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
     )
-    # numpy.random.seed(0)
-    # pts = numpy.random.uniform(-2.0, 2.0, (2, 100))
-    # pts = numpy.array([[-2.0, 0.0]])
-    # pts = numpy.array([[-0.1, 0.0]])
-    # pts = numpy.array([[0.0, 2.0]])
-    # pts = numpy.array([[0.0, 0.9]])
-    # pts = numpy.array([[2.0, 0.1]])
-    # pts = numpy.array([[0.1, 0.1]])
-    # pts = numpy.array([[0.7, 0.1]])
-    pts = numpy.array([[0.5, 0.1]])
+    # np.random.seed(0)
+    # pts = np.random.uniform(-2.0, 2.0, (2, 100))
+    # pts = np.array([[-2.0, 0.0]])
+    # pts = np.array([[-0.1, 0.0]])
+    # pts = np.array([[0.0, 2.0]])
+    # pts = np.array([[0.0, 0.9]])
+    # pts = np.array([[2.0, 0.1]])
+    # pts = np.array([[0.1, 0.1]])
+    # pts = np.array([[0.7, 0.1]])
+    pts = np.array([[0.5, 0.1]])
     pts = pts.T
     print(pts.T.shape)
     pts = geo.boundary_step(pts)
@@ -65,7 +65,7 @@ def test_boundary_step_pacman():
 
     plt.plot(pts[0], pts[1], "xk")
     plt.show()
-    # assert numpy.all(numpy.abs(geo.dist(pts)) < 1.0e-12)
+    # assert np.all(np.abs(geo.dist(pts)) < 1.0e-12)
 
 
 if __name__ == "__main__":

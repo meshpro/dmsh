@@ -1,5 +1,5 @@
 import meshplex
-import numpy
+import numpy as np
 import pytest
 from helpers import assert_norm_equality
 
@@ -16,7 +16,7 @@ def test_circle(radius, ref_norms, show=False):
     meshplex.MeshTri(X, cells).show()
 
     # make sure the origin is part of the mesh
-    assert numpy.sum(numpy.einsum("ij,ij->i", X, X) < 1.0e-6) == 1
+    assert np.sum(np.einsum("ij,ij->i", X, X) < 1.0e-6) == 1
 
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-5)
     return X, cells
@@ -31,17 +31,17 @@ def test_degenerate_circle(target_edge_length):
     X, cells = dmsh.generate(geo, target_edge_length, show=False)
 
     mesh = meshplex.MeshTri(X, cells)
-    min_q = numpy.min(mesh.q_radius_ratio)
+    min_q = np.min(mesh.q_radius_ratio)
     assert min_q > 0.5, f"min cell quality: {min_q:.3f}"
 
 
 def test_boundary_step():
     geo = dmsh.Circle([0.1, 0.2], 1.0)
-    numpy.random.seed(0)
-    pts = numpy.random.uniform(-1.0, 1.0, (2, 100))
+    np.random.seed(0)
+    pts = np.random.uniform(-1.0, 1.0, (2, 100))
     pts = geo.boundary_step(pts)
     tol = 1.0e-12
-    assert numpy.all(numpy.abs(geo.dist(pts)) < tol)
+    assert np.all(np.abs(geo.dist(pts)) < tol)
 
 
 if __name__ == "__main__":

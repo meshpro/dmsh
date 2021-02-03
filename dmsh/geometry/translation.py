@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 from .geometry import Geometry
 
@@ -15,7 +15,7 @@ class Translation(Geometry):
             geometry.bounding_box[2] + v[1],
             geometry.bounding_box[3] + v[1],
         ]
-        self.feature_points = numpy.array([])
+        self.feature_points = np.array([])
         return
 
     def dist(self, x):

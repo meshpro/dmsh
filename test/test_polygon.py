@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 from helpers import assert_norm_equality
 
 import dmsh
@@ -36,8 +36,8 @@ def test_boundary_step2():
             [0.5, 1.5],
         ]
     )
-    numpy.random.seed(0)
-    pts = numpy.random.uniform(-2.0, 2.0, (2, 100))
+    np.random.seed(0)
+    pts = np.random.uniform(-2.0, 2.0, (2, 100))
     pts = geo.boundary_step(pts)
     # geo.plot()
     # import matplotlib.pyplot as plt
@@ -45,7 +45,7 @@ def test_boundary_step2():
     # plt.show()
     # print(geo.dist(pts).shape)
     dist = geo.dist(pts)
-    assert numpy.all(numpy.abs(dist) < 1.0e-12)
+    assert np.all(np.abs(dist) < 1.0e-12)
 
 
 if __name__ == "__main__":

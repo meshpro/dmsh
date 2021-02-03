@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 from .geometry import Geometry
 
@@ -8,8 +8,8 @@ class Scaling(Geometry):
         super().__init__()
         self.geometry = geometry
         self.alpha = alpha
-        self.bounding_box = alpha * numpy.array(geometry.bounding_box)
-        self.feature_points = numpy.array([])
+        self.bounding_box = alpha * np.array(geometry.bounding_box)
+        self.feature_points = np.array([])
 
     def dist(self, x):
         return self.geometry.dist(x / self.alpha)

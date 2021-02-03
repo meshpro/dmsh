@@ -1,5 +1,6 @@
 from typing import Tuple
-import numpy
+
+import numpy as np
 
 from .geometry import Geometry
 
@@ -10,15 +11,15 @@ class CirclePath:
         self.r = r
 
     def p(self, t):
-        v = numpy.array([numpy.cos(2 * numpy.pi * t), numpy.sin(2 * numpy.pi * t)])
+        v = np.array([np.cos(2 * np.pi * t), np.sin(2 * np.pi * t)])
         return ((self.r * v).T + self.x0).T
 
     def dp_dt(self, t):
         return (
             self.r
             * 2
-            * numpy.pi
-            * numpy.array([-numpy.sin(2 * numpy.pi * t), numpy.cos(2 * numpy.pi * t)])
+            * np.pi
+            * np.array([-np.sin(2 * np.pi * t), np.cos(2 * np.pi * t)])
         )
 
 
@@ -29,17 +30,17 @@ class Circle(Geometry):
         self.r = r
         self.bounding_box = [x0[0] - r, x0[0] + r, x0[1] - r, x0[1] + r]
         self.paths = [CirclePath(x0, r)]
-        self.feature_points = numpy.array([[], []]).T
+        self.feature_points = np.array([[], []]).T
 
     def dist(self, x):
         assert x.shape[0] == 2
         y = (x.T - self.x0).T
-        return numpy.sqrt(numpy.einsum("i...,i...->...", y, y)) - self.r
+        return np.sqrt(np.einsum("i...,i...->...", y, y)) - self.r
 
     def boundary_step(self, x):
         # simply project onto the circle
         y = (x.T - self.x0).T
-        r = numpy.sqrt(numpy.einsum("ij,ij->j", y, y))
+        r = np.sqrt(np.einsum("ij,ij->j", y, y))
         return ((y / r * self.r).T + self.x0).T
 
     def plot(self, level_set=True):
@@ -47,7 +48,7 @@ class Circle(Geometry):
 
         if level_set:
             X, Y, Z = self._get_xyz()
-            alpha = numpy.max(numpy.abs(Z))
+            alpha = np.max(np.abs(Z))
             cf = plt.contourf(
                 X, Y, Z, levels=20, cmap=plt.cm.coolwarm, vmin=-alpha, vmax=alpha
             )

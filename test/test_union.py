@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 from helpers import assert_equality, assert_norm_equality
 
 import dmsh
@@ -27,12 +27,12 @@ def test_union_rectangles(show=False):
 
 
 def test_union_three_circles(show=False):
-    angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
+    angles = np.pi * np.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
     geo = dmsh.Union(
         [
-            dmsh.Circle([numpy.cos(angles[0]), numpy.sin(angles[0])], 1.0),
-            dmsh.Circle([numpy.cos(angles[1]), numpy.sin(angles[1])], 1.0),
-            dmsh.Circle([numpy.cos(angles[2]), numpy.sin(angles[2])], 1.0),
+            dmsh.Circle([np.cos(angles[0]), np.sin(angles[0])], 1.0),
+            dmsh.Circle([np.cos(angles[1]), np.sin(angles[1])], 1.0),
+            dmsh.Circle([np.cos(angles[2]), np.sin(angles[2])], 1.0),
         ]
     )
     X, cells = dmsh.generate(geo, 0.2, show=show, tol=1.0e-5)
@@ -45,35 +45,35 @@ def test_union_three_circles(show=False):
 def test_boundary_step():
     geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
     a = geo.boundary_step([-0.5, 0.9])
-    assert numpy.array_equal(a, [-0.5, 1.0])
+    assert np.array_equal(a, [-0.5, 1.0])
 
     a = geo.boundary_step([-0.5, 0.6])
-    assert numpy.array_equal(a, [-0.5, 1.0])
+    assert np.array_equal(a, [-0.5, 1.0])
 
     a = geo.boundary_step([0.05, 0.05])
     assert_equality(a, [-4.4469961425821203e-01, 9.9846976285554556e-01], 1.0e-10)
 
-    pts = numpy.array([[-5.0, 0.0], [4.1, 0.0]])
+    pts = np.array([[-5.0, 0.0], [4.1, 0.0]])
     pts = geo.boundary_step(pts.T).T
-    ref = numpy.array([[-1.5, 0.0], [1.5, 0.0]])
-    assert numpy.all(numpy.abs(pts - ref) < 1.0e-10)
+    ref = np.array([[-1.5, 0.0], [1.5, 0.0]])
+    assert np.all(np.abs(pts - ref) < 1.0e-10)
 
-    pts = numpy.array([[-0.9, 0.0], [1.1, 0.0]])
+    pts = np.array([[-0.9, 0.0], [1.1, 0.0]])
     pts = geo.boundary_step(pts.T).T
-    ref = numpy.array([[-1.5, 0.0], [1.5, 0.0]])
-    assert numpy.all(numpy.abs(pts - ref) < 1.0e-10)
+    ref = np.array([[-1.5, 0.0], [1.5, 0.0]])
+    assert np.all(np.abs(pts - ref) < 1.0e-10)
 
 
 def test_boundary_step2():
     geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
-    numpy.random.seed(0)
-    pts = numpy.random.uniform(-2.0, 2.0, (2, 100))
+    np.random.seed(0)
+    pts = np.random.uniform(-2.0, 2.0, (2, 100))
     pts = geo.boundary_step(pts)
     # geo.plot()
     # import matplotlib.pyplot as plt
     # plt.plot(pts[0], pts[1], "xk")
     # plt.show()
-    assert numpy.all(numpy.abs(geo.dist(pts)) < 1.0e-12)
+    assert np.all(np.abs(geo.dist(pts)) < 1.0e-12)
 
 
 if __name__ == "__main__":
