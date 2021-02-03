@@ -45,6 +45,17 @@ def test_rectangle(show=False):
     return X, cells
 
 
+def test_duplicate_points(show=False):
+    # https://github.com/nschloe/dmsh/issues/66
+    geo = dmsh.Rectangle(0.0, 1.8, 0.0, 0.41)
+
+    points, triangles = dmsh.generate(geo, 0.2, tol=1e-5, show=show)
+
+    tmp = np.ascontiguousarray(points)
+    assert points.shape[0] == np.unique(tmp.view([("", tmp.dtype)] * tmp.shape[1])).shape[0]
+
+
 if __name__ == "__main__":
-    X, cells = test_rectangle(show=False)
-    save("rectangle.png", X, cells)
+    test_duplicate_points(show=False)
+    # X, cells = test_rectangle(show=False)
+    # save("rectangle.png", X, cells)
