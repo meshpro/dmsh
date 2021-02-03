@@ -8,11 +8,11 @@ def test_intersection(show=False):
     geo = dmsh.Intersection(
         [dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)]
     )
-    X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-10)
+    X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-10, max_steps=100)
 
     geo.plot()
 
-    ref_norms = [8.6619344595913475e01, 6.1599895121114274e00, 8.6602540378466342e-01]
+    ref_norms = [8.6491736892894920e01, 6.1568624411912278e00, 8.6602540378466342e-01]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
@@ -26,9 +26,9 @@ def test_intersection_circles(show=False):
             dmsh.Circle([np.cos(angles[2]), np.sin(angles[2])], 1.5),
         ]
     )
-    X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-10)
+    X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-10, max_steps=100)
 
-    ref_norms = [6.7650924332929776e01, 5.0559320825183374e00, 7.2474487138537913e-01]
+    ref_norms = [6.7661318585210836e01, 5.0568863746561723e00, 7.2474487138537913e-01]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 

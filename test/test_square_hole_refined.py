@@ -10,7 +10,11 @@ def test(show=False):
     geo = dmsh.Difference(r, c)
 
     X, cells = dmsh.generate(
-        geo, lambda pts: np.abs(c.dist(pts)) / 5 + 0.05, show=show, tol=1.0e-10
+        geo,
+        lambda pts: np.abs(c.dist(pts)) / 5 + 0.05,
+        show=show,
+        tol=1.0e-10,
+        max_steps=100,
     )
 
     ref_norms = [2.48e02, 1.200e01, 1.0]

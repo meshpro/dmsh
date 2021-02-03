@@ -6,11 +6,11 @@ import dmsh
 
 def test_union_circles(show=False):
     geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
-    X, cells = dmsh.generate(geo, 0.15, show=show, tol=1.0e-5)
+    X, cells = dmsh.generate(geo, 0.15, show=show, tol=1.0e-5, max_steps=100)
 
     geo.plot()
 
-    ref_norms = [3.0087320808275558e02, 1.5784709390397147e01, 1.5000000000000000e00]
+    ref_norms = [3.0080546580519666e02, 1.5775854476745508e01, 1.5000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
@@ -19,9 +19,9 @@ def test_union_rectangles(show=False):
     geo = dmsh.Union(
         [dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5), dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)]
     )
-    X, cells = dmsh.generate(geo, 0.15, show=show, tol=1.0e-5)
+    X, cells = dmsh.generate(geo, 0.15, show=show, tol=1.0e-5, max_steps=100)
 
-    ref_norms = [1.8420561245539048e02, 1.1269215671323987e01, 1.0000000000000000e00]
+    ref_norms = [1.8417796811774514e02, 1.1277323166424049e01, 1.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
@@ -35,9 +35,9 @@ def test_union_three_circles(show=False):
             dmsh.Circle([np.cos(angles[2]), np.sin(angles[2])], 1.0),
         ]
     )
-    X, cells = dmsh.generate(geo, 0.2, show=show, tol=1.0e-5)
+    X, cells = dmsh.generate(geo, 0.2, show=show, tol=1.0e-5, max_steps=100)
 
-    ref_norms = [4.0370458355600903e02, 2.1155724692606825e01, 2.0000000000000000e00]
+    ref_norms = [4.0359760255235619e02, 2.1162741423521961e01, 2.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 

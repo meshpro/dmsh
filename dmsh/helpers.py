@@ -32,9 +32,19 @@ def show(pts, cells, geo, title=None, full_screen=True):
     import matplotlib.pyplot as plt
 
     eps = 1.0e-10
+    # hightlight outside points in C3, and points which aren't part of any cell in C4
+    is_part_of_cell = np.zeros(len(pts), dtype=bool)
+    is_part_of_cell[cells.flat] = True
+
     is_inside = geo.dist(pts.T) < eps
-    plt.plot(pts[is_inside, 0], pts[is_inside, 1], ".")
-    plt.plot(pts[~is_inside, 0], pts[~is_inside, 1], ".", color="r")
+
+    sp = pts[is_inside & is_part_of_cell]
+    plt.plot(sp[:, 0], sp[:, 1], ".", color="C0")
+    sp = pts[~is_inside]
+    plt.plot(sp[:, 0], sp[:, 1], ".", color="C3")
+    sp = pts[~is_part_of_cell]
+    plt.plot(sp[:, 0], sp[:, 1], ".", color="k")
+    # plt.plot(pts[~is_inside, 0], pts[~is_part_of_cell, 1], ".", color="k")
     plt.triplot(pts[:, 0], pts[:, 1], cells)
     plt.axis("square")
 

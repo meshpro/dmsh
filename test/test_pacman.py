@@ -8,9 +8,9 @@ def test_pacman(show=False):
         dmsh.Circle([0.0, 0.0], 1.0),
         dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
     )
-    X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-5)
+    X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-5, max_steps=100)
 
-    ref_norms = [3.0307531341596325e02, 1.3612316633640821e01, 9.9999999953623819e-01]
+    ref_norms = [3.0173012692535394e02, 1.3565685453257570e01, 9.9999999999884770e-01]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-10)
     return X, cells
 
