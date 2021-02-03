@@ -36,21 +36,30 @@ def _create_cells(pts, geo):
     return cells
 
 
-def _recell(mesh, geo, flip_tol):
+def _recell_boundary_step(mesh, geo, flip_tol):
     # We could do a _create_cells() here, but inverted boundary cell removal plus Lawson
     # flips produce the same result and are much cheaper. This is because, most of the
     # time, there are no cells to be removed and no edges to be flipped.  Because the
     # rest of the algorithm is so cheap. The flip is still a fairly expensive operation.
     # First kick out all boundary cells whose barycenters are not in the geometry.
+    while True:
+        idx = mesh.is_boundary_point
+        points_new = mesh.points.copy()
+        points_new[idx] = geo.boundary_step(points_new[idx].T).T
+        mesh.points = points_new
+        #
+        mesh.flip_until_delaunay(tol=flip_tol)
+        #
+        num_removed_cells = mesh.remove_boundary_cells(
+            lambda is_bdry_cell: mesh.compute_signed_cell_areas(is_bdry_cell)
+            < 1.0e-10
+        )
+        if num_removed_cells == 0:
+            break
+
     mesh.remove_boundary_cells(
-        lambda is_boundary_cell: geo.dist(mesh.compute_centroids(is_boundary_cell).T)
-        > 0.0
+        lambda is_bdry_cell: geo.dist(mesh.compute_centroids(is_bdry_cell).T) > 0.0
     )
-    mesh.remove_boundary_cells(
-        lambda is_boundary_cell: mesh.compute_signed_cell_areas(is_boundary_cell)
-        < 1.0e-10
-    )
-    mesh.flip_until_delaunay(tol=flip_tol)
 
 
 def create_staggered_grid(h, bounding_box):
@@ -285,10 +294,13 @@ def distmesh_smoothing(
         # # alpha = np.min(max_step / step_lengths)
         # # update *= alpha
 
+        points_old = mesh.points.copy()
+
         # update coordinates
         points_new = mesh.points + update
         # leave feature points untouched
         points_new[:num_feature_points] = mesh.points[:num_feature_points]
+        mesh.points = points_new
         # Some mesh boundary points may have been moved off of the domain boundary,
         # either because they were pushed outside or because they just became boundary
         # points by way of cell removal. Move them all (back) onto the domain boundary.
@@ -297,14 +309,9 @@ def distmesh_smoothing(
         # Alternative: Push all boundary points (the ones _inside_ the geometry as well)
         # back to the boundary.
         # idx = is_outside | is_boundary_point
-        idx = mesh.is_boundary_point
-        points_new[idx] = geo.boundary_step(points_new[idx].T).T
+        _recell_boundary_step(mesh, geo, flip_tol)
 
-        diff = points_new - mesh.points
-        mesh.points = points_new
-
-        _recell(mesh, geo, flip_tol)
-
+        diff = points_new - points_old
         move2 = np.einsum("ij,ij->i", diff, diff)
         if verbose:
             print("max_move: {:.6e}".format(np.sqrt(np.max(move2))))
