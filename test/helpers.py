@@ -1,25 +1,25 @@
-import numpy
+import numpy as np
 
 
 def assert_equality(a, b, tol):
-    a = numpy.asarray(a)
-    b = numpy.asarray(b)
+    a = np.asarray(a)
+    b = np.asarray(b)
     fmt_a = ", ".join(["{:.16e}"] * len(a))
     fmt_b = ", ".join(["{:.16e}"] * len(b))
-    assert numpy.all(numpy.abs(a - b) < tol), f"[{fmt_a}]\n[{fmt_b}]".format(*a, *b)
+    assert np.all(np.abs(a - b) < tol), f"[{fmt_a}]\n[{fmt_b}]".format(*a, *b)
 
 
 def assert_norm_equality(X, ref_norm, tol):
-    ref_norm = numpy.asarray(ref_norm)
-    vals = numpy.array(
+    ref_norm = np.asarray(ref_norm)
+    vals = np.array(
         [
-            numpy.linalg.norm(X, ord=1),
-            numpy.linalg.norm(X, ord=2),
-            numpy.linalg.norm(X, ord=numpy.inf),
+            np.linalg.norm(X, ord=1),
+            np.linalg.norm(X, ord=2),
+            np.linalg.norm(X, ord=np.inf),
         ]
     )
-    assert numpy.all(
-        numpy.abs(vals - ref_norm) < tol * ref_norm
+    assert np.all(
+        np.abs(vals - ref_norm) < tol * ref_norm
     ), "Expected: [{:.16e}, {:.16e}, {:.16e}]\nComputed: [{:.16e}, {:.16e}, {:.16e}]".format(
         *ref_norm, *vals
     )

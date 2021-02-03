@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 from .geometry import Geometry
 from .polygon import LineSegmentPath
@@ -15,35 +15,35 @@ class Rectangle(Geometry):
         self.x1 = x1
         self.y0 = y0
         self.y1 = y1
-        self.points = numpy.array([[x0, y0], [x1, y0], [x1, y1], [x0, y1]])
+        self.points = np.array([[x0, y0], [x1, y0], [x1, y1], [x0, y1]])
         self.bounding_box = [
-            numpy.min(self.points[:, 0]),
-            numpy.max(self.points[:, 0]),
-            numpy.min(self.points[:, 1]),
-            numpy.max(self.points[:, 1]),
+            np.min(self.points[:, 0]),
+            np.max(self.points[:, 0]),
+            np.min(self.points[:, 1]),
+            np.max(self.points[:, 1]),
         ]
         self.feature_points = self.points
         self.paths = [
             LineSegmentPath(p0, p1)
-            for p0, p1 in zip(self.points, numpy.roll(self.points, -1, axis=0))
+            for p0, p1 in zip(self.points, np.roll(self.points, -1, axis=0))
         ]
 
     def dist(self, x):
         # outside dist
         # https://gamedev.stackexchange.com/a/44496
-        x = numpy.asarray(x)
+        x = np.asarray(x)
         w = self.x1 - self.x0
         h = self.y1 - self.y0
         cx = (self.x0 + self.x1) / 2
         cy = (self.y0 + self.y1) / 2
-        dx = numpy.abs(x[0] - cx) - w / 2
-        dy = numpy.abs(x[1] - cy) - h / 2
+        dx = np.abs(x[0] - cx) - w / 2
+        dy = np.abs(x[1] - cy) - h / 2
         is_inside = (dx <= 0) & (dy <= 0)
         dx[dx < 0.0] = 0.0
         dy[dy < 0.0] = 0.0
-        dist = numpy.sqrt(dx ** 2 + dy ** 2)
+        dist = np.sqrt(dx ** 2 + dy ** 2)
         # inside dist
-        a = numpy.array(
+        a = np.array(
             [
                 x[0, is_inside] - self.x0,
                 self.x1 - x[0, is_inside],
@@ -51,11 +51,11 @@ class Rectangle(Geometry):
                 self.y1 - x[1, is_inside],
             ]
         )
-        dist[is_inside] = -numpy.min(a, axis=0)
+        dist[is_inside] = -np.min(a, axis=0)
         return dist
 
     def boundary_step(self, x):
-        x = numpy.asarray(x)
+        x = np.asarray(x)
         assert x.shape[0] == 2
 
         is_one_dimensional = False
@@ -89,7 +89,7 @@ class Rectangle(Geometry):
         X += cx
         Y += cy
 
-        out = numpy.array([X, Y])
+        out = np.array([X, Y])
         if is_one_dimensional:
             out = out.reshape(-1)
         return out

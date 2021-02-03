@@ -1,7 +1,7 @@
 import math
 
 import meshplex
-import numpy
+import numpy as np
 import scipy.spatial
 
 from .helpers import show as show_mesh
@@ -15,12 +15,12 @@ def _create_cells(pts, geo):
     cells = tri.simplices.copy()
 
     # kick out all cells whose barycenter is not in the geometry
-    bc = numpy.sum(pts[cells], axis=1) / 3.0
+    bc = np.sum(pts[cells], axis=1) / 3.0
     cells = cells[geo.dist(bc.T) < 0.0]
 
     # # kick out all cells whose barycenter or edge midpoints are not in the geometry
     # btol = 1.0e-3
-    # bc = numpy.sum(pts[cells], axis=1) / 3.0
+    # bc = np.sum(pts[cells], axis=1) / 3.0
     # barycenter_inside = geo.dist(bc.T) < btol
     # # Remove cells which are (partly) outside of the domain. Check at the midpoint of
     # # all edges.
@@ -55,7 +55,7 @@ def _recell(mesh, geo, flip_tol):
 
 def create_staggered_grid(h, bounding_box):
     x_step = h
-    y_step = h * numpy.sqrt(3) / 2
+    y_step = h * np.sqrt(3) / 2
     bb_width = bounding_box[1] - bounding_box[0]
     bb_height = bounding_box[3] - bounding_box[2]
     midpoint = [
@@ -74,24 +74,24 @@ def create_staggered_grid(h, bounding_box):
     # Make sure that the midpoint is one point in the grid.
     x2 = num_x_steps // 2
     y2 = num_y_steps // 2
-    x, y = numpy.meshgrid(
-        midpoint[0] + x_step * numpy.arange(-x2, x2 + 1),
-        midpoint[1] + y_step * numpy.arange(-y2, y2 + 1),
+    x, y = np.meshgrid(
+        midpoint[0] + x_step * np.arange(-x2, x2 + 1),
+        midpoint[1] + y_step * np.arange(-y2, y2 + 1),
     )
     # Staggered, such that the midpoint is not moved.
     # Unconditionally move to the right, then add more points to the left.
     offset = (y2 + 1) % 2
     x[offset::2] += h / 2
 
-    out = numpy.column_stack([x.reshape(-1), y.reshape(-1)])
+    out = np.column_stack([x.reshape(-1), y.reshape(-1)])
 
     # add points in the staggered lines to preserve symmetry
     n = 2 * (-(-y2 // 2))
-    extra = numpy.empty((n, 2))
+    extra = np.empty((n, 2))
     extra[:, 0] = midpoint[0] - x_step * x2 - h / 2
-    extra[:, 1] = midpoint[1] + y_step * numpy.arange(-y2 + offset, y2 + 1, 2)
+    extra[:, 1] = midpoint[1] + y_step * np.arange(-y2 + offset, y2 + 1, 2)
 
-    out = numpy.concatenate([out, extra])
+    out = np.concatenate([out, extra])
     return out
 
 
@@ -102,9 +102,9 @@ def create_staggered_grid(h, bounding_box):
 #     # this, restrict the maximum step size to half of the minimum the incircle radius of
 #     # all adjacent cells. This makes sure that triangles cannot "flip".
 #     # <https://stackoverflow.com/a/57261082/353337>
-#     max_step = numpy.full(mesh.points.shape[0], numpy.inf)
-#     numpy.minimum.at(
-#         max_step, mesh.cells["points"].reshape(-1), numpy.repeat(mesh.cell_inradius, 3),
+#     max_step = np.full(mesh.points.shape[0], np.inf)
+#     np.minimum.at(
+#         max_step, mesh.cells["points"].reshape(-1), np.repeat(mesh.cell_inradius, 3),
 #     )
 #     max_step *= 0.5
 #     return max_step
@@ -112,14 +112,14 @@ def create_staggered_grid(h, bounding_box):
 
 def generate(
     geo,
-    edge_size,
+    edge_size: float,
     # smoothing_method="distmesh",
-    tol=1.0e-5,
-    random_seed=0,
-    show=False,
-    max_steps=10000,
-    verbose=False,
-    flip_tol=0.0,
+    tol: float = 1.0e-5,
+    random_seed: int = 0,
+    show: bool = False,
+    max_steps: int = 10000,
+    verbose: bool = False,
+    flip_tol: float = 0.0,
 ):
     # Find h0 from edge_size (function)
     if callable(edge_size):
@@ -128,16 +128,16 @@ def generate(
         h00 = (geo.bounding_box[1] - geo.bounding_box[0]) / 100
         pts = create_staggered_grid(h00, geo.bounding_box)
         sizes = edge_size_function(pts.T)
-        assert numpy.all(sizes > 0.0), "edge_size_function must be strictly positive."
-        h0 = numpy.min(sizes)
+        assert np.all(sizes > 0.0), "edge_size_function must be strictly positive."
+        h0 = np.min(sizes)
     else:
         h0 = edge_size
 
         def edge_size_function(pts):
-            return numpy.full(pts.shape[1], edge_size)
+            return np.full(pts.shape[1], edge_size)
 
     if random_seed is not None:
-        numpy.random.seed(random_seed)
+        np.random.seed(random_seed)
 
     pts = create_staggered_grid(h0, geo.bounding_box)
 
@@ -148,18 +148,18 @@ def generate(
 
     # evaluate the element size function, remove points according to it
     alpha = 1.0 / edge_size_function(pts.T) ** 2
-    pts = pts[numpy.random.rand(pts.shape[0]) < alpha / numpy.max(alpha)]
+    pts = pts[np.random.rand(pts.shape[0]) < alpha / np.max(alpha)]
 
     num_feature_points = len(geo.feature_points)
     if num_feature_points > 0:
         # remove all points which are equal to a feature point
-        diff = numpy.array([[pt - fp for fp in geo.feature_points] for pt in pts])
-        dist = numpy.einsum("...k,...k->...", diff, diff)
+        diff = np.array([[pt - fp for fp in geo.feature_points] for pt in pts])
+        dist = np.einsum("...k,...k->...", diff, diff)
         ftol = h0 / 10
-        equals_feature_point = numpy.any(dist < ftol ** 2, axis=1)
+        equals_feature_point = np.any(dist < ftol ** 2, axis=1)
         pts = pts[~equals_feature_point]
         # Add feature points
-        pts = numpy.concatenate([geo.feature_points, pts])
+        pts = np.concatenate([geo.feature_points, pts])
 
     cells = _create_cells(pts, geo)
     mesh = meshplex.MeshTri(pts, cells)
@@ -244,16 +244,14 @@ def distmesh_smoothing(
         edges = mesh.edges["points"]
 
         edges_vec = mesh.points[edges[:, 1]] - mesh.points[edges[:, 0]]
-        edge_lengths = numpy.sqrt(numpy.einsum("ij,ij->i", edges_vec, edges_vec))
+        edge_lengths = np.sqrt(np.einsum("ij,ij->i", edges_vec, edges_vec))
         edges_vec /= edge_lengths[..., None]
 
         # Evaluate element sizes at edge midpoints
         edge_midpoints = (mesh.points[edges[:, 1]] + mesh.points[edges[:, 0]]) / 2
         p = edge_size_function(edge_midpoints.T)
         desired_lengths = (
-            f_scale
-            * p
-            * numpy.sqrt(numpy.dot(edge_lengths, edge_lengths) / numpy.dot(p, p))
+            f_scale * p * np.sqrt(np.dot(edge_lengths, edge_lengths) / np.dot(p, p))
         )
 
         force_abs = desired_lengths - edge_lengths
@@ -263,14 +261,14 @@ def distmesh_smoothing(
         # force vectors
         force = edges_vec * force_abs[..., None]
 
-        # bincount replacement for the slow numpy.add.at
+        # bincount replacement for the slow np.add.at
         # more speed-up can be achieved if the weights were contiguous in memory, i.e.,
         # if force[k] was used
         n = mesh.points.shape[0]
-        force_per_point = numpy.array(
+        force_per_point = np.array(
             [
-                numpy.bincount(edges[:, 0], weights=-force[:, k], minlength=n)
-                + numpy.bincount(edges[:, 1], weights=+force[:, k], minlength=n)
+                np.bincount(edges[:, 0], weights=-force[:, k], minlength=n)
+                + np.bincount(edges[:, 1], weights=+force[:, k], minlength=n)
                 for k in range(force.shape[1])
             ]
         ).T
@@ -281,10 +279,10 @@ def distmesh_smoothing(
         # TODO this doesn't work for distmesh smoothing. hm.
         # mesh = meshplex.MeshTri(pts, cells)
         # max_step = get_max_step(mesh)
-        # step_lengths = numpy.sqrt(numpy.einsum("ij,ij->i", update, update))
+        # step_lengths = np.sqrt(np.einsum("ij,ij->i", update, update))
         # idx = step_lengths > max_step
         # update[idx] *= (max_step / step_lengths)[idx, None]
-        # # alpha = numpy.min(max_step / step_lengths)
+        # # alpha = np.min(max_step / step_lengths)
         # # update *= alpha
 
         # update coordinates
@@ -307,10 +305,10 @@ def distmesh_smoothing(
 
         _recell(mesh, geo, flip_tol)
 
-        move2 = numpy.einsum("ij,ij->i", diff, diff)
+        move2 = np.einsum("ij,ij->i", diff, diff)
         if verbose:
-            print("max_move: {:.6e}".format(numpy.sqrt(numpy.max(move2))))
-        if numpy.all(move2 < tol ** 2):
+            print("max_move: {:.6e}".format(np.sqrt(np.max(move2))))
+        if np.all(move2 < tol ** 2):
             break
 
     # print("num steps:  ", k)

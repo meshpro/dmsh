@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 from . import pypathlib
 
@@ -10,24 +10,22 @@ class LineSegmentPath:
         return
 
     def p(self, t):
-        return numpy.multiply.outer(self.x0, 1 - t) + numpy.multiply.outer(self.x1, t)
+        return np.multiply.outer(self.x0, 1 - t) + np.multiply.outer(self.x1, t)
 
     def dp_dt(self, t):
-        ones = numpy.ones(t.shape)
-        return numpy.multiply.outer(self.x0, -ones) + numpy.multiply.outer(
-            self.x1, ones
-        )
+        ones = np.ones(t.shape)
+        return np.multiply.outer(self.x0, -ones) + np.multiply.outer(self.x1, ones)
 
 
 class Path:
     def __init__(self, points):
-        points = numpy.array(points)
+        points = np.array(points)
         self.path = pypathlib.Path(points)
         self.bounding_box = [
-            numpy.min(points[:, 0]),
-            numpy.max(points[:, 0]),
-            numpy.min(points[:, 1]),
-            numpy.max(points[:, 1]),
+            np.min(points[:, 0]),
+            np.max(points[:, 0]),
+            np.min(points[:, 1]),
+            np.max(points[:, 1]),
         ]
         self.feature_points = points
 

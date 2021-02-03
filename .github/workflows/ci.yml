@@ -1,6 +1,12 @@
 name: ci
 
-on: [pull_request]
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
 
 jobs:
   lint:
@@ -24,7 +30,7 @@ jobs:
     strategy:
       matrix:
         # testing python 3.9 still takes too long
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
     - uses: actions/setup-python@v2
       with:

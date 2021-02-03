@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import perfplot
 import pytest
 from matplotlib import path
@@ -18,10 +18,10 @@ def test_speed(n=3):
     def _pypathlib_contains_points(pts):
         return path1.contains_points(pts)
 
-    numpy.random.seed(0)
+    np.random.seed(0)
 
     perfplot.show(
-        setup=lambda n: numpy.random.rand(n, 2),
+        setup=lambda n: np.random.rand(n, 2),
         kernels=[_mpl_path, _pypathlib_contains_points],
         n_range=[2 ** k for k in range(n)],
         labels=["matplotlib.path.contains_points", "pypathlib.contains_points"],
@@ -34,7 +34,7 @@ def test_speed(n=3):
 def benchmark():
     path_pts = [[0, 0], [0, 1], [1, 1], [1, 0]]
     path1 = pypathlib.ClosedPath(path_pts)
-    pts = numpy.random.rand(5000000, 2)
+    pts = np.random.rand(5000000, 2)
     path1.contains_points(pts)
 
 
