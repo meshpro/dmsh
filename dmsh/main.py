@@ -39,24 +39,27 @@ def _create_cells(pts, geo):
 def _recell_boundary_step(mesh, geo, flip_tol):
     # We could do a _create_cells() here, but inverted boundary cell removal plus Lawson
     # flips produce the same result and are much cheaper. This is because, most of the
-    # time, there are no cells to be removed and no edges to be flipped.  Because the
-    # rest of the algorithm is so cheap. The flip is still a fairly expensive operation.
-    # First kick out all boundary cells whose barycenters are not in the geometry.
+    # time, there are no cells to be removed and no edges to be flipped. (The flip is
+    # still a fairly expensive operation.)
     while True:
         idx = mesh.is_boundary_point
         points_new = mesh.points.copy()
         points_new[idx] = geo.boundary_step(points_new[idx].T).T
         mesh.points = points_new
         #
-        mesh.flip_until_delaunay(tol=flip_tol)
-        #
         num_removed_cells = mesh.remove_boundary_cells(
             lambda is_bdry_cell: mesh.compute_signed_cell_areas(is_bdry_cell)
             < 1.0e-10
         )
+        #
+        # The flip has to come right after the boundary cell removal to prevent
+        # "degenerate cell" errors.
+        mesh.flip_until_delaunay(tol=flip_tol)
+        #
         if num_removed_cells == 0:
             break
 
+    # Last kick out all boundary cells whose barycenters are not in the geometry.
     mesh.remove_boundary_cells(
         lambda is_bdry_cell: geo.dist(mesh.compute_centroids(is_bdry_cell).T) > 0.0
     )
