@@ -104,15 +104,13 @@ The following example uses a nonconstant edge length; it depends on the distance
 circle `c`.
 ```python
 import dmsh
-import numpy
+import numpy as np
 
 r = dmsh.Rectangle(-1.0, +1.0, -1.0, +1.0)
 c = dmsh.Circle([0.0, 0.0], 0.3)
 geo = dmsh.Difference(r, c)
 
-X, cells = dmsh.generate(
-    geo, lambda pts: numpy.abs(c.dist(pts)) / 5 + 0.05, tol=1.0e-10
-)
+X, cells = dmsh.generate(geo, lambda pts: np.abs(c.dist(pts)) / 5 + 0.05, tol=1.0e-10)
 ```
 
 ##### Union
@@ -136,14 +134,14 @@ X, cells = dmsh.generate(geo, 0.15)
 ```
 ```python
 import dmsh
-import numpy
+import numpy as np
 
-angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
+angles = np.pi * np.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
 geo = dmsh.Union(
     [
-        dmsh.Circle([numpy.cos(angles[0]), numpy.sin(angles[0])], 1.0),
-        dmsh.Circle([numpy.cos(angles[1]), numpy.sin(angles[1])], 1.0),
-        dmsh.Circle([numpy.cos(angles[2]), numpy.sin(angles[2])], 1.0),
+        dmsh.Circle([np.cos(angles[0]), np.sin(angles[0])], 1.0),
+        dmsh.Circle([np.cos(angles[1]), np.sin(angles[1])], 1.0),
+        dmsh.Circle([np.cos(angles[2]), np.sin(angles[2])], 1.0),
     ]
 )
 X, cells = dmsh.generate(geo, 0.15)
@@ -163,14 +161,14 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 
 ```python
 import dmsh
-import numpy
+import numpy as np
 
-angles = numpy.pi * numpy.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
+angles = np.pi * np.array([3.0 / 6.0, 7.0 / 6.0, 11.0 / 6.0])
 geo = dmsh.Intersection(
     [
-        dmsh.Circle([numpy.cos(angles[0]), numpy.sin(angles[0])], 1.5),
-        dmsh.Circle([numpy.cos(angles[1]), numpy.sin(angles[1])], 1.5),
-        dmsh.Circle([numpy.cos(angles[2]), numpy.sin(angles[2])], 1.5),
+        dmsh.Circle([np.cos(angles[0]), np.sin(angles[0])], 1.5),
+        dmsh.Circle([np.cos(angles[1]), np.sin(angles[1])], 1.5),
+        dmsh.Circle([np.cos(angles[2]), np.sin(angles[2])], 1.5),
     ]
 )
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
@@ -179,11 +177,11 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 The following uses the `HalfSpace` primtive for cutting off a circle.
 ```python
 import dmsh
-import numpy
+import numpy as np
 
 geo = dmsh.Intersection(
     [
-        dmsh.HalfSpace(numpy.sqrt(0.5) * numpy.array([1.0, 1.0]), 0.0),
+        dmsh.HalfSpace(np.sqrt(0.5) * np.array([1.0, 1.0]), 0.0),
         dmsh.Circle([0.0, 0.0], 1.0),
     ]
 )
@@ -197,9 +195,9 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ```python
 import dmsh
-import numpy
+import numpy as np
 
-geo = dmsh.Rotation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 0.1 * numpy.pi)
+geo = dmsh.Rotation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 0.1 * np.pi)
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 ```python
@@ -244,7 +242,7 @@ boundary.
 
 ```python
 import dmsh
-import numpy
+import numpy as np
 
 
 class MyDisk(dmsh.Geometry):
@@ -253,17 +251,17 @@ class MyDisk(dmsh.Geometry):
         self.r = 1.0
         self.x0 = [0.0, 0.0]
         self.bounding_box = [-1.0, 1.0, -1.0, 1.0]
-        self.feature_points = numpy.array([[], []]).T
+        self.feature_points = np.array([[], []]).T
 
     def dist(self, x):
         assert x.shape[0] == 2
         y = (x.T - self.x0).T
-        return numpy.sqrt(numpy.einsum("i...,i...->...", y, y)) - self.r
+        return np.sqrt(np.einsum("i...,i...->...", y, y)) - self.r
 
     def boundary_step(self, x):
         # project onto the circle
         y = (x.T - self.x0).T
-        r = numpy.sqrt(numpy.einsum("ij,ij->j", y, y))
+        r = np.sqrt(np.einsum("ij,ij->j", y, y))
         return ((y / r * self.r).T + self.x0).T
 
 
