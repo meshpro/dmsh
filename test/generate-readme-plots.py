@@ -7,7 +7,7 @@ import dmsh
 
 def save(X, cells, filename):
     meshio.Mesh(X, {"triangle": cells}).write(
-        filename, stroke="#969696", force_width=100, stroke_width=0.5
+        filename, image_width=100, stroke_width=0.5
     )
 
 
