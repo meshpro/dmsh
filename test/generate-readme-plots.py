@@ -7,7 +7,7 @@ import dmsh
 
 def save(X, cells, filename):
     meshio.Mesh(X, {"triangle": cells}).write(
-        filename, stroke="#969696", force_width=100, stroke_width=0.5
+        filename, image_width=100, stroke_width=0.5
     )
 
 
@@ -107,13 +107,8 @@ X, cells = dmsh.generate(geo, 0.1)
 save(X, cells, "intersection-circle-halfspace.svg")
 
 
-geo = dmsh.Intersection(
-    [
-        dmsh.HalfSpace(np.sqrt(0.5) * np.array([1.0, 1.0]), 0.0),
-        dmsh.Circle([0.0, 0.0], 1.0),
-    ]
-)
-X, cells = dmsh.generate(geo, 0.1)
+geo = dmsh.Rotation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 0.1 * np.pi)
+X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 save(X, cells, "rotation.svg")
 
 
