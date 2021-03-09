@@ -9,6 +9,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/dmsh.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/dmsh)
 [![PyPi downloads](https://img.shields.io/pypi/dm/dmsh.svg?style=flat-square)](https://pypistats.org/packages/dmsh)
 
+[![Discord](https://img.shields.io/static/v1?logo=discord&label=chat&message=on%20discord&color=7289da&style=flat-square)](https://discord.com/channels/818781969562599434/818781969562599438)
+
 [![gh-actions](https://img.shields.io/github/workflow/status/nschloe/dmsh/ci?style=flat-square)](https://github.com/nschloe/dmsh/actions?query=workflow%3Aci)
 [![codecov](https://img.shields.io/codecov/c/github/nschloe/dmsh.svg?style=flat-square)](https://codecov.io/gh/nschloe/dmsh)
 [![LGTM](https://img.shields.io/lgtm/grade/python/github/nschloe/dmsh.svg?style=flat-square)](https://lgtm.com/projects/g/nschloe/dmsh)
@@ -35,22 +37,20 @@ highest-quality 2D meshes in the west.
 
 ```python
 import dmsh
+import meshio
+import optimesh
 
 geo = dmsh.Circle([0.0, 0.0], 1.0)
 X, cells = dmsh.generate(geo, 0.1)
 
 # optionally optimize the mesh
-import optimesh
-
 X, cells = optimesh.optimize_points_cells(X, cells, "CVT (full)", 1.0e-10, 100)
 
 # visualize the mesh
 dmsh.helpers.show(X, cells, geo)
 
 # and write it to a file
-import meshio
-
-meshio.write_points_cells("circle.vtk", X, {"triangle": cells})
+meshio.Mesh(X, {"triangle": cells}).write("circle.vtk")
 ```
 
 ```python
