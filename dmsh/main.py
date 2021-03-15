@@ -60,7 +60,7 @@ def _recell_and_boundary_step(mesh, geo, flip_tol):
 
     # Last kick out all boundary cells whose barycenters are not in the geometry.
     mesh.remove_boundary_cells(
-        lambda is_bdry_cell: geo.dist(mesh.compute_centroids(is_bdry_cell).T) > 0.0
+        lambda is_bdry_cell: geo.dist(mesh.compute_cell_centroids(is_bdry_cell).T) > 0.0
     )
 
 
