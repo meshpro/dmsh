@@ -1,15 +1,6 @@
 import numpy as np
 
 
-def unique_rows(a):
-    # The cleaner alternative `np.unique(a, axis=0)` is slow; cf.
-    # <https://github.com/numpy/numpy/issues/11136>.
-    b = np.ascontiguousarray(a).view(np.dtype((np.void, a.dtype.itemsize * a.shape[1])))
-    a_unique, inv, cts = np.unique(b, return_inverse=True, return_counts=True)
-    a_unique = a_unique.view(a.dtype).reshape(-1, a.shape[1])
-    return a_unique, inv, cts
-
-
 def multi_newton(x0, is_inside, boundary_step, tol, max_num_steps=10):
     """Newton's minimization method for multiple starting points."""
     x = x0.copy()

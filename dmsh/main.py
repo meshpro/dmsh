@@ -6,8 +6,6 @@ import scipy.spatial
 
 from .helpers import show as show_mesh
 
-# from .helpers import unique_rows
-
 
 def _create_cells(pts, geo):
     # compute Delaunay triangulation

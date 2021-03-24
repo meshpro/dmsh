@@ -31,7 +31,9 @@ def test_circle(radius, ref_norms, show=False):
 )
 def test_degenerate_circle(target_edge_length):
     geo = dmsh.Circle([0.0, 0.0], 1.0)
-    X, cells = dmsh.generate(geo, target_edge_length, show=False, max_steps=200)
+    X, cells = dmsh.generate(
+        geo, target_edge_length, show=False, max_steps=200, verbose=True
+    )
 
     mesh = meshplex.MeshTri(X, cells)
     min_q = np.min(mesh.q_radius_ratio)
