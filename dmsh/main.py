@@ -113,7 +113,7 @@ def create_staggered_grid(h, bounding_box):
 #     # <https://stackoverflow.com/a/57261082/353337>
 #     max_step = np.full(mesh.points.shape[0], np.inf)
 #     np.minimum.at(
-#         max_step, mesh.cells["points"].reshape(-1), np.repeat(mesh.cell_inradius, 3),
+#         max_step, mesh.cells("points").reshape(-1), np.repeat(mesh.cell_inradius, 3),
 #     )
 #     max_step *= 0.5
 #     return max_step
@@ -189,7 +189,7 @@ def generate(
     # if smoothing_method == "odt":
     #     points, cells = optimesh.odt.fixed_point_uniform(
     #         mesh.points,
-    #         mesh.cells["points"],
+    #         mesh.cells("points"),
     #         max_num_steps=max_steps,
     #         verbose=verbose,
     #         boundary_step=geo.boundary_step,
@@ -211,7 +211,7 @@ def generate(
         flip_tol=flip_tol,
     )
     points = mesh.points
-    cells = mesh.cells["points"]
+    cells = mesh.cells("points")
 
     return points, cells
 
@@ -248,7 +248,7 @@ def distmesh_smoothing(
 
         if show:
             print(f"max move: {math.sqrt(max(move2)):.3e}")
-            show_mesh(mesh.points, mesh.cells["points"], geo)
+            show_mesh(mesh.points, mesh.cells("points"), geo)
 
         edges = mesh.edges["points"]
 

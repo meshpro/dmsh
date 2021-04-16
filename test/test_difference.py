@@ -70,6 +70,6 @@ def test_boundary_step_pacman():
 
 if __name__ == "__main__":
     # from helpers import save
-    # X, cells = test_difference(show=True)
+    X, cells = test_difference(show=True)
     # save("difference.png", X, cells)
-    test_boundary_step_pacman()
+    # test_boundary_step_pacman()
