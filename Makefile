@@ -1,4 +1,5 @@
 VERSION=$(shell python3 -c "from configparser import ConfigParser; p = ConfigParser(); p.read('setup.cfg'); print(p['metadata']['version'])")
+# VERSION=$(shell python3 -c 'import setuptools; print(setuptools.config.read_configuration("setup.cfg")["metadata"]["version"])')
 
 default:
 	@echo "\"make publish\"?"
