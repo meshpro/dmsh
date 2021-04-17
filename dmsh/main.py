@@ -315,7 +315,7 @@ def distmesh_smoothing(
         diff = points_new - points_old
         move2 = np.einsum("ij,ij->i", diff, diff)
         if verbose:
-            print("max_move: {:.6e}".format(np.sqrt(np.max(move2))))
+            print(f"max_move: {np.sqrt(np.max(move2)):.6e}")
         if np.all(move2 < tol ** 2):
             break
 
