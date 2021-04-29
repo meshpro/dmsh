@@ -6,6 +6,7 @@
 [![PyPi Version](https://img.shields.io/pypi/v/dmsh.svg?style=flat-square)](https://pypi.org/project/dmsh/)
 [![Packaging status](https://repology.org/badge/tiny-repos/python:dmsh.svg)](https://repology.org/project/python:dmsh/versions)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/dmsh.svg?style=flat-square)](https://pypi.org/project/dmsh/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4728039.svg?style=flat-square)](https://doi.org/10.5281/zenodo.4728039)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/dmsh.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/dmsh)
 [![PyPi downloads](https://img.shields.io/pypi/dm/dmsh.svg?style=flat-square)](https://pypistats.org/packages/dmsh)
 
