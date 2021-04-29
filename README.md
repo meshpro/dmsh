@@ -3,16 +3,16 @@
   <p align="center">The worst mesh generator you'll ever use.</p>
 </p>
 
-[![PyPi Version](https://img.shields.io/pypi/v/dmsh.svg?style=flat-square)](https://pypi.org/project/dmsh)
+[![PyPi Version](https://img.shields.io/pypi/v/dmsh.svg?style=flat-square)](https://pypi.org/project/dmsh/)
 [![Packaging status](https://repology.org/badge/tiny-repos/python:dmsh.svg)](https://repology.org/project/python:dmsh/versions)
-[![PyPI pyversions](https://img.shields.io/pypi/pyversions/dmsh.svg?style=flat-square)](https://pypi.org/pypi/dmsh/)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/dmsh.svg?style=flat-square)](https://pypi.org/project/dmsh/)
 [![GitHub stars](https://img.shields.io/github/stars/nschloe/dmsh.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/nschloe/dmsh)
 [![PyPi downloads](https://img.shields.io/pypi/dm/dmsh.svg?style=flat-square)](https://pypistats.org/packages/dmsh)
 
 [![Discord](https://img.shields.io/static/v1?logo=discord&label=chat&message=on%20discord&color=7289da&style=flat-square)](https://discord.gg/PBCCvwHqpv)
 
 [![gh-actions](https://img.shields.io/github/workflow/status/nschloe/dmsh/ci?style=flat-square)](https://github.com/nschloe/dmsh/actions?query=workflow%3Aci)
-[![codecov](https://img.shields.io/codecov/c/github/nschloe/dmsh.svg?style=flat-square)](https://codecov.io/gh/nschloe/dmsh)
+[![codecov](https://img.shields.io/codecov/c/github/nschloe/dmsh.svg?style=flat-square)](https://app.codecov.io/gh/nschloe/dmsh)
 [![LGTM](https://img.shields.io/lgtm/grade/python/github/nschloe/dmsh.svg?style=flat-square)](https://lgtm.com/projects/g/nschloe/dmsh)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 
