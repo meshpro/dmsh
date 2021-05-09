@@ -294,12 +294,11 @@ pip install dmsh
 to install.
 
 ### Testing
-
 To run the dmsh unit tests, check out this repository and type
 ```
-MPLBACKEND=Agg pytest
+tox
 ```
-(Setting the environment variable prevents the test figures from being displayed.)
 
 ### License
-This software is published under the [MIT license](https://en.wikipedia.org/wiki/MIT_License).
+This software is published under the [MIT
+license](https://en.wikipedia.org/wiki/MIT_License).
