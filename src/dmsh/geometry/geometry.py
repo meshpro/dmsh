@@ -53,7 +53,12 @@ class Geometry:
     def __add__(self, obj):
         if isinstance(obj, Geometry):
             return Union([self, obj])
-        return Stretch(self, obj)
+        return Translation(self, obj)
+
+    def __sub__(self, obj):
+        if isinstance(obj, Geometry):
+            return Difference(self, obj)
+        return Translation(self, -obj)
 
     def __or__(self, obj):
         return Union([self, obj])
@@ -148,3 +153,79 @@ class Stretch(Geometry):
         y2 = self.geometry.boundary_step(y.T)
         vy2 = np.multiply.outer(np.dot(self.v, y2), self.v)
         return (vy2 * self.alpha + (y2.T - vy2)).T
+
+
+class Difference(Geometry):
+    def __init__(self, geo0, geo1):
+        super().__init__()
+        self.geo0 = geo0
+        self.geo1 = geo1
+        self.bounding_box = geo0.bounding_box
+
+        fp = [geo0.feature_points, geo1.feature_points]
+        fp.append(find_feature_points([geo0, geo1]))
+        self.feature_points = np.concatenate(fp)
+
+        # Only keep the feature points on the outer boundary
+        alpha = self.dist(self.feature_points.T)
+        tol = 1.0e-5
+        is_on_boundary = (-tol < alpha) & (alpha < tol)
+        self.feature_points = self.feature_points[is_on_boundary]
+
+        self.paths = [path for geo in [geo0, geo1] for path in geo.paths]
+
+    def dist(self, x):
+        return np.max([self.geo0.dist(x), -self.geo1.dist(x)], axis=0)
+
+    # Choose tolerance above sqrt(machine_eps). This is necessary as the polygon
+    # dist() is only accurate to that precision.
+    def boundary_step(self, x, tol=1.0e-12, max_steps=100):
+        # Scale the tolerance with the domain diameter. This is necessary at least for
+        # polygons where the distance calculation is flawed with round-off proportional
+        # to the edge lengths.
+        try:
+            tol *= self.geo0.diameter
+        except AttributeError:
+            pass
+
+        alpha = np.array([self.geo0.dist(x), -self.geo1.dist(x)])
+        mask = np.any(alpha > tol, axis=0) | np.all(alpha < -tol, axis=0)
+
+        step = 0
+        while np.any(mask):
+            assert step <= max_steps, "Exceeded maximum number of boundary steps."
+            step += 1
+
+            x_tmp = x[:, mask]
+            idx = np.argmax(alpha[:, mask], axis=0)
+            if np.any(idx == 0):
+                x_tmp[:, idx == 0] = self.geo0.boundary_step(x_tmp[:, idx == 0])
+            if np.any(idx == 1):
+                x_tmp[:, idx == 1] = self.geo1.boundary_step(x_tmp[:, idx == 1])
+            x[:, mask] = x_tmp
+
+            alpha = np.array([self.geo0.dist(x), -self.geo1.dist(x)])
+            mask = np.any(alpha > tol, axis=0) | np.all(alpha < -tol, axis=0)
+        return x
+
+
+class Translation(Geometry):
+    def __init__(self, geometry, v):
+        super().__init__()
+        self.geometry = geometry
+        self.v = v
+
+        self.bounding_box = [
+            geometry.bounding_box[0] + v[0],
+            geometry.bounding_box[1] + v[0],
+            geometry.bounding_box[2] + v[1],
+            geometry.bounding_box[3] + v[1],
+        ]
+        self.feature_points = np.array([])
+        return
+
+    def dist(self, x):
+        return self.geometry.dist((x.T - self.v).T)
+
+    def boundary_step(self, x):
+        return (self.geometry.boundary_step((x.T - self.v).T).T + self.v).T

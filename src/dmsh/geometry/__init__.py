@@ -1,7 +1,6 @@
 from .circle import Circle
-from .difference import Difference
 from .ellipse import Ellipse
-from .geometry import Geometry
+from .geometry import Difference, Geometry, Stretch, Translation, Union
 from .halfspace import HalfSpace
 from .intersection import Intersection
 from .path import Path
@@ -9,9 +8,6 @@ from .polygon import Polygon
 from .rectangle import Rectangle
 from .rotation import Rotation
 from .scaling import Scaling
-from .geometry import Stretch
-from .translation import Translation
-from .geometry import Union
 
 __all__ = [
     "Circle",

@@ -88,16 +88,13 @@ X, cells = dmsh.generate(geo, 0.1)
 ```python
 import dmsh
 
-geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
+geo = dmsh.Circle([-0.5, 0.0], 1.0) - dmsh.Circle([+0.5, 0.0], 1.0)
 X, cells = dmsh.generate(geo, 0.1)
 ```
 ```python
 import dmsh
 
-geo = dmsh.Difference(
-    dmsh.Circle([0.0, 0.0], 1.0),
-    dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
-)
+geo = dmsh.Circle([0.0, 0.0], 1.0) - dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]])
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 
@@ -109,7 +106,7 @@ import numpy as np
 
 r = dmsh.Rectangle(-1.0, +1.0, -1.0, +1.0)
 c = dmsh.Circle([0.0, 0.0], 0.3)
-geo = dmsh.Difference(r, c)
+geo = r - c
 
 X, cells = dmsh.generate(geo, lambda pts: np.abs(c.dist(pts)) / 5 + 0.05, tol=1.0e-10)
 ```
