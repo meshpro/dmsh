@@ -9,9 +9,9 @@ from .polygon import Polygon
 from .rectangle import Rectangle
 from .rotation import Rotation
 from .scaling import Scaling
-from .stretch import Stretch
+from .geometry import Stretch
 from .translation import Translation
-from .union import Union
+from .geometry import Union
 
 __all__ = [
     "Circle",

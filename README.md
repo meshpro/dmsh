@@ -122,15 +122,13 @@ X, cells = dmsh.generate(geo, lambda pts: np.abs(c.dist(pts)) / 5 + 0.05, tol=1.
 ```python
 import dmsh
 
-geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
+geo = dmsh.Circle([-0.5, 0.0], 1.0) + dmsh.Circle([+0.5, 0.0], 1.0)
 X, cells = dmsh.generate(geo, 0.15)
 ```
 ```python
 import dmsh
 
-geo = dmsh.Union(
-    [dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5), dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)]
-)
+geo = dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5) + dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)
 X, cells = dmsh.generate(geo, 0.15)
 ```
 ```python
