@@ -55,6 +55,9 @@ class Geometry:
             return Union([self, obj])
         return Translation(self, obj)
 
+    def __radd__(self, obj):
+        return self.__add__(obj)
+
     def __sub__(self, obj):
         if isinstance(obj, Geometry):
             return Difference(self, obj)
@@ -65,6 +68,12 @@ class Geometry:
 
     def __or__(self, obj):
         return Union([self, obj])
+
+    def __mul__(self, alpha: float):
+        return Scaling(self, alpha)
+
+    def __rmul__(self, alpha: float):
+        return self.__mul__(alpha)
 
 
 class Union(Geometry):
@@ -285,3 +294,18 @@ class Intersection(Geometry):
 
             alpha = np.array([geo.dist(x) for geo in self.geometries])
         return x
+
+
+class Scaling(Geometry):
+    def __init__(self, geometry: Geometry, alpha: float):
+        super().__init__()
+        self.geometry = geometry
+        self.alpha = alpha
+        self.bounding_box = alpha * np.array(geometry.bounding_box)
+        self.feature_points = np.array([])
+
+    def dist(self, x):
+        return self.geometry.dist(x / self.alpha)
+
+    def boundary_step(self, x):
+        return self.geometry.boundary_step(x / self.alpha) * self.alpha
