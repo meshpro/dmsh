@@ -1,8 +1,7 @@
 from .circle import Circle
 from .ellipse import Ellipse
-from .geometry import Difference, Geometry, Stretch, Translation, Union
+from .geometry import Difference, Geometry, Intersection, Stretch, Translation, Union
 from .halfspace import HalfSpace
-from .intersection import Intersection
 from .path import Path
 from .polygon import Polygon
 from .rectangle import Rectangle

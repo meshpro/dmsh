@@ -5,9 +5,7 @@ import dmsh
 
 
 def test_intersection(show=False):
-    geo = dmsh.Intersection(
-        [dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)]
-    )
+    geo = dmsh.Circle([0.0, -0.5], 1.0) & dmsh.Circle([0.0, +0.5], 1.0)
     X, cells = dmsh.generate(geo, 0.1, show=show, tol=1.0e-10, max_steps=100)
 
     geo.plot()
@@ -34,9 +32,8 @@ def test_intersection_circles(show=False):
 
 
 def test_boundary_step():
-    geo = dmsh.Intersection(
-        [dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)]
-    )
+    geo = dmsh.Circle([0.0, -0.5], 1.0) & dmsh.Circle([0.0, +0.5], 1.0)
+
     pts = np.array([[0.0, -5.0], [0.0, 4.1]])
     pts = geo.boundary_step(pts.T).T
     ref = np.array([[0.0, -0.5], [0.0, 0.5]])
@@ -49,9 +46,8 @@ def test_boundary_step():
 
 
 def test_boundary_step2():
-    geo = dmsh.Intersection(
-        [dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)]
-    )
+    geo = dmsh.Circle([0.0, -0.5], 1.0) & dmsh.Circle([0.0, +0.5], 1.0)
+
     np.random.seed(0)
     pts = np.random.uniform(-1.0, 1.0, (2, 100))
     pts = geo.boundary_step(pts)

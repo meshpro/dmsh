@@ -151,7 +151,7 @@ X, cells = dmsh.generate(geo, 0.15)
 ```python
 import dmsh
 
-geo = dmsh.Intersection([dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)])
+geo = dmsh.Circle([0.0, -0.5], 1.0) & dmsh.Circle([0.0, +0.5], 1.0)
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 
@@ -175,11 +175,8 @@ The following uses the `HalfSpace` primtive for cutting off a circle.
 import dmsh
 import numpy as np
 
-geo = dmsh.Intersection(
-    [
-        dmsh.HalfSpace(np.sqrt(0.5) * np.array([1.0, 1.0]), 0.0),
-        dmsh.Circle([0.0, 0.0], 1.0),
-    ]
+geo = dmsh.HalfSpace(np.sqrt(0.5) * np.array([1.0, 1.0]), 0.0) & dmsh.Circle(
+    [0.0, 0.0], 1.0
 )
 X, cells = dmsh.generate(geo, 0.1)
 ```
@@ -199,7 +196,7 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```python
 import dmsh
 
-geo = dmsh.Translation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), [1.0, 1.0])
+geo = dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0) + [1.0, 1.0]
 X, cells = dmsh.generate(geo, 0.1)
 ```
 ```python
