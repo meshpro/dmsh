@@ -88,16 +88,13 @@ X, cells = dmsh.generate(geo, 0.1)
 ```python
 import dmsh
 
-geo = dmsh.Difference(dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0))
+geo = dmsh.Circle([-0.5, 0.0], 1.0) - dmsh.Circle([+0.5, 0.0], 1.0)
 X, cells = dmsh.generate(geo, 0.1)
 ```
 ```python
 import dmsh
 
-geo = dmsh.Difference(
-    dmsh.Circle([0.0, 0.0], 1.0),
-    dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]]),
-)
+geo = dmsh.Circle([0.0, 0.0], 1.0) - dmsh.Polygon([[0.0, 0.0], [1.5, 0.4], [1.5, -0.4]])
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 
@@ -109,7 +106,7 @@ import numpy as np
 
 r = dmsh.Rectangle(-1.0, +1.0, -1.0, +1.0)
 c = dmsh.Circle([0.0, 0.0], 0.3)
-geo = dmsh.Difference(r, c)
+geo = r - c
 
 X, cells = dmsh.generate(geo, lambda pts: np.abs(c.dist(pts)) / 5 + 0.05, tol=1.0e-10)
 ```
@@ -122,15 +119,13 @@ X, cells = dmsh.generate(geo, lambda pts: np.abs(c.dist(pts)) / 5 + 0.05, tol=1.
 ```python
 import dmsh
 
-geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
+geo = dmsh.Circle([-0.5, 0.0], 1.0) + dmsh.Circle([+0.5, 0.0], 1.0)
 X, cells = dmsh.generate(geo, 0.15)
 ```
 ```python
 import dmsh
 
-geo = dmsh.Union(
-    [dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5), dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)]
-)
+geo = dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5) + dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)
 X, cells = dmsh.generate(geo, 0.15)
 ```
 ```python
@@ -156,7 +151,7 @@ X, cells = dmsh.generate(geo, 0.15)
 ```python
 import dmsh
 
-geo = dmsh.Intersection([dmsh.Circle([0.0, -0.5], 1.0), dmsh.Circle([0.0, +0.5], 1.0)])
+geo = dmsh.Circle([0.0, -0.5], 1.0) & dmsh.Circle([0.0, +0.5], 1.0)
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 
@@ -178,14 +173,8 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 The following uses the `HalfSpace` primtive for cutting off a circle.
 ```python
 import dmsh
-import numpy as np
 
-geo = dmsh.Intersection(
-    [
-        dmsh.HalfSpace(np.sqrt(0.5) * np.array([1.0, 1.0]), 0.0),
-        dmsh.Circle([0.0, 0.0], 1.0),
-    ]
-)
+geo = dmsh.HalfSpace([1.0, 1.0]) & dmsh.Circle([0.0, 0.0], 1.0)
 X, cells = dmsh.generate(geo, 0.1)
 ```
 
@@ -204,13 +193,13 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```python
 import dmsh
 
-geo = dmsh.Translation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), [1.0, 1.0])
+geo = dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0) + [1.0, 1.0]
 X, cells = dmsh.generate(geo, 0.1)
 ```
 ```python
 import dmsh
 
-geo = dmsh.Scaling(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 2.0)
+geo = dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0) * 2.0
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-5)
 ```
 

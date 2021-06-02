@@ -5,7 +5,7 @@ import dmsh
 
 
 def test_union_circles(show=False):
-    geo = dmsh.Union([dmsh.Circle([-0.5, 0.0], 1.0), dmsh.Circle([+0.5, 0.0], 1.0)])
+    geo = dmsh.Circle([-0.5, 0.0], 1.0) + dmsh.Circle([+0.5, 0.0], 1.0)
     X, cells = dmsh.generate(geo, 0.15, show=show, tol=1.0e-5, max_steps=100)
 
     geo.plot()
@@ -16,8 +16,8 @@ def test_union_circles(show=False):
 
 
 def test_union_rectangles(show=False):
-    geo = dmsh.Union(
-        [dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5), dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)]
+    geo = dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5) | dmsh.Rectangle(
+        -0.5, +1.0, -0.5, +1.0
     )
     X, cells = dmsh.generate(geo, 0.15, show=show, tol=1.0e-5, max_steps=100)
 
