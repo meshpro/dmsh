@@ -75,6 +75,9 @@ class Geometry:
     def __rmul__(self, alpha: float):
         return self.__mul__(alpha)
 
+    def stretch(self, obj):
+        return Stretch(self, obj)
+
 
 class Union(Geometry):
     def __init__(self, geometries):
