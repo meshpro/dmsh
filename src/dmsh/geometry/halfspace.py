@@ -25,7 +25,7 @@ class LinePath:
 
 
 class HalfSpace(Geometry):
-    def __init__(self, normal, alpha):
+    def __init__(self, normal, alpha=0.0):
         super().__init__()
         self.normal = normal
         self.alpha = alpha

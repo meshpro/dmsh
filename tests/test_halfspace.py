@@ -7,7 +7,7 @@ import dmsh
 def test_halfspace(show=False):
     geo = dmsh.Intersection(
         [
-            dmsh.HalfSpace(np.sqrt(0.5) * np.array([1.0, 1.0]), 0.0),
+            dmsh.HalfSpace(np.sqrt(0.5) * np.array([1.0, 1.0])),
             dmsh.Circle([0.0, 0.0], 1.0),
         ]
     )

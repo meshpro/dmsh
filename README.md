@@ -173,11 +173,8 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 The following uses the `HalfSpace` primtive for cutting off a circle.
 ```python
 import dmsh
-import numpy as np
 
-geo = dmsh.HalfSpace(np.sqrt(0.5) * np.array([1.0, 1.0]), 0.0) & dmsh.Circle(
-    [0.0, 0.0], 1.0
-)
+geo = dmsh.HalfSpace([1.0, 1.0]) & dmsh.Circle([0.0, 0.0], 1.0)
 X, cells = dmsh.generate(geo, 0.1)
 ```
 
