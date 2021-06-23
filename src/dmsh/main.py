@@ -1,4 +1,5 @@
 import math
+from typing import Callable, Union
 
 import meshplex
 import numpy as np
@@ -122,7 +123,7 @@ def create_staggered_grid(h, bounding_box):
 
 def generate(
     geo,
-    edge_size,  # float or function that returns float
+    target_edge_size: Union[float, Callable],
     # smoothing_method="distmesh",
     tol: float = 1.0e-5,
     random_seed: int = 0,
@@ -132,8 +133,8 @@ def generate(
     flip_tol: float = 0.0,
 ):
     # Find h0 from edge_size (function)
-    if callable(edge_size):
-        edge_size_function = edge_size
+    if callable(target_edge_size):
+        edge_size_function = target_edge_size
         # Find h0 by sampling
         h00 = (geo.bounding_box[1] - geo.bounding_box[0]) / 100
         pts = create_staggered_grid(h00, geo.bounding_box)
@@ -141,10 +142,10 @@ def generate(
         assert np.all(sizes > 0.0), "edge_size_function must be strictly positive."
         h0 = np.min(sizes)
     else:
-        h0 = edge_size
+        h0 = target_edge_size
 
         def edge_size_function(pts):
-            return np.full(pts.shape[1], edge_size)
+            return np.full(pts.shape[1], target_edge_size)
 
     if random_seed is not None:
         np.random.seed(random_seed)

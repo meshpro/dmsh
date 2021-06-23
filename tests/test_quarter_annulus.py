@@ -15,7 +15,7 @@ def test_quarter_annulus():
 
     points, cells = dmsh.generate(
         quarter,
-        edge_size=lambda x: h + 0.1 * np.abs(disk0.dist(x)),
+        lambda x: h + 0.1 * np.abs(disk0.dist(x)),
         tol=1.0e-10,
         max_steps=100,
     )
