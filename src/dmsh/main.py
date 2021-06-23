@@ -132,23 +132,24 @@ def generate(
     verbose: bool = False,
     flip_tol: float = 0.0,
 ):
+    target_edge_size_function = (
+        target_edge_size
+        if callable(target_edge_size)
+        else lambda pts: np.full(pts.shape[1], target_edge_size)
+    )
+
     # Find h0 from edge_size (function)
     if callable(target_edge_size):
-        edge_size_function = target_edge_size
         # Find h0 by sampling
         h00 = (geo.bounding_box[1] - geo.bounding_box[0]) / 100
         pts = create_staggered_grid(h00, geo.bounding_box)
-        sizes = edge_size_function(pts.T)
-        assert np.all(sizes > 0.0), "edge_size_function must be strictly positive."
+        sizes = target_edge_size_function(pts.T)
+        assert np.all(
+            sizes > 0.0
+        ), "target_edge_size_function must be strictly positive."
         h0 = np.min(sizes)
     else:
         h0 = target_edge_size
-
-        def edge_size_function(pts):
-            return np.full(pts.shape[1], target_edge_size)
-
-    if random_seed is not None:
-        np.random.seed(random_seed)
 
     pts = create_staggered_grid(h0, geo.bounding_box)
 
@@ -158,7 +159,9 @@ def generate(
     pts = pts[geo.dist(pts.T) < eps]
 
     # evaluate the element size function, remove points according to it
-    alpha = 1.0 / edge_size_function(pts.T) ** 2
+    alpha = 1.0 / target_edge_size_function(pts.T) ** 2
+    if random_seed is not None:
+        np.random.seed(random_seed)
     pts = pts[np.random.rand(pts.shape[0]) < alpha / np.max(alpha)]
 
     num_feature_points = len(geo.feature_points)
@@ -203,7 +206,7 @@ def generate(
         mesh,
         geo,
         num_feature_points,
-        edge_size_function,
+        target_edge_size_function,
         max_steps,
         tol,
         verbose,
@@ -222,7 +225,7 @@ def distmesh_smoothing(
     mesh,
     geo,
     num_feature_points,
-    edge_size_function,
+    target_edge_size_function,
     max_steps,
     tol,
     verbose,
@@ -260,7 +263,7 @@ def distmesh_smoothing(
 
         # Evaluate element sizes at edge midpoints
         edge_midpoints = (mesh.points[edges[:, 1]] + mesh.points[edges[:, 0]]) / 2
-        p = edge_size_function(edge_midpoints.T)
+        p = target_edge_size_function(edge_midpoints.T)
         desired_lengths = (
             f_scale * p * np.sqrt(np.dot(edge_lengths, edge_lengths) / np.dot(p, p))
         )
