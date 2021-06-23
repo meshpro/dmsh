@@ -17,7 +17,7 @@ def test(show=False):
         max_steps=100,
     )
 
-    ref_norms = [2.48e02, 1.200e01, 1.0]
+    ref_norms = [2.3686099753024831e02, 1.1750558136202198e01, 1.0000000000000000e00]
     assert_norm_equality(X.flatten(), ref_norms, 1.0e-2)
     return X, cells
 
