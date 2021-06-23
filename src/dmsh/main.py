@@ -1,5 +1,4 @@
 import math
-from typing import Callable, Union
 
 import meshplex
 import numpy as np
@@ -123,7 +122,7 @@ def create_staggered_grid(h, bounding_box):
 
 def generate(
     geo,
-    target_edge_size: Union[float, Callable],
+    edge_size,  # float or function that returns float
     # smoothing_method="distmesh",
     tol: float = 1.0e-5,
     random_seed: int = 0,
@@ -132,22 +131,23 @@ def generate(
     verbose: bool = False,
     flip_tol: float = 0.0,
 ):
-    target_edge_size_function = (
-        target_edge_size
-        if callable(target_edge_size)
-        else lambda pts: np.full(pts.shape[1], target_edge_size)
-    )
-
     # Find h0 from edge_size (function)
-    if callable(target_edge_size):
+    if callable(edge_size):
+        edge_size_function = edge_size
         # Find h0 by sampling
         h00 = (geo.bounding_box[1] - geo.bounding_box[0]) / 100
         pts = create_staggered_grid(h00, geo.bounding_box)
-        sizes = target_edge_size_function(pts.T)
+        sizes = edge_size_function(pts.T)
         assert np.all(sizes > 0.0), "edge_size_function must be strictly positive."
         h0 = np.min(sizes)
     else:
-        h0 = target_edge_size
+        h0 = edge_size
+
+        def edge_size_function(pts):
+            return np.full(pts.shape[1], edge_size)
+
+    if random_seed is not None:
+        np.random.seed(random_seed)
 
     pts = create_staggered_grid(h0, geo.bounding_box)
 
@@ -157,10 +157,8 @@ def generate(
     pts = pts[geo.dist(pts.T) < eps]
 
     # evaluate the element size function, remove points according to it
-    alpha = 1.0 / target_edge_size_function(pts.T) ** 2
-    #
-    rng = np.random.default_rng(seed=random_seed)
-    pts = pts[rng.random(pts.shape[0]) < alpha / np.max(alpha)]
+    alpha = 1.0 / edge_size_function(pts.T) ** 2
+    pts = pts[np.random.rand(pts.shape[0]) < alpha / np.max(alpha)]
 
     num_feature_points = len(geo.feature_points)
     if num_feature_points > 0:
@@ -204,7 +202,7 @@ def generate(
         mesh,
         geo,
         num_feature_points,
-        target_edge_size_function,
+        edge_size_function,
         max_steps,
         tol,
         verbose,
@@ -223,7 +221,7 @@ def distmesh_smoothing(
     mesh,
     geo,
     num_feature_points,
-    target_edge_size_function,
+    edge_size_function,
     max_steps,
     tol,
     verbose,
@@ -261,12 +259,12 @@ def distmesh_smoothing(
 
         # Evaluate element sizes at edge midpoints
         edge_midpoints = (mesh.points[edges[:, 1]] + mesh.points[edges[:, 0]]) / 2
-        p = target_edge_size_function(edge_midpoints.T)
-        target_lengths = (
+        p = edge_size_function(edge_midpoints.T)
+        desired_lengths = (
             f_scale * p * np.sqrt(np.dot(edge_lengths, edge_lengths) / np.dot(p, p))
         )
 
-        force_abs = target_lengths - edge_lengths
+        force_abs = desired_lengths - edge_lengths
         # only consider repulsive forces
         force_abs[force_abs < 0.0] = 0.0
 

@@ -23,7 +23,7 @@ def show(pts, cells, geo, title=None, full_screen=True):
     import matplotlib.pyplot as plt
 
     eps = 1.0e-10
-    # highlight outside points in C3, and points which aren't part of any cell in C4
+    # hightlight outside points in C3, and points which aren't part of any cell in C4
     is_part_of_cell = np.zeros(len(pts), dtype=bool)
     is_part_of_cell[cells.flat] = True
 
