@@ -160,9 +160,8 @@ def generate(
 
     # evaluate the element size function, remove points according to it
     alpha = 1.0 / target_edge_size_function(pts.T) ** 2
-    if random_seed is not None:
-        np.random.seed(random_seed)
-    pts = pts[np.random.rand(pts.shape[0]) < alpha / np.max(alpha)]
+    rng = np.random.default_rng(random_seed)
+    pts = pts[rng.random(pts.shape[0]) < alpha / np.max(alpha)]
 
     num_feature_points = len(geo.feature_points)
     if num_feature_points > 0:

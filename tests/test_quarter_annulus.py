@@ -20,7 +20,7 @@ def test_quarter_annulus():
         max_steps=100,
     )
 
-    ref_norms = [8.0232179592990462e01, 6.6832464479565372e00, 1.0000000000000000e00]
+    ref_norms = [7.7455372708027483e01, 6.5770003813066431e00, 1.0000000000000000e00]
     assert_norm_equality(points.flatten(), ref_norms, 1.0e-10)
     return points, cells
 
