@@ -263,11 +263,11 @@ def distmesh_smoothing(
         # Evaluate element sizes at edge midpoints
         edge_midpoints = (mesh.points[edges[:, 1]] + mesh.points[edges[:, 0]]) / 2
         p = target_edge_size_function(edge_midpoints.T)
-        desired_lengths = (
+        target_lengths = (
             f_scale * p * np.sqrt(np.dot(edge_lengths, edge_lengths) / np.dot(p, p))
         )
 
-        force_abs = desired_lengths - edge_lengths
+        force_abs = target_lengths - edge_lengths
         # only consider repulsive forces
         force_abs[force_abs < 0.0] = 0.0
 
