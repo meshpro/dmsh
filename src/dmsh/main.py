@@ -2,6 +2,7 @@ import math
 from typing import Callable, Union
 
 import meshplex
+import npx
 import numpy as np
 import scipy.spatial
 
@@ -291,17 +292,10 @@ def distmesh_smoothing(
         # force vectors
         force = edges_vec_normalized * force_abs[..., None]
 
-        # bincount replacement for the slow np.add.at
-        # more speed-up can be achieved if the weights were contiguous in memory, i.e.,
-        # if force[k] was used
         n = mesh.points.shape[0]
-        force_per_point = np.array(
-            [
-                np.bincount(edges[:, 0], weights=-force[:, k], minlength=n)
-                + np.bincount(edges[:, 1], weights=+force[:, k], minlength=n)
-                for k in range(force.shape[1])
-            ]
-        ).T
+        force_per_point = npx.sum_at(-force, edges[:, 0], minlength=n) + npx.sum_at(
+            +force, edges[:, 1], minlength=n
+        )
 
         update = delta_t * force_per_point
 
