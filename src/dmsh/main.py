@@ -277,7 +277,7 @@ def distmesh_smoothing(
         # In <https://github.com/nschloe/dmsh/issues/85>, there's a suggestion for a
         # better forcing function. The below doesn't seem to work too well though.
         #
-        # Need to set delta_t to 1.0e-2 or smaller to accomodate for the missing factor
+        # Need to set delta_t to 1.0e-2 or smaller to accommodate for the missing factor
         # `target_lengths`.
         # force_type = "persson"
         # relative_length = edge_lengths / target_lengths

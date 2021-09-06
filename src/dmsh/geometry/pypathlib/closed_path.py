@@ -21,7 +21,7 @@ class ClosedPath(Path):
         return
 
     def signed_squared_distance(self, x):
-        """Negative inside the polgon."""
+        """Negative inside the polygon."""
         x = np.array(x)
         assert x.shape[1] == 2
         t, dist2, idx = self._all_distances(x)
@@ -30,7 +30,7 @@ class ClosedPath(Path):
         return dist2
 
     def signed_distance(self, x):
-        """Negative inside the polgon."""
+        """Negative inside the polygon."""
         x = np.array(x)
         assert x.shape[1] == 2
         t, dist2, idx = self._all_distances(x)
