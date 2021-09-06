@@ -24,7 +24,7 @@ def test(show=False):
     return X, cells
 
 
-def test_boundary_step2():
+def test_boundary_step2(plot=False):
     geo = dmsh.Polygon(
         [
             [0.0, 0.0],
@@ -39,11 +39,12 @@ def test_boundary_step2():
     np.random.seed(0)
     pts = np.random.uniform(-2.0, 2.0, (2, 100))
     pts = geo.boundary_step(pts)
-    # geo.plot()
-    # import matplotlib.pyplot as plt
-    # plt.plot(pts[0], pts[1], "xk")
-    # plt.show()
-    # print(geo.dist(pts).shape)
+    if plot:
+        geo.plot()
+        import matplotlib.pyplot as plt
+
+        plt.plot(pts[0], pts[1], "xk")
+        plt.show()
     dist = geo.dist(pts)
     assert np.all(np.abs(dist) < 1.0e-12)
 
@@ -52,4 +53,4 @@ if __name__ == "__main__":
     # from helpers import save
     # X, cells = test(show=False)
     # save("polygon.svg", X, cells)
-    test_boundary_step2()
+    test_boundary_step2(plot=True)

@@ -39,7 +39,7 @@ class Path:
         #    (<e, e> <x-x0, x-x0> - <x-x0, e>**2) / <e, e>
         #
         # but this expression is numerically disadvantageous. (For example, the
-        # expresison can become negative due to round-off.) Simply compute the
+        # expression can become negative due to round-off.) Simply compute the
         # projection and the dot product.
         x_min_proj = diff - t[:, :, None] * self.edges[None, :, :]
         dist2_sides = np.einsum("ijk,ijk->ij", x_min_proj, x_min_proj)
