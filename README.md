@@ -22,9 +22,9 @@ requires a lot of memory, and isn't terribly robust either.
 
 On the plus side,
 
- * it's got a user-friendly interface,
- * is pure Python (and hence easily installable on any system), and
- * it produces pretty high-quality meshes.
+- it's got a user-friendly interface,
+- is pure Python (and hence easily installable on any system), and
+- it produces pretty high-quality meshes.
 
 Combined with [optimesh](https://github.com/nschloe/optimesh), dmsh produces the
 highest-quality 2D meshes in the west.
@@ -33,8 +33,8 @@ highest-quality 2D meshes in the west.
 
 #### Primitives
 
-<img alt="circle" src="https://nschloe.github.io/dmsh/circle.svg" width="100%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/rectangle.svg" width="100%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/polygon.svg" width="100%">
-|:---:|:---:|:---:|
+| <img alt="circle" src="https://nschloe.github.io/dmsh/circle.svg" width="100%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/rectangle.svg" width="100%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/polygon.svg" width="100%"> |
+| :-----------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
 
 ```python
 import dmsh
@@ -82,8 +82,8 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ##### Difference
 
-<img src="https://nschloe.github.io/dmsh/moon.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/pacman.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/rectangle-hole-refinement.svg" width="100%">
-:-------------------:|:------------------:|:----:|
+| <img src="https://nschloe.github.io/dmsh/moon.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/pacman.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/rectangle-hole-refinement.svg" width="100%"> |
+| :--------------------------------------------------------------: | :----------------------------------------------------------------: | :-----------------------------------------------------------------------------------: |
 
 ```python
 import dmsh
@@ -91,6 +91,7 @@ import dmsh
 geo = dmsh.Circle([-0.5, 0.0], 1.0) - dmsh.Circle([+0.5, 0.0], 1.0)
 X, cells = dmsh.generate(geo, 0.1)
 ```
+
 ```python
 import dmsh
 
@@ -100,6 +101,7 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 
 The following example uses a nonconstant edge length; it depends on the distance to the
 circle `c`.
+
 ```python
 import dmsh
 import numpy as np
@@ -113,8 +115,8 @@ X, cells = dmsh.generate(geo, lambda pts: np.abs(c.dist(pts)) / 5 + 0.05, tol=1.
 
 ##### Union
 
-<img src="https://nschloe.github.io/dmsh/union-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-rectangles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-three-circles.svg" width="100%">
-:-------------------:|:------------------:|:----:|
+| <img src="https://nschloe.github.io/dmsh/union-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-rectangles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-three-circles.svg" width="100%"> |
+| :-----------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :-----------------------------------------------------------------------------: |
 
 ```python
 import dmsh
@@ -122,12 +124,14 @@ import dmsh
 geo = dmsh.Circle([-0.5, 0.0], 1.0) + dmsh.Circle([+0.5, 0.0], 1.0)
 X, cells = dmsh.generate(geo, 0.15)
 ```
+
 ```python
 import dmsh
 
 geo = dmsh.Rectangle(-1.0, +0.5, -1.0, +0.5) + dmsh.Rectangle(-0.5, +1.0, -0.5, +1.0)
 X, cells = dmsh.generate(geo, 0.15)
 ```
+
 ```python
 import dmsh
 import numpy as np
@@ -145,8 +149,8 @@ X, cells = dmsh.generate(geo, 0.15)
 
 #### Intersection
 
-<img src="https://nschloe.github.io/dmsh/intersection-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/intersection-three-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/intersection-circle-halfspace.svg" width="100%">
-:-------------------:|:------------------:|:----:|
+| <img src="https://nschloe.github.io/dmsh/intersection-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/intersection-three-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/intersection-circle-halfspace.svg" width="100%"> |
+| :------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
 
 ```python
 import dmsh
@@ -171,6 +175,7 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
 
 The following uses the `HalfSpace` primtive for cutting off a circle.
+
 ```python
 import dmsh
 
@@ -180,8 +185,8 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ### Rotation, translation, scaling
 
-<img src="https://nschloe.github.io/dmsh/rotation.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/scaling.svg" width="100%">
-|:----:|:----:|
+| <img src="https://nschloe.github.io/dmsh/rotation.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/scaling.svg" width="100%"> |
+| :------------------------------------------------------------------: | :-----------------------------------------------------------------: |
 
 ```python
 import dmsh
@@ -190,12 +195,14 @@ import numpy as np
 geo = dmsh.Rotation(dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0), 0.1 * np.pi)
 X, cells = dmsh.generate(geo, 0.1, tol=1.0e-10)
 ```
+
 ```python
 import dmsh
 
 geo = dmsh.Rectangle(-1.0, +2.0, -1.0, +1.0) + [1.0, 1.0]
 X, cells = dmsh.generate(geo, 0.1)
 ```
+
 ```python
 import dmsh
 
@@ -209,6 +216,7 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-5)
 
 All objects can be used to refine the mesh according to the distance to the object;
 e.g. a `Path`:
+
 ```python
 import dmsh
 
@@ -224,8 +232,8 @@ def edge_size(x):
 X, cells = dmsh.generate(geo, edge_size, tol=1.0e-10)
 ```
 
-
 ### Custom shapes
+
 It is also possible to define your own geometry. Simply create a class derived from
 `dmsh.Geometry` that contains a `dist` method and a method to project points onto the
 boundary.
@@ -261,33 +269,39 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ### Debugging
 
-![level-set-poly](https://nschloe.github.io/dmsh/levelset-polygon.png) | ![level-set-rect-hole](https://nschloe.github.io/dmsh/levelset-rect-hole.png)
-|:----:|:----:|
+| ![level-set-poly](https://nschloe.github.io/dmsh/levelset-polygon.png) | ![level-set-rect-hole](https://nschloe.github.io/dmsh/levelset-rect-hole.png) |
+| :--------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
 
 dmsh is rather fragile, but sometimes the break-downs are due to an incorrectly defined
 geometry. Use
+
 ```
 geo.show()
 ```
+
 to inspect the level set function of your domain. (It must be negative inside the
 domain and positive outside. The 0-level set forms the domain boundary.)
-
 
 ### Installation
 
 dmsh is [available from the Python Package
 Index](https://pypi.org/project/dmsh/), so simply type
+
 ```
 pip install dmsh
 ```
+
 to install.
 
 ### Testing
+
 To run the dmsh unit tests, check out this repository and type
+
 ```
 tox
 ```
 
 ### License
+
 This software is published under the [MIT
 license](https://en.wikipedia.org/wiki/MIT_License).
