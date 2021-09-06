@@ -269,21 +269,24 @@ def distmesh_smoothing(
             f_scale * p * np.sqrt(np.dot(edge_lengths, edge_lengths) / np.dot(p, p))
         )
 
-        delta_t = 1.0e-2
+        force_abs = target_lengths - edge_lengths
+        # only consider repulsive forces
+        force_abs[force_abs < 0.0] = 0.0
 
-        force_type = "persson"
-        relative_length = edge_lengths / target_lengths
-        if force_type.lower() == "persson":
-            # force_abs = target_lengths - edge_lengths
-            # # only consider repulsive forces
-            # force_abs[force_abs < 0.0] = 0.0
-            #
-            force_abs = 1.0 - relative_length
-            # only consider repulsive forces
-            force_abs[relative_length > 1.0] = 0.0
-        else:
-            assert force_type.lower() == "bossens"
-            force_abs = (1 - relative_length ** 4) * np.exp(-(relative_length ** 4))
+        # In <https://github.com/nschloe/dmsh/issues/85>, there's a suggestion for a
+        # better forcing function. The below doesn't seem to work too well though.
+        #
+        # Need to set delta_t to 1.0e-2 or smaller to accomodate for the missing factor
+        # `target_lengths`.
+        # force_type = "persson"
+        # relative_length = edge_lengths / target_lengths
+        # if force_type.lower() == "persson":
+        #     force_abs = 1.0 - relative_length
+        #     # only consider repulsive forces
+        #     force_abs[relative_length > 1.0] = 0.0
+        # else:
+        #     assert force_type.lower() == "bossens"
+        #     force_abs = (1 - relative_length ** 4) * np.exp(-(relative_length ** 4))
 
         # force vectors
         force = edges_vec_normalized * force_abs[..., None]
