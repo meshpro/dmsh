@@ -256,9 +256,11 @@ def distmesh_smoothing(
 
         edges = mesh.edges["points"]
 
-        edges_vec = mesh.points[edges[:, 1]] - mesh.points[edges[:, 0]]
-        edge_lengths = np.sqrt(np.einsum("ij,ij->i", edges_vec, edges_vec))
-        edges_vec /= edge_lengths[..., None]
+        edges_vec_normalized = mesh.points[edges[:, 1]] - mesh.points[edges[:, 0]]
+        edge_lengths = np.sqrt(
+            np.einsum("ij,ij->i", edges_vec_normalized, edges_vec_normalized)
+        )
+        edges_vec_normalized /= edge_lengths[..., None]
 
         # Evaluate element sizes at edge midpoints
         edge_midpoints = (mesh.points[edges[:, 1]] + mesh.points[edges[:, 0]]) / 2
@@ -267,12 +269,24 @@ def distmesh_smoothing(
             f_scale * p * np.sqrt(np.dot(edge_lengths, edge_lengths) / np.dot(p, p))
         )
 
-        force_abs = target_lengths - edge_lengths
-        # only consider repulsive forces
-        force_abs[force_abs < 0.0] = 0.0
+        delta_t = 1.0e-2
+
+        force_type = "persson"
+        relative_length = edge_lengths / target_lengths
+        if force_type.lower() == "persson":
+            # force_abs = target_lengths - edge_lengths
+            # # only consider repulsive forces
+            # force_abs[force_abs < 0.0] = 0.0
+            #
+            force_abs = 1.0 - relative_length
+            # only consider repulsive forces
+            force_abs[relative_length > 1.0] = 0.0
+        else:
+            assert force_type.lower() == "bossens"
+            force_abs = (1 - relative_length ** 4) * np.exp(-(relative_length ** 4))
 
         # force vectors
-        force = edges_vec * force_abs[..., None]
+        force = edges_vec_normalized * force_abs[..., None]
 
         # bincount replacement for the slow np.add.at
         # more speed-up can be achieved if the weights were contiguous in memory, i.e.,
@@ -321,8 +335,6 @@ def distmesh_smoothing(
             print(f"max_move: {np.sqrt(np.max(move2)):.6e}")
         if np.all(move2 < tol ** 2):
             break
-
-    # print("num steps:  ", k)
 
     # The cell removal steps in _recell_and_boundary_step() might create points which
     # aren't part of any cell (dangling points). Remove them now.
