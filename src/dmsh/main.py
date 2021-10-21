@@ -1,15 +1,18 @@
+from __future__ import annotations
+
 import math
-from typing import Callable, Union
+from typing import Callable
 
 import meshplex
 import npx
 import numpy as np
 import scipy.spatial
 
+from .geometry import Geometry
 from .helpers import show as show_mesh
 
 
-def _create_cells(pts, geo):
+def _create_cells(pts, geo: Geometry):
     # compute Delaunay triangulation
     tri = scipy.spatial.Delaunay(pts)
     cells = tri.simplices.copy()
@@ -123,8 +126,8 @@ def create_staggered_grid(h, bounding_box):
 
 
 def generate(
-    geo,
-    target_edge_size: Union[float, Callable],
+    geo: Geometry,
+    target_edge_size: float | Callable,
     # smoothing_method="distmesh",
     tol: float = 1.0e-5,
     random_seed: int = 0,
