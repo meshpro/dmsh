@@ -8,7 +8,6 @@ class Rectangle(Geometry):
     # One could simply make Rectangle a child class of Polygon. However, boundary steps
     # can be inaccurate for polygons (there is some computation involved).
     def __init__(self, x0, x1, y0, y1):
-        super().__init__()
         assert x0 < x1
         assert y0 < y1
         self.x0 = x0
@@ -16,17 +15,17 @@ class Rectangle(Geometry):
         self.y0 = y0
         self.y1 = y1
         self.points = np.array([[x0, y0], [x1, y0], [x1, y1], [x0, y1]])
-        self.bounding_box = [
+        bounding_box = [
             np.min(self.points[:, 0]),
             np.max(self.points[:, 0]),
             np.min(self.points[:, 1]),
             np.max(self.points[:, 1]),
         ]
-        self.feature_points = self.points
         self.paths = [
             LineSegmentPath(p0, p1)
             for p0, p1 in zip(self.points, np.roll(self.points, -1, axis=0))
         ]
+        super().__init__(bounding_box, feature_points=self.points)
 
     def dist(self, x):
         # outside dist

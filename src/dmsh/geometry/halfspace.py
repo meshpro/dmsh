@@ -5,7 +5,6 @@ from .geometry import Geometry
 
 class LinePath:
     def __init__(self, v, tangent):
-        super().__init__()
         self.v = v
         self.tangent = tangent
 
@@ -26,18 +25,17 @@ class LinePath:
 
 class HalfSpace(Geometry):
     def __init__(self, normal, alpha=0.0):
-        super().__init__()
         self.normal = normal
         self.alpha = alpha
 
-        self.bounding_box = [-np.inf, +np.inf, -np.inf, +np.inf]
-        self.feature_points = np.array([])
+        bounding_box = [-np.inf, +np.inf, -np.inf, +np.inf]
 
         # One point on the line:
         v = self.normal / np.dot(self.normal, self.normal) * self.alpha
         tangent = np.array([-self.normal[1], self.normal[0]])
 
         self.paths = [LinePath(v, tangent)]
+        super().__init__(bounding_box, feature_points=[])
 
     def dist(self, x):
         assert x.shape[0] == 2

@@ -245,11 +245,11 @@ import numpy as np
 
 class MyDisk(dmsh.Geometry):
     def __init__(self):
-        super().__init__()
         self.r = 1.0
         self.x0 = [0.0, 0.0]
-        self.bounding_box = [-1.0, 1.0, -1.0, 1.0]
-        self.feature_points = np.array([[], []]).T
+        bounding_box = [-1.0, 1.0, -1.0, 1.0]
+        feature_points = np.array([[], []]).T
+        super().__init__(bounding_box, feature_points)
 
     def dist(self, x):
         assert x.shape[0] == 2

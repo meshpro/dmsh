@@ -25,12 +25,12 @@ class CirclePath:
 
 class Circle(Geometry):
     def __init__(self, x0, r):
-        super().__init__()
         self.x0 = x0
         self.r = r
-        self.bounding_box = [x0[0] - r, x0[0] + r, x0[1] - r, x0[1] + r]
+        bounding_box = [x0[0] - r, x0[0] + r, x0[1] - r, x0[1] + r]
         self.paths = [CirclePath(x0, r)]
-        self.feature_points = np.array([[], []]).T
+        feature_points = np.array([[], []]).T
+        super().__init__(bounding_box, feature_points)
 
     def dist(self, x):
         assert x.shape[0] == 2

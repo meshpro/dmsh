@@ -4,8 +4,9 @@ from ..helpers import find_feature_points
 
 
 class Geometry:
-    def __init__(self):
-        return
+    def __init__(self, bounding_box, feature_points):
+        self.bounding_box = bounding_box
+        self.feature_points = feature_points
 
     def _get_xyz(self, nx=101, ny=101):
         x0, x1, y0, y1 = self.bounding_box
@@ -16,6 +17,9 @@ class Geometry:
         X, Y = np.meshgrid(x, y)
         Z = self.dist(np.array([X, Y]))
         return X, Y, Z
+
+    def dist(self, _):
+        raise NotImplementedError("dist() not implemented")
 
     def _plot_level_set(self):
         import matplotlib.pyplot as plt
@@ -81,26 +85,26 @@ class Geometry:
 
 class Union(Geometry):
     def __init__(self, geometries):
-        super().__init__()
         self.geometries = geometries
-        self.bounding_box = [
+        bounding_box = [
             np.min([geo.bounding_box[0] for geo in geometries]),
             np.max([geo.bounding_box[1] for geo in geometries]),
             np.min([geo.bounding_box[2] for geo in geometries]),
             np.max([geo.bounding_box[3] for geo in geometries]),
         ]
-
         fp = [geo.feature_points for geo in geometries]
         fp.append(find_feature_points(geometries))
-        self.feature_points = np.concatenate(fp)
+        feature_points = np.concatenate(fp)
 
         # Only keep the feature points on the outer boundary
-        alpha = np.array([geo.dist(self.feature_points.T) for geo in geometries])
+        alpha = np.array([geo.dist(feature_points.T) for geo in geometries])
         tol = 1.0e-5
         is_on_boundary = np.all(alpha > -tol, axis=0)
-        self.feature_points = self.feature_points[is_on_boundary]
+        feature_points = feature_points[is_on_boundary]
 
         self.paths = [path for geo in self.geometries for path in geo.paths]
+
+        super().__init__(bounding_box, feature_points)
 
     def dist(self, x):
         return np.min([geo.dist(x) for geo in self.geometries], axis=0)
@@ -132,7 +136,6 @@ class Union(Geometry):
 
 class Stretch(Geometry):
     def __init__(self, geometry, v):
-        super().__init__()
         self.geometry = geometry
         self.alpha = np.sqrt(np.dot(v, v))
         self.v = v / self.alpha
@@ -144,13 +147,13 @@ class Stretch(Geometry):
         )
         vx = np.multiply.outer(np.dot(self.v, corners.T), self.v)
         stretched_corners = (vx * self.alpha + (corners - vx)).T
-        self.bounding_box = [
+        bounding_box = [
             np.min(stretched_corners[0]),
             np.max(stretched_corners[0]),
             np.min(stretched_corners[1]),
             np.max(stretched_corners[1]),
         ]
-        self.feature_points = np.array([])
+        super().__init__(bounding_box, feature_points=[])
 
     def dist(self, x):
         # scale the component of x in direction v by 1/alpha
@@ -172,22 +175,21 @@ class Stretch(Geometry):
 
 class Difference(Geometry):
     def __init__(self, geo0, geo1):
-        super().__init__()
         self.geo0 = geo0
         self.geo1 = geo1
-        self.bounding_box = geo0.bounding_box
 
         fp = [geo0.feature_points, geo1.feature_points]
         fp.append(find_feature_points([geo0, geo1]))
-        self.feature_points = np.concatenate(fp)
+        feature_points = np.concatenate(fp)
 
         # Only keep the feature points on the outer boundary
-        alpha = self.dist(self.feature_points.T)
+        alpha = self.dist(feature_points.T)
         tol = 1.0e-5
         is_on_boundary = (-tol < alpha) & (alpha < tol)
-        self.feature_points = self.feature_points[is_on_boundary]
+        feature_points = feature_points[is_on_boundary]
 
         self.paths = [path for geo in [geo0, geo1] for path in geo.paths]
+        super().__init__(geo0.bounding_box, feature_points)
 
     def dist(self, x):
         return np.max([self.geo0.dist(x), -self.geo1.dist(x)], axis=0)
@@ -226,18 +228,16 @@ class Difference(Geometry):
 
 class Translation(Geometry):
     def __init__(self, geometry, v):
-        super().__init__()
         self.geometry = geometry
         self.v = v
 
-        self.bounding_box = [
+        bounding_box = [
             geometry.bounding_box[0] + v[0],
             geometry.bounding_box[1] + v[0],
             geometry.bounding_box[2] + v[1],
             geometry.bounding_box[3] + v[1],
         ]
-        self.feature_points = np.array([])
-        return
+        super().__init__(bounding_box, feature_points=[])
 
     def dist(self, x):
         return self.geometry.dist((x.T - self.v).T)
@@ -248,25 +248,25 @@ class Translation(Geometry):
 
 class Intersection(Geometry):
     def __init__(self, geometries):
-        super().__init__()
         self.geometries = geometries
-        self.bounding_box = [
+        bounding_box = [
             np.max([geo.bounding_box[0] for geo in geometries]),
             np.min([geo.bounding_box[1] for geo in geometries]),
             np.max([geo.bounding_box[2] for geo in geometries]),
             np.min([geo.bounding_box[3] for geo in geometries]),
         ]
 
-        self.feature_points = find_feature_points(geometries)
+        feature_points = find_feature_points(geometries)
         # filter out the feature points outside the intersection
-        self.feature_points = self.feature_points[
+        feature_points = feature_points[
             np.all(
-                [geo.dist(self.feature_points.T) < 1.0e-10 for geo in geometries],
+                [geo.dist(feature_points.T) < 1.0e-10 for geo in geometries],
                 axis=0,
             )
         ]
 
         self.paths = [path for geo in self.geometries for path in geo.paths]
+        super().__init__(bounding_box, feature_points)
 
     def dist(self, x):
         return np.max([geo.dist(x) for geo in self.geometries], axis=0)
@@ -301,11 +301,10 @@ class Intersection(Geometry):
 
 class Scaling(Geometry):
     def __init__(self, geometry: Geometry, alpha: float):
-        super().__init__()
         self.geometry = geometry
         self.alpha = alpha
-        self.bounding_box = alpha * np.array(geometry.bounding_box)
-        self.feature_points = np.array([])
+        bounding_box = alpha * np.array(geometry.bounding_box)
+        super().__init__(bounding_box, feature_points=[])
 
     def dist(self, x):
         return self.geometry.dist(x / self.alpha)

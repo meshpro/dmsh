@@ -1,5 +1,5 @@
 default:
-	@echo `make png`?
+	@echo `just png`?
 
 png:
 	for file in test_*.py; do \
