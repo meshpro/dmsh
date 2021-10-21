@@ -4,8 +4,6 @@ from typing import Callable
 
 import numpy as np
 
-from .geometry import Geometry
-
 
 def multi_newton(
     x0: np.ndarray,
@@ -31,7 +29,7 @@ def multi_newton(
     return x
 
 
-def show(pts, cells, geo: Geometry, title: str | None = None, full_screen: bool = True):
+def show(pts, cells, geo, title: str | None = None, full_screen: bool = True):
     import matplotlib.pyplot as plt
 
     eps = 1.0e-10
@@ -81,7 +79,7 @@ def show(pts, cells, geo: Geometry, title: str | None = None, full_screen: bool 
         pass
 
 
-def find_feature_points(geometries: list[Geometry], num_steps: int = 10):
+def find_feature_points(geometries, num_steps: int = 10):
     n = len(geometries)
 
     # collect path pairs

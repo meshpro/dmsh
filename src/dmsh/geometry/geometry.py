@@ -97,7 +97,7 @@ class Union(Geometry):
         feature_points = np.concatenate(fp)
 
         # Only keep the feature points on the outer boundary
-        alpha = np.array([geo.dist(self.feature_points.T) for geo in geometries])
+        alpha = np.array([geo.dist(feature_points.T) for geo in geometries])
         tol = 1.0e-5
         is_on_boundary = np.all(alpha > -tol, axis=0)
         feature_points = feature_points[is_on_boundary]
@@ -180,13 +180,13 @@ class Difference(Geometry):
 
         fp = [geo0.feature_points, geo1.feature_points]
         fp.append(find_feature_points([geo0, geo1]))
-        self.feature_points = np.concatenate(fp)
+        feature_points = np.concatenate(fp)
 
         # Only keep the feature points on the outer boundary
-        alpha = self.dist(self.feature_points.T)
+        alpha = self.dist(feature_points.T)
         tol = 1.0e-5
         is_on_boundary = (-tol < alpha) & (alpha < tol)
-        feature_points = self.feature_points[is_on_boundary]
+        feature_points = feature_points[is_on_boundary]
 
         self.paths = [path for geo in [geo0, geo1] for path in geo.paths]
         super().__init__(geo0.bounding_box, feature_points)
@@ -258,9 +258,9 @@ class Intersection(Geometry):
 
         feature_points = find_feature_points(geometries)
         # filter out the feature points outside the intersection
-        feature_points = self.feature_points[
+        feature_points = feature_points[
             np.all(
-                [geo.dist(self.feature_points.T) < 1.0e-10 for geo in geometries],
+                [geo.dist(feature_points.T) < 1.0e-10 for geo in geometries],
                 axis=0,
             )
         ]

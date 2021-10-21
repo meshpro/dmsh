@@ -19,21 +19,20 @@ class LineSegmentPath:
 
 class Polygon(Geometry):
     def __init__(self, points):
-        super().__init__()
         points = np.asarray(points)
-        self.bounding_box = [
+        bounding_box = [
             np.min(points[:, 0]),
             np.max(points[:, 0]),
             np.min(points[:, 1]),
             np.max(points[:, 1]),
         ]
         self.polygon = pypathlib.ClosedPath(points)
-        self.feature_points = points
         self.paths = [
             LineSegmentPath(p0, p1)
             for p0, p1 in zip(points, np.roll(points, -1, axis=0))
         ]
         self.diameter = self.polygon.diameter
+        super().__init__(bounding_box, feature_points=points)
 
     def dist(self, x):
         assert x.shape[0] == 2
