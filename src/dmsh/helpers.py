@@ -1,7 +1,19 @@
+from __future__ import annotations
+
+from typing import Callable
+
 import numpy as np
 
+from .geometry import Geometry
 
-def multi_newton(x0, is_inside, boundary_step, tol, max_num_steps=10):
+
+def multi_newton(
+    x0: np.ndarray,
+    is_inside: Callable,
+    boundary_step: Callable,
+    tol: float,
+    max_num_steps: int = 10,
+) -> np.ndarray:
     """Newton's minimization method for multiple starting points."""
     x = x0.copy()
     fx = is_inside(x.T)
@@ -19,7 +31,7 @@ def multi_newton(x0, is_inside, boundary_step, tol, max_num_steps=10):
     return x
 
 
-def show(pts, cells, geo, title=None, full_screen=True):
+def show(pts, cells, geo: Geometry, title: str | None = None, full_screen: bool = True):
     import matplotlib.pyplot as plt
 
     eps = 1.0e-10
@@ -69,7 +81,7 @@ def show(pts, cells, geo, title=None, full_screen=True):
         pass
 
 
-def find_feature_points(geometries, num_steps=10):
+def find_feature_points(geometries: list[Geometry], num_steps: int = 10):
     n = len(geometries)
 
     # collect path pairs
@@ -164,7 +176,7 @@ def _find_feature_points_between_two_paths(path0, path1, num_steps, nx=11, ny=11
     return points0
 
 
-def unique_float_cols(data, k=0, tol=1.0e-10):
+def unique_float_cols(data: np.ndarray, k: int = 0, tol: float = 1.0e-10):
     """In a (k, n) array `data`, find the unique columns."""
     if k == data.shape[0]:
         return data[:, 0]
