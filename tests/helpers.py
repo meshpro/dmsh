@@ -18,10 +18,13 @@ def assert_norm_equality(X, ref_norm, tol):
             np.linalg.norm(X, ord=np.inf),
         ]
     )
+
     assert np.all(
-        np.abs(vals - ref_norm) < tol * ref_norm
-    ), "Expected: [{:.16e}, {:.16e}, {:.16e}]\nComputed: [{:.16e}, {:.16e}, {:.16e}]".format(
-        *ref_norm, *vals
+        np.abs(vals - ref_norm) < tol * (1.0 + ref_norm)
+    ), """Expected: [{:.16e}, {:.16e}, {:.16e}]
+Computed: [{:.16e}, {:.16e}, {:.16e}]
+max_err: {:.3e}""".format(
+        *ref_norm, *vals, max(np.abs(vals - ref_norm) / (1.0 + ref_norm))
     )
 
 
