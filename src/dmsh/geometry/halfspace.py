@@ -19,7 +19,7 @@ class LinePath:
 
     def dp_dt(self, t):
         with np.errstate(divide="ignore"):
-            dt = 1 / t ** 2 + 1 / (1 - t) ** 2
+            dt = 1 / t**2 + 1 / (1 - t) ** 2
         return np.multiply.outer(self.tangent, dt)
 
 

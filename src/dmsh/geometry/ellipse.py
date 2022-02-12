@@ -24,7 +24,7 @@ class Ellipse(Geometry):
         ax = (x[0] - self.x0[0]) / self.a
         ay = (x[1] - self.x0[1]) / self.b
 
-        alpha = ax ** 2 + ay ** 2 - 1.0
+        alpha = ax**2 + ay**2 - 1.0
         jac = np.array([4 * alpha * ax / self.a, 4 * alpha * ay / self.b])
 
         dalpha_dx = 2 * ax / self.a
@@ -32,12 +32,12 @@ class Ellipse(Geometry):
         hess = np.array(
             [
                 [
-                    4 * dalpha_dx * ax / self.a + 4 * alpha / self.a ** 2,
+                    4 * dalpha_dx * ax / self.a + 4 * alpha / self.a**2,
                     4 * dalpha_dy * ax / self.a,
                 ],
                 [
                     4 * dalpha_dx * ay / self.b,
-                    4 * dalpha_dy * ay / self.b + 4 * alpha / self.b ** 2,
+                    4 * dalpha_dy * ay / self.b + 4 * alpha / self.b**2,
                 ],
             ]
         )

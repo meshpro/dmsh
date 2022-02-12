@@ -173,7 +173,7 @@ def generate(
         diff = np.array([[pt - fp for fp in geo.feature_points] for pt in pts])
         dist = np.einsum("...k,...k->...", diff, diff)
         ftol = h0 / 10
-        equals_feature_point = np.any(dist < ftol ** 2, axis=1)
+        equals_feature_point = np.any(dist < ftol**2, axis=1)
         pts = pts[~equals_feature_point]
         # Add feature points
         pts = np.concatenate([geo.feature_points, pts])
@@ -333,7 +333,7 @@ def distmesh_smoothing(
         move2 = np.einsum("ij,ij->i", diff, diff)
         if verbose:
             print(f"max_move: {np.sqrt(np.max(move2)):.6e}")
-        if np.all(move2 < tol ** 2):
+        if np.all(move2 < tol**2):
             break
 
     # The cell removal steps in _recell_and_boundary_step() might create points which

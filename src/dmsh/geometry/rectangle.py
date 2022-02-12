@@ -40,7 +40,7 @@ class Rectangle(Geometry):
         is_inside = (dx <= 0) & (dy <= 0)
         dx[dx < 0.0] = 0.0
         dy[dy < 0.0] = 0.0
-        dist = np.sqrt(dx ** 2 + dy ** 2)
+        dist = np.sqrt(dx**2 + dy**2)
         # inside dist
         a = np.array(
             [
