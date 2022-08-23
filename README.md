@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/nschloe/dmsh"><img alt="dmsh" src="https://nschloe.github.io/dmsh/logo-with-text.svg" width="50%"></a>
+  <a href="https://github.com/nschloe/dmsh"><img alt="dmsh" src="https://meshpro.github.io/dmsh/logo-with-text.svg" width="50%"></a>
   <p align="center">The worst mesh generator you'll ever use.</p>
 </p>
 
@@ -33,7 +33,7 @@ highest-quality 2D meshes in the west.
 
 #### Primitives
 
-| <img alt="circle" src="https://nschloe.github.io/dmsh/circle.svg" width="100%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/rectangle.svg" width="100%"> | <img alt="circle" src="https://nschloe.github.io/dmsh/polygon.svg" width="100%"> |
+| <img alt="circle" src="https://meshpro.github.io/dmsh/circle.svg" width="100%"> | <img alt="circle" src="https://meshpro.github.io/dmsh/rectangle.svg" width="100%"> | <img alt="circle" src="https://meshpro.github.io/dmsh/polygon.svg" width="100%"> |
 | :-----------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
 
 ```python
@@ -82,7 +82,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ##### Difference
 
-| <img src="https://nschloe.github.io/dmsh/moon.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/pacman.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/rectangle-hole-refinement.svg" width="100%"> |
+| <img src="https://meshpro.github.io/dmsh/moon.svg" width="100%"> | <img src="https://meshpro.github.io/dmsh/pacman.svg" width="100%"> | <img src="https://meshpro.github.io/dmsh/rectangle-hole-refinement.svg" width="100%"> |
 | :--------------------------------------------------------------: | :----------------------------------------------------------------: | :-----------------------------------------------------------------------------------: |
 
 ```python
@@ -115,7 +115,7 @@ X, cells = dmsh.generate(geo, lambda pts: np.abs(c.dist(pts)) / 5 + 0.05, tol=1.
 
 ##### Union
 
-| <img src="https://nschloe.github.io/dmsh/union-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-rectangles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/union-three-circles.svg" width="100%"> |
+| <img src="https://meshpro.github.io/dmsh/union-circles.svg" width="100%"> | <img src="https://meshpro.github.io/dmsh/union-rectangles.svg" width="100%"> | <img src="https://meshpro.github.io/dmsh/union-three-circles.svg" width="100%"> |
 | :-----------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :-----------------------------------------------------------------------------: |
 
 ```python
@@ -149,7 +149,7 @@ X, cells = dmsh.generate(geo, 0.15)
 
 #### Intersection
 
-| <img src="https://nschloe.github.io/dmsh/intersection-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/intersection-three-circles.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/intersection-circle-halfspace.svg" width="100%"> |
+| <img src="https://meshpro.github.io/dmsh/intersection-circles.svg" width="100%"> | <img src="https://meshpro.github.io/dmsh/intersection-three-circles.svg" width="100%"> | <img src="https://meshpro.github.io/dmsh/intersection-circle-halfspace.svg" width="100%"> |
 | :------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
 
 ```python
@@ -185,7 +185,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ### Rotation, translation, scaling
 
-| <img src="https://nschloe.github.io/dmsh/rotation.svg" width="100%"> | <img src="https://nschloe.github.io/dmsh/scaling.svg" width="100%"> |
+| <img src="https://meshpro.github.io/dmsh/rotation.svg" width="100%"> | <img src="https://meshpro.github.io/dmsh/scaling.svg" width="100%"> |
 | :------------------------------------------------------------------: | :-----------------------------------------------------------------: |
 
 ```python
@@ -212,7 +212,7 @@ X, cells = dmsh.generate(geo, 0.1, tol=1.0e-5)
 
 ### Local refinement
 
-<img alt="local-refinement" src="https://nschloe.github.io/dmsh/local-refinement.svg" width="30%">
+<img alt="local-refinement" src="https://meshpro.github.io/dmsh/local-refinement.svg" width="30%">
 
 All objects can be used to refine the mesh according to the distance to the object;
 e.g. a `Path`:
@@ -269,7 +269,7 @@ X, cells = dmsh.generate(geo, 0.1)
 
 ### Debugging
 
-| ![level-set-poly](https://nschloe.github.io/dmsh/levelset-polygon.png) | ![level-set-rect-hole](https://nschloe.github.io/dmsh/levelset-rect-hole.png) |
+| ![level-set-poly](https://meshpro.github.io/dmsh/levelset-polygon.png) | ![level-set-rect-hole](https://meshpro.github.io/dmsh/levelset-rect-hole.png) |
 | :--------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
 
 dmsh is rather fragile, but sometimes the break-downs are due to an incorrectly defined
