@@ -285,11 +285,3 @@ pip install dmsh
 ```
 
 to install.
-
-### Testing
-
-To run the dmsh unit tests, check out this repository and type
-
-```
-tox
-```
